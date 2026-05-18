@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calendario</title>
+    <style>
+        /* --- STILE GRAFICO iOS (MODALITÀ SCURA) --- */
+        :root {
+            --ios-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-text: #FFFFFF;
+            --ios-gray: #8E8E93;
+            --ios-tint: #FF453A; /* Rosso iOS per evidenziare */
+            --ios-border: #2C2C2E;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--ios-text);
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Nav Bar Superiore */
+        .ios-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px 10px 20px;
+            background-color: var(--ios-bg);
+            border-bottom: 1px solid var(--ios-border);
+        }
+
+        .ios-navbar h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .ios-navbar button {
+            background: none;
+            border: none;
+            color: var(--ios-tint);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        /* Griglia Giorni */
+        .calendar-container {
+            padding: 10px;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            color: var(--ios-gray);
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            row-gap: 15px;
+        }
+
+        .day-cell {
+            position: relative;
+            text-align: center;
+            font-size: 18px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Il Pallino dell'Evento di iOS */
+        .ios-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--ios-gray);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 2px;
+        }
+
+        /* Lista Eventi in Basso */
+        .events-list-container {
+            margin-top: 20px;
+            padding: 20px;
+            border-top: 1px solid var(--ios-border);
+            background-color: var(--ios-bg);
+            min-height: 150px;
+        }
+
+        .event-item {
+            background-color: var(--ios-card);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .event-item strong {
+            color: var(--ios-tint);
+        }
+
+        .no-events {
+            color: var(--ios-gray);
+            font-size: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Pop-up Modali (Inserimento e Menu Segreto) */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--ios-card);
+            padding: 20px;
+            border-radius: 14px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            border: 1px solid var(--ios-border);
+        }
+
+        .modal-content input {
+            width: 90%;
+            padding: 10px;
+            margin: 15px 0;
+            background-color: var(--ios-bg);
+            border: 1px solid var(--ios-border);
+            color: var(--ios-text);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .modal-buttons button {
+            background: none;
+            border: none;
+            color: var(--ios-tint);
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .modal-buttons .add-bold {
+            font-weight: 700;
+        }
+
+        .secret-bg {
+            background-color: #111111;
+            border: 2px dashed #333;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTERFACCIA CALENDARIO -->
+    <div class="ios-navbar">
+        <!-- Cliccando sulle griglie si apre il pannello segreto delle routine -->
+        <button id="grid-btn" onclick="toggleMenuSegreto()">☰</button>
+        <h2 id="month-year-display">Maggio 2026</h2>
+        <button id="add-event-btn" onclick="apriModaleNuovoEvento()">+</button>
+    </div>
+
+    <div class="calendar-container">
+        <div class="weekdays">
+            <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
+        </div>
+        <div class="calendar-grid" id="days-grid"></div>
+    </div>
+
+    <div class="events-list-container" id="events-list">
+        <p class="no-events">Nessun evento</p>
+    </div>
+
+    <!-- MODALE INSERIMENTO EVENTO (ESCA) -->
+    <div id="event-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">Nuovo evento</h3>
+            <input type="text" id="event-title" placeholder="Titolo promemoria">
+            <div class="modal-buttons">
+                <button onclick="chiudiModale()">Annulla</button>
+                <button onclick="salvaNuovoEvento()" class="add-bold">Aggiungi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA SEGRETA DELLE ROUTINE (ATTIVATA DALLA GRIGLIA) -->
+    <div id="secret-panel" class="modal hidden">
+        <div class="modal-content secret-bg">
+            <h3 style="color: #FF453A; margin-top:0;">Pannello Setup</h3>
+            <p style="font-size: 14px; color: #8E8E93;">Qui puoi gestire le routine magiche dell'applicazione.</p>
+            <p style="font-size: 13px; text-align: left; background: #222; padding: 8px; border-radius: 5px;">
+                <strong>Routine 1 attiva:</strong><br>
+                Input automatico su inserimento testo.<br>
+                Regola: -2 mesi, -3 giorni dall'obiettivo (equivale a generare l'evento finale +2 mesi e +3 giorni dopo).
+            </p>
+            <button onclick="toggleMenuSegreto()" style="background: none; border: none; color: #FFF; font-size: 16px; margin-top: 15px; cursor: pointer; text-decoration: underline;">Chiudi</button>
+        </div>
+    </div>
+
+    <!-- LOGICA IN JAVASCRIPT -->
+    <script>
+        // Database locale temporaneo degli eventi
+        let eventiSalvati = {}; 
+
+        // Mappatura semi in italiano
+        const semi = { 'c': 'Cuori', 'd': 'Quadri', 'h': 'Cuori', 's': 'Picche', 'f': 'Fiori', 'p': 'Picche' }; 
+
+        // Data iniziale di simulazione dell'app (Maggio 2026)
+        let dataSelezionata = new Date(2026, 4, 18); 
+
+        const nomiMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+
+        window.onload = function() {
+            renderizzaCalendario();
+        };
+
+        function renderizzaCalendario() {
+            document.getElementById("month-year-display").innerText = `${nomiMesi[dataSelezionata.getMonth()]} ${dataSelezionata.getFullYear()}`;
+            const grid = document.getElementById("days-grid");
+            grid.innerHTML = "";
+
+            // Genera una griglia fissa di 31 giorni per il test visivo
+            for (let i = 1; i <= 31; i++) {
+                let daySquare = document.createElement("div");
+                daySquare.className = "day-cell";
+                daySquare.innerText = i;
+
+                let dataStringa = `${dataSelezionata.getFullYear()}-${dataSelezionata.getMonth()}-${i}`;
+
+                // Se c'è un evento associato, inserisce il pallino grigio
+                if (eventiSalvati[dataStringa]) {
+                    let dot = document.createElement("div");
+                    dot.className = "ios-dot";
+                    daySquare.appendChild(dot);
+                }
+
+                daySquare.onclick = () => selezionaGiorno(i, dataStringa);
+                grid.appendChild(daySquare);
+            }
+        }
+
+        function selezionaGiorno(giorno, dataStringa) {
+            const listContainer = document.getElementById("events-list");
+            listContainer.innerHTML = "";
+
+            if (eventiSalvati[dataStringa]) {
+                eventiSalvati[dataStringa].forEach(ev => {
+                    let item = document.createElement("div");
+                    item.className = "event-item";
+                    item.innerHTML = `<strong>${ev.ora}</strong> <span>${ev.titolo}</span>`;
+                    listContainer.appendChild(item);
+                });
+            } else {
+                listContainer.innerHTML = `<p class="no-events">Nessun evento per il giorno ${giorno}</p>`;
+            }
+            
+            dataSelezionata.setDate(giorno);
+        }
+
+        function apriModaleNuovoEvento() { document.getElementById("event-modal").classList.remove("hidden"); }
+        function chiudiModale() { document.getElementById("event-modal").classList.add("hidden"); }
+        function toggleMenuSegreto() { document.getElementById("secret-panel").classList.toggle("hidden"); }
+
+        // LOGICA DI INPUT INPUT SEGRETO + CALCOLO MATEMATICO
+        function salvaNuovoEvento() {
+            const titoloInput = document.getElementById("event-title").value.trim();
+            if (!titoloInput) return;
+
+            // 1. Salva l'evento esca con il testo digitato sul giorno corrente
+            let dataEscaStr = `${dataSelezionata.getFullYear()}-${dataSelezionata.getMonth()}-${dataSelezionata.getDate()}`;
+            if (!eventiSalvati[dataEscaStr]) eventiSalvati[dataEscaStr] = [];
+            eventiSalvati[dataEscaStr].push({ ora: "12:00", titolo: titoloInput });
+
+            // 2. Estrae gli ultimi due caratteri del testo per decodificare il comando segreto
+            const codiceSegreto = titoloInput.slice(-2).toLowerCase(); 
+            const valoreCarta = codiceSegreto.charAt(0);
+            const semeLettera = codiceSegreto.charAt(1);
+
+            // Se l'ultima lettera corrisponde a un seme valido nel dizionario
+            if (semi[semeLettera]) {
+                let semeTradotto = semi[semeLettera];
+                let nomeCartaCompleto = `Promemoria: ${valoreCarta.toUpperCase()} di ${semeTradotto}`;
+
+                // 3. Calcola la data finale spostandosi in avanti di 2 mesi e 3 giorni
+                let dataFutura = new Date(dataSelezionata);
+                dataFutura.setMonth(dataFutura.getMonth() + 2);
+                dataFutura.setDate(dataFutura.getDate() + 3);
+
+                let dataFuturaStr = `${dataFutura.getFullYear()}-${dataFutura.getMonth()}-${dataFutura.getDate()}`;
+
+                // 4. Crea in background il vero evento pulito nella data programmata
+                if (!eventiSalvati[dataFuturaStr]) eventiSalvati[dataFuturaStr] = [];
+                eventiSalvati[dataFuturaStr].push({
+                    ora: "09:00",
+                    titolo: nomeCartaCompleto
+                });
+            }
+
+            // Reset interfaccia
+            document.getElementById("event-title").value = "";
+            chiudiModale();
+            renderizzaCalendario();
+            selezionaGiorno(dataSelezionata.getDate(), dataEscaStr);
+        }
+    </script>
+</body>
+</html>
