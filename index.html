@@ -12,7 +12,7 @@
             --ios-gray: #8E8E93;
             --ios-dark-gray: #48484A; 
             --ios-tint: #FF453A; 
-            --ios-border: rgba(84, 84, 88, 0.75); /* Linee orizzontali spesse e molto evidenti */
+            --ios-border: rgba(84, 84, 88, 0.65); 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -29,7 +29,7 @@
             height: 100vh;
         }
 
-        /* HEADER PRINCIPALE CON ELEMENTI CONFERMATI */
+        /* HEADER PRINCIPALE CONFERMATO */
         .ios-header {
             position: fixed;
             top: 0;
@@ -86,38 +86,40 @@
             color: var(--ios-dark-gray); 
         }
 
-        /* VISTA SCORRIMENTO */
+        /* CALENDARIO A GRIGLIA UNICA CONTINUA */
         .calendar-scroll-view {
             height: 100vh;
             overflow-y: scroll;
             padding-top: 140px; 
             padding-bottom: 120px;
+            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
 
-        .month-section { 
-            padding: 0 16px 0 16px; 
-        }
-
-        .days-grid {
+        .grid-continua {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 0; /* Gestito dalle celle per avere linee continue perfette */
-            column-gap: 12px; 
+            padding: 0 16px;
         }
 
-        /* CELLA GIORNO: Linee spesse continue da riga a riga */
+        /* CELLA GIORNO: Linea spessa e continua sotto ogni singola riga di numeri */
         .day-cell {
             position: relative;
             text-align: center;
             font-size: 16px; 
             font-weight: 700; 
-            height: 64px; /* Altezza aumentata per ospitare il testo sopra il numero */
+            height: 58px; /* Spaziatura verticale calibrata sullo screenshot */
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Spinge il numero verso il basso, vicino alla linea */
-            padding-bottom: 8px;
-            border-bottom: 1.2px solid var(--ios-border); /* La linea spessa e continua sotto ogni giorno */
+            justify-content: flex-end; 
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--ios-border); /* Linea orizzontale che attraversa tutto lo schermo */
+            cursor: pointer;
+        }
+
+        /* Celle vuote di riempimento per mantenere le linee continue */
+        .day-cell.empty {
+            cursor: default;
         }
 
         .day-number {
@@ -127,25 +129,27 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            z-index: 5;
         }
 
+        /* Sabato e Domenica spenti */
         .day-cell.sat, .day-cell.sun { color: var(--ios-dark-gray); } 
+        
+        /* Giorno corrente cerchiato in rosso */
         .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; }
 
-        /* SCRITTA DEL MESE ABBREVIATO INGRANDITA E POSIZIONATA SOPRA IL NUMERO 1 */
+        /* IL VERO MESE ABBREVIATO DI iOS: Grande, in grassetto, inserito sopra il giorno 1 */
         .month-start-label {
             position: absolute;
             top: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 15px; /* Scritta molto più grande richiesta */
-            font-weight: 700; /* In un grassetto marcato */
+            left: 4px;
+            font-size: 15px; /* Ingrandito come da richiesta */
+            font-weight: 700; /* Grassetto marcato */
             color: #FFFFFF;
-            text-transform: capitalize;
-            z-index: 10;
+            letter-spacing: -0.2px;
         }
-        .month-start-label.current-break { color: var(--ios-tint); }
+        .day-cell.current-month-break .month-start-label { 
+            color: var(--ios-tint); /* Diventa rosso (es. Mag) se è il mese corrente */
+        }
 
         /* FOOTER */
         .bottom-bar {
@@ -172,73 +176,84 @@
 
     <div class="ios-header">
         <div class="navbar-top">
-            <button class="back-year-btn">‹ 2026</button>
+            <button class="back-year-btn">‹ <span id="current-year-header">2026</span></button>
             <img src="capsula-alto.png" class="capsula-alto-img" alt="">
         </div>
-        <div class="main-month-title" id="main-title-display">Novembre</div>
+        <div class="main-month-title" id="main-title-display">Maggio</div>
         <div class="weekdays-grid">
             <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
     </div>
 
-    <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
+    <!-- CONTENITORE UNICO PER TUTTI I MESI -->
+    <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()">
+        <div class="grid-continua" id="main-grid"></div>
+    </div>
 
     <div class="bottom-bar">
-        <img src="pulsante-oggi.png" class="today-png-btn" alt="">
+        <img src="pulsante-oggi.png" class="today-png-btn" alt="" onclick="scattaSuOggi()">
         <img src="capsula-basso.png" class="capsula-basso-img" alt="">
     </div>
 
     <script>
         const nomiMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
         const nomiMesiBrevi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+        
         let oggi = new Date();
+        let annoCorrenteView = oggi.getFullYear();
 
         window.onload = function() {
-            renderizzaCalendarioDinamico();
+            renderizzaCalendarioContinuo();
+            setTimeout(scattaSuOggi, 100); // Centra in automatico su oggi al caricamento
         };
 
         function idData(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
 
-        function renderizzaCalendarioDinamico() {
-            const container = document.getElementById("scroll-container");
-            container.innerHTML = "";
-            let dataLavoro = new Date(2026, 10, 1); // Novembre 2026
+        function renderizzaCalendarioContinuo() {
+            const grid = document.getElementById("main-grid");
+            grid.innerHTML = "";
 
-            for (let m = 0; m < 4; m++) {
+            // Genera la timeline da 14 mesi fa a 14 mesi nel futuro (ampio raggio di oltre due anni completi)
+            let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
+
+            for (let m = 0; m < 28; m++) {
                 let anno = dataLavoro.getFullYear();
                 let mese = dataLavoro.getMonth();
-
-                let section = document.createElement("div");
-                section.className = "month-section";
-                section.setAttribute("data-mese-nome", nomiMesi[mese]);
-
-                let grid = document.createElement("div");
-                grid.className = "days-grid";
 
                 let primoGiornoReal = new Date(anno, mese, 1).getDay();
                 let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
 
-                // Genera le celle anche per gli spazi vuoti iniziali della settimana, così le linee orizzontali sono continue fin dall'inizio
-                for (let e = 0; e < offsetReal; e++) { 
-                    let empty = document.createElement("div");
-                    empty.className = "day-cell"; 
-                    grid.appendChild(empty); 
+                // Se è il primissimo mese della timeline, inseriamo i quadrati vuoti iniziali per allineare i giorni della settimana
+                if (m === 0) {
+                    for (let e = 0; e < offsetReal; e++) { 
+                        let empty = document.createElement("div");
+                        empty.className = "day-cell empty"; 
+                        grid.appendChild(empty); 
+                    }
                 }
 
                 let giorniNelMese = new Date(anno, mese + 1, 0).getDate();
                 for (let g = 1; g <= giorniNelMese; g++) {
                     let dataGiorno = new Date(anno, mese, g);
                     let dayOfWeek = dataGiorno.getDay();
+                    let sData = idData(dataGiorno);
 
                     let dCell = document.createElement("div");
                     dCell.className = "day-cell";
+                    dCell.setAttribute("data-anno", anno);
+                    dCell.setAttribute("data-mese-nome", nomiMesi[mese]);
+                    dCell.id = `cell-${sData}`;
+
                     if (dayOfWeek === 0) dCell.classList.add("sun");
                     if (dayOfWeek === 6) dCell.classList.add("sat");
 
-                    // Inserisce il mese abbreviato ingrandito ESATTAMENTE nella cella del giorno 1, sopra il numero
-                    if (g === 1 && m > 0) {
+                    // LOGICA DEFINITIVA: Inserisce il mese abbreviato (Dic, Gen) sopra il numero 1
+                    if (g === 1) {
                         let shortLabel = document.createElement("div");
                         shortLabel.className = "month-start-label";
+                        if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
+                            dCell.classList.add("current-month-break");
+                        }
                         shortLabel.innerText = nomiMesiBrevi[mese];
                         dCell.appendChild(shortLabel);
                     }
@@ -248,37 +263,48 @@
                     dNum.innerText = g;
                     dCell.appendChild(dNum);
 
+                    // Evidenziazione tempo reale di oggi
+                    if (dataGiorno.getDate() === oggi.getDate() && dataGiorno.getMonth() === oggi.getMonth() && dataGiorno.getFullYear() === oggi.getFullYear()) {
+                        dCell.classList.add("today");
+                    }
+
                     grid.appendChild(dCell);
                 }
 
-                // Se l'ultimo giorno del mese non cade di domenica, riempie la riga con celle vuote per far continuare la linea spessa fino alla fine dello schermo
-                let ultimoGiornoReal = new Date(anno, mese, giorniNelMese).getDay();
-                let offsetFine = ultimoGiornoReal === 0 ? 0 : 7 - ultimoGiornoReal;
-                for (let e = 0; e < offsetFine; e++) {
-                    let emptyFine = document.createElement("div");
-                    emptyFine.className = "day-cell";
-                    grid.appendChild(emptyFine);
-                }
-
-                section.appendChild(grid);
-                container.appendChild(section);
                 dataLavoro.setMonth(dataLavoro.getMonth() + 1);
             }
         }
 
+        // AGGIORNA IN TEMPO REALE IL TITOLO GRANDE DEL MESE E IL NUMERO DELL'ANNO DURANTE LO SCORRIMENTO
         function gestisciScorrimentoMesi() {
-            const container = document.getElementById("scroll-container");
-            const sections = container.getElementsByClassName("month-section");
-            let meseAttualeVisualizzato = "Novembre";
+            const cells = document.getElementsByClassName("day-cell");
+            let meseAttuale = nomiMesi[oggi.getMonth()];
+            let annoAttuale = oggi.getFullYear();
             
-            for (let section of sections) {
-                let rect = section.getBoundingClientRect();
-                if (rect.top <= 250 && rect.bottom >= 250) {
-                    meseAttualeVisualizzato = section.getAttribute("data-mese-nome");
+            for (let cell of cells) {
+                let rect = cell.getBoundingClientRect();
+                if (rect.top >= 150 && rect.top <= 220) {
+                    let mNome = cell.getAttribute("data-mese-nome");
+                    let aNome = cell.getAttribute("data-anno");
+                    if (mNome) meseAttuale = mNome;
+                    if (aNome) annoAttuale = aNome;
                     break;
                 }
             }
-            document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
+            document.getElementById("main-title-display").innerText = meseAttuale;
+            document.getElementById("current-year-header").innerText = annoAttuale;
+        }
+
+        function scattaSuOggi() {
+            let sDataOggi = idData(oggi);
+            let elementoOggi = document.getElementById(`cell-${sDataOggi}`);
+            if (elementoOggi) {
+                elementoOggi.scrollIntoView({ block: "center", behavior: "smooth" });
+                meseCorrenteView = oggi.getMonth();
+                annoCorrenteView = oggi.getFullYear();
+                document.getElementById("main-title-display").innerText = nomiMesi[oggi.getMonth()];
+                document.getElementById("current-year-header").innerText = oggi.getFullYear();
+            }
         }
     </script>
 </body>
