@@ -1,578 +1,587 @@
-# iOS 26 Style Magic Calendar — Single File HTML App
-
-Salva questo file come `index.html`.
-
-Aprilo nel browser oppure caricalo su GitHub Pages.
-
-```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Magic Chronicle Calendar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Calendario</title>
+    <style>
+        :root {
+            --ios-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-modal-bg: #151515;
+            --ios-input-bg: #242426;
+            --ios-text: #FFFFFF;
+            --ios-gray: #8E8E93;
+            --ios-dark-gray: #48484A; 
+            --ios-tint: #FF453A; 
+            --ios-border: rgba(84, 84, 88, 0.45); /* Linea divisoria più evidente */
+        }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-<style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--ios-text);
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden;
+            height: 100vh;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        /* HEADER PRINCIPALE */
+        .ios-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--ios-bg);
+            z-index: 100;
+            padding: 20px 16px 4px 16px;
+        }
 
-:root{
-    --bg:#000000;
-    --card:#111111;
-    --line:#1e1e1e;
-    --soft:#2a2a2a;
-    --text:#ffffff;
-    --muted:#8e8e93;
-    --ios-red:#ff453a;
-    --glass:rgba(255,255,255,0.06);
-}
+        .navbar-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+        }
 
-body{
-    background:black;
-    color:white;
-    font-family:'Inter',sans-serif;
-    overflow-x:hidden;
-}
+        /* Anno con la bolla tonda grigia intorno */
+        .back-year-btn {
+            background-color: var(--ios-card);
+            border: none;
+            color: #FFFFFF; 
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.app{
-    width:100%;
-    min-height:100vh;
-    padding:22px;
-    background:radial-gradient(circle at top,#0d0d0d,#000000 45%);
-}
+        .capsula-alto-img {
+            height: 38px;
+            object-fit: contain;
+            opacity: 0.45;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            cursor: pointer;
+        }
 
-.status-bar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:24px;
-    padding:8px 2px;
-}
+        .main-month-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin: 12px 0 8px 4px;
+            color: var(--ios-text);
+        }
 
-.time{
-    font-size:22px;
-    font-weight:700;
-}
+        .weekdays-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            color: var(--ios-gray);
+            font-size: 11px;
+            font-weight: 500;
+            padding-bottom: 6px;
+            border-bottom: 0.5px solid var(--ios-border);
+        }
+        
+        .weekdays-grid div:nth-child(6), .weekdays-grid div:nth-child(7) {
+            color: var(--ios-dark-gray);
+        }
 
-.dynamic-island{
-    width:170px;
-    height:42px;
-    background:black;
-    border:1px solid rgba(255,0,0,0.4);
-    border-radius:999px;
-    display:flex;
-    align-items:center;
-    padding-left:18px;
-    box-shadow:0 0 20px rgba(255,0,0,0.15);
-}
+        /* VISTA SCORRIMENTO MESI */
+        .calendar-scroll-view {
+            height: 100vh;
+            overflow-y: scroll;
+            padding-top: 135px;
+            padding-bottom: 120px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
 
-.record-dot{
-    width:14px;
-    height:14px;
-    border-radius:50%;
-    background:#ff453a;
-}
+        .month-section { 
+            padding: 0 16px 15px 16px; 
+        }
 
-.top-actions{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-}
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            row-gap: 16px;
+        }
 
-.pill{
-    background:#111111;
-    border:1px solid #1d1d1f;
-    border-radius:999px;
-    padding:18px 26px;
-    display:flex;
-    align-items:center;
-    gap:18px;
-    backdrop-filter:blur(20px);
-    box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.05),
-    0 10px 30px rgba(0,0,0,0.4);
-}
+        /* CELLA GIORNO E CARATTERISTICHE DEI NUMERI */
+        .day-cell {
+            position: relative;
+            text-align: center;
+            font-size: 16px; /* Numeri più piccoli */
+            font-weight: 700; /* Carattere in Grassetto */
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+        }
 
-.pill-left{
-    font-size:24px;
-    font-weight:600;
-}
+        .day-number {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
 
-.icon-btn{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    opacity:0.9;
-    cursor:pointer;
-    transition:0.25s;
-}
+        .day-cell.sat, .day-cell.sun { color: var(--ios-dark-gray); }
 
-.icon-btn:hover{
-    transform:scale(1.08);
-    opacity:1;
-}
+        .day-cell.selected .day-number { background-color: #2C2C2E; color: #fff; }
+        .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
 
-.month-title{
-    font-size:76px;
-    font-weight:800;
-    letter-spacing:-4px;
-    margin-bottom:24px;
-}
+        /* LINEE ORIZZONTALI DIVISORIE PIÙ EVIDENTI TRA LE RIGHE */
+        .inline-month-break {
+            grid-column: 1 / span 7;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ios-text);
+            padding: 14px 0 6px 4px;
+            border-bottom: 0.8px solid var(--ios-border); /* Linea marcata */
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        .inline-month-break.current-break { color: var(--ios-tint); }
 
-.weekdays{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    color:#9d9da3;
-    margin-bottom:10px;
-    padding:0 8px;
-}
+        .ios-capsule-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 2px;
+        }
 
-.weekdays div{
-    text-align:center;
-    font-size:24px;
-    font-weight:500;
-}
+        /* FOOTER CON IMMAGINI */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 84px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px 24px 16px;
+            z-index: 120;
+            pointer-events: none;
+        }
 
-.calendar{
-    display:flex;
-    flex-direction:column;
-    gap:0;
-}
+        .today-png-btn, .capsula-basso-img {
+            object-fit: contain;
+            opacity: 0.45;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            cursor: pointer;
+            pointer-events: auto;
+        }
 
-.week{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    border-top:1px solid #1d1d1f;
-    min-height:145px;
-}
+        .today-png-btn { height: 44px; }
+        .capsula-basso-img { height: 44px; }
 
-.day{
-    position:relative;
-    padding:18px 12px;
-    font-size:28px;
-    font-weight:600;
-    color:white;
-    transition:0.25s;
-}
+        /* SCHERMATA CREAZIONE PROMEMORIA CON RIGHE REALI */
+        .ios-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 250; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .ios-modal.open { opacity: 1; pointer-events: auto; }
+        
+        .modal-body {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 93vh; background-color: var(--ios-modal-bg);
+            border-top-left-radius: 12px; border-top-right-radius: 12px;
+            transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .ios-modal.open .modal-body { transform: translateY(0); }
 
-.day:hover{
-    background:rgba(255,255,255,0.03);
-}
+        /* Header della modale con tasti tondi grigi */
+        .modal-navbar {
+            display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 0.5px solid var(--ios-border);
+        }
+        
+        .modal-navbar button { 
+            background-color: var(--ios-card); 
+            border: none; 
+            font-size: 16px; 
+            color: var(--ios-gray); 
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-navbar button.check-btn { color: #fff; font-weight: 600; }
+        .modal-navbar h3 { margin: 0; font-size: 17px; font-weight: 600; color: #fff; }
 
-.day.muted{
-    color:#5d5d63;
-}
+        .modal-form { padding: 16px; overflow-y: auto; height: calc(100% - 60px); }
+        
+        .ios-segment-control {
+            display: flex; background-color: var(--ios-card); padding: 2px; border-radius: 8px; margin-bottom: 20px;
+        }
+        .ios-segment-control div {
+            flex: 1; text-align: center; padding: 6px 0; font-size: 13px; font-weight: 500; border-radius: 6px;
+        }
+        .ios-segment-control div.active { background-color: #3a3a3c; color: #fff; }
 
-.event-dot{
-    position:absolute;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    background:#00c781;
-    box-shadow:0 0 10px #00c781;
-}
+        .ios-input-block {
+            background-color: var(--ios-card); border-radius: 12px; padding: 4px 16px; margin-bottom: 18px;
+        }
+        .ios-input-block input {
+            width: 100%; background: none; border: none; color: #fff; font-size: 17px; padding: 12px 0; outline: none;
+        }
+        .ios-input-block input::placeholder { color: #545458; }
+        .ios-input-block input:first-child { border-bottom: 0.5px solid var(--ios-border); }
 
-.magic-event{
-    background:linear-gradient(90deg,#00c781,#ff00ff);
-    width:28px;
-    height:12px;
-    border-radius:999px;
-}
+        .finta-riga-opzioni {
+            background-color: var(--ios-card); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; font-size: 17px; color: #fff; align-items: center;
+        }
+        .finta-riga-opzioni.border-row {
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 0;
+            border-bottom: 0.5px solid var(--ios-border);
+        }
+        .finta-riga-opzioni.mid-row {
+            border-radius: 0;
+            margin-bottom: 0;
+            border-bottom: 0.5px solid var(--ios-border);
+        }
+        .finta-riga-opzioni.end-row {
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 18px;
+        }
 
-.bottom-bar{
-    position:fixed;
-    bottom:28px;
-    left:50%;
-    transform:translateX(-50%);
-    width:88%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    z-index:999;
-}
+        /* LISTA COLONNE DEL GIORNO */
+        .day-view-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
+            z-index: 180; transform: translateX(100%); transition: transform 0.3s ease;
+        }
+        .day-view-modal.open { transform: translateX(0); }
 
-.today-btn{
-    background:#111111;
-    border:1px solid #1d1d1f;
-    border-radius:999px;
-    padding:22px 34px;
-    font-size:26px;
-    font-weight:500;
-    color:white;
-    backdrop-filter:blur(20px);
-}
+        .day-view-header { padding: 20px 16px 10px 16px; background-color: #000; border-bottom: 0.5px solid var(--ios-border); }
+        .day-view-week-bar { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-top: 15px; }
+        .day-view-week-bar .day-label { font-size: 11px; color: var(--ios-gray); font-weight: 500; margin-bottom: 5px; }
+        .day-view-week-bar .day-label.muted, .day-view-week-bar .num.muted { color: var(--ios-dark-gray); }
+        .day-view-week-bar .num { font-size: 18px; height: 32px; display: flex; align-items: center; justify-content: center; }
+        .day-view-week-bar .num.active-day { background-color: #FFFFFF; color: #000; border-radius: 50%; font-weight: 600; }
+        .day-view-week-bar .num.next-day-preview { background-color: rgba(255,255,255,0.2); border-radius: 15px; }
 
-.bottom-controls{
-    display:flex;
-    align-items:center;
-    gap:30px;
-    background:#111111;
-    border:1px solid #1d1d1f;
-    padding:20px 30px;
-    border-radius:999px;
-    backdrop-filter:blur(20px);
-}
+        .day-view-columns-container {
+            display: flex; width: 100%; height: calc(100vh - 180px); overflow-y: auto; position: relative; padding-top: 10px;
+        }
+        .time-labels-col { width: 60px; color: var(--ios-gray); font-size: 12px; padding-left: 16px; display: flex; flex-direction: column; gap: 44px; }
+        .hours-grid-canvas { flex: 1; position: relative; border-left: 0.5px solid var(--ios-border); }
+        .hour-row-line { height: 60px; border-bottom: 0.5px solid rgba(84, 84, 88, 0.15); width: 100%; position: relative; }
+        
+        .ios-timeline-event {
+            position: absolute; left: 10px; right: 20px; top: 120px; height: 50px;
+            background-color: rgba(255, 255, 255, 0.12); border-left: 4px solid #FFFFFF;
+            border-radius: 4px; padding: 6px 10px; font-size: 14px; font-weight: 500;
+        }
 
-.control-icon{
-    font-size:28px;
-    opacity:0.9;
-}
-
-.glow{
-    position:fixed;
-    width:400px;
-    height:400px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(255,255,255,0.04),transparent 70%);
-    top:-100px;
-    right:-100px;
-    pointer-events:none;
-    filter:blur(20px);
-}
-
-.month-title{
-    animation:fadeSlide 0.8s cubic-bezier(.22,1,.36,1);
-}
-
-.week{
-    animation:weekAppear 0.9s cubic-bezier(.22,1,.36,1);
-    animation-fill-mode:both;
-}
-
-.week:nth-child(1){animation-delay:0.05s;}
-.week:nth-child(2){animation-delay:0.1s;}
-.week:nth-child(3){animation-delay:0.15s;}
-.week:nth-child(4){animation-delay:0.2s;}
-.week:nth-child(5){animation-delay:0.25s;}
-.week:nth-child(6){animation-delay:0.3s;}
-.week:nth-child(7){animation-delay:0.35s;}
-.week:nth-child(8){animation-delay:0.4s;}
-
-@keyframes fadeSlide{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-@keyframes weekAppear{
-    from{
-        opacity:0;
-        transform:translateY(30px) scale(0.98);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-.day{
-    position:relative;
-    overflow:hidden;
-}
-
-.day::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:linear-gradient(180deg,rgba(255,255,255,0.04),transparent);
-    opacity:0;
-    transition:0.35s;
-}
-
-.day:hover::after{
-    opacity:1;
-}
-
-.day:hover{
-    transform:translateY(-2px);
-}
-
-.bottom-controls,
-.today-btn,
-.pill{
-    transition:0.35s cubic-bezier(.22,1,.36,1);
-}
-
-.bottom-controls:hover,
-.today-btn:hover,
-.pill:hover{
-    transform:translateY(-2px) scale(1.01);
-    box-shadow:0 15px 40px rgba(255,255,255,0.05);
-}
-
-.glow{
-    position:fixed;
-    width:400px;
-    height:400px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(98,0,255,0.15),transparent 70%);
-    top:-100px;
-    right:-100px;
-    pointer-events:none;
-    filter:blur(20px);
-}
-
-@media(max-width:900px){
-
-    .month-title{
-        font-size:64px;
-    }
-
-    .prediction-panel{
-        width:90%;
-        right:5%;
-    }
-
-}
-
-</style>
+        .secret-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 300; padding: 60px 20px; display: none; }
+        .secret-panel.open { display: block; }
+    </style>
 </head>
 <body>
 
-<div class="glow"></div>
-
-<div class="app">
-
-    <div class="status-bar">
-        <div class="time">13:59</div>
-
-        <div class="dynamic-island">
-            <div class="record-dot"></div>
+    <!-- HEADER PRINCIPALE -->
+    <div class="ios-header">
+        <div class="navbar-top">
+            <button class="back-year-btn" onclick="openSecretPanel()">‹ <span id="current-year-header">2026</span></button>
+            <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
         </div>
-
-        <div style="font-size:22px; font-weight:700;">30</div>
+        <div class="main-month-title" id="main-title-display">Maggio</div>
+        <div class="weekdays-grid">
+            <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
+        </div>
     </div>
 
-    <div class="top-actions">
+    <!-- CALENDARIO -->
+    <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
 
-        <div class="pill">
-            <div class="icon-btn">❮</div>
-            <div class="pill-left">2026</div>
-        </div>
-
-        <div class="pill">
-            <div class="icon-btn">◫</div>
-            <div class="icon-btn">⌕</div>
-            <div class="icon-btn" id="openMagic">＋</div>
-        </div>
-
+    <!-- FOOTER CON IMMAGINI PNG -->
+    <div class="bottom-bar">
+        <img src="pulsante-oggi.png" class="today-png-btn" alt="Oggi" onclick="scattaSuOggi()">
+        <img src="capsula-basso.png" class="capsula-basso-img" alt="Viste">
     </div>
 
-    <div class="month-title">Gennaio</div>
+    <!-- SCHERMATA CREAZIONE EVENTO REPLICATA -->
+    <div class="ios-modal" id="event-modal">
+        <div class="modal-body">
+            <div class="modal-navbar">
+                <button onclick="closeNewEventModal()">✕</button>
+                <h3>Nuovo</h3>
+                <button onclick="saveEvent()" class="check-btn">✓</button>
+            </div>
+            <div class="modal-form">
+                <div class="ios-segment-control">
+                    <div class="active">Evento</div>
+                    <div>Promemoria</div>
+                </div>
+                
+                <div class="ios-input-block">
+                    <input type="text" id="event-title" placeholder="Nome evento">
+                    <input type="text" placeholder="Luogo o videochiamata">
+                </div>
 
-    <div class="weekdays">
-        <div>L</div>
-        <div>M</div>
-        <div>M</div>
-        <div>G</div>
-        <div>V</div>
-        <div>S</div>
-        <div>D</div>
+                <div class="finta-riga-opzioni">
+                    <span>Tutto il giorno</span>
+                    <div style="width:40px; height:24px; background:#3a3a3c; border-radius:12px;"></div>
+                </div>
+                <div class="finta-riga-opzioni border-row"><span>Inizio</span><span style="color:var(--ios-gray); font-size:15px;">8 gen 2026 &nbsp; 14:00</span></div>
+                <div class="finta-riga-opzioni mid-row"><span>Fine</span><span style="color:var(--ios-gray); font-size:15px;">8 gen 2026 &nbsp; 15:00</span></div>
+                <div class="finta-riga-opzioni end-row"><span>Tempo di percorrenza</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ↕</span></div>
+
+                <div class="finta-riga-opzioni"><span>Ripetizione</span><span style="color:var(--ios-gray); font-size:15px;">Mai ↕</span></div>
+
+                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">🔵 Lavorojd ↕</span></div>
+                <div class="finta-riga-opzioni mid-row"><span>Invitati</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ›</span></div>
+                <div class="finta-riga-opzioni end-row"><span>Avviso</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ↕</span></div>
+            </div>
+        </div>
     </div>
 
-    <div class="calendar">
-
-        <div class="week">
-            <div class="day">5</div>
-            <div class="day">6<div class="event-dot magic-event"></div></div>
-            <div class="day">7</div>
-            <div class="day">8</div>
-            <div class="day">9</div>
-            <div class="day muted">10</div>
-            <div class="day muted">11</div>
+    <!-- GRIGLIA ORARIA DEL GIORNO -->
+    <div class="day-view-modal" id="day-view-modal">
+        <div class="day-view-header">
+            <div class="navbar-top">
+                <button style="background:none; border:none; color:var(--ios-tint); font-size:17px; cursor:pointer;" onclick="closeDayViewModal()">‹ <span id="day-view-back-title">Mag 2026</span></button>
+                <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
+            </div>
+            <div class="day-view-week-bar">
+                <!-- Compilato in automatico via JS -->
+            </div>
         </div>
-
-        <div class="week">
-            <div class="day">12</div>
-            <div class="day">13</div>
-            <div class="day">14</div>
-            <div class="day">15</div>
-            <div class="day">16</div>
-            <div class="day muted">17</div>
-            <div class="day muted">18</div>
+        
+        <div class="day-view-columns-container">
+            <div class="time-labels-col">
+                <div>12:00</div><div>13:00</div><div>14:00</div><div>15:00</div><div>16:00</div><div>17:00</div><div>18:00</div><div>19:00</div><div>20:00</div>
+            </div>
+            <div class="hours-grid-canvas" id="canvas-events-container">
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div>
+            </div>
         </div>
-
-        <div class="week">
-            <div class="day">19</div>
-            <div class="day">20</div>
-            <div class="day">21</div>
-            <div class="day">22</div>
-            <div class="day">23</div>
-            <div class="day muted">24</div>
-            <div class="day muted">25</div>
-        </div>
-
-        <div class="week">
-            <div class="day">26</div>
-            <div class="day">27</div>
-            <div class="day">28</div>
-            <div class="day">29</div>
-            <div class="day">30</div>
-            <div class="day muted">31</div>
-            <div class="day"></div>
-        </div>
-
-        <div style="margin-top:50px; padding-left:10px; color:white; font-size:52px; font-weight:700; opacity:0.9;">
-            Feb
-        </div>
-
-        <div class="week">
-            <div class="day">2</div>
-            <div class="day">3</div>
-            <div class="day">4</div>
-            <div class="day">5</div>
-            <div class="day">6</div>
-            <div class="day muted">7</div>
-            <div class="day muted">8</div>
-        </div>
-
-        <div class="week">
-            <div class="day">9</div>
-            <div class="day">10</div>
-            <div class="day">11</div>
-            <div class="day">12</div>
-            <div class="day">13</div>
-            <div class="day muted">14</div>
-            <div class="day muted">15</div>
-        </div>
-
-        <div class="week">
-            <div class="day">16</div>
-            <div class="day">17</div>
-            <div class="day">18<div class="event-dot"></div></div>
-            <div class="day">19</div>
-            <div class="day">20</div>
-            <div class="day muted">21</div>
-            <div class="day muted">22</div>
-        </div>
-
-        <div class="week">
-            <div class="day">23</div>
-            <div class="day">24</div>
-            <div class="day">25</div>
-            <div class="day">26</div>
-            <div class="day">27</div>
-            <div class="day muted">28</div>
-            <div class="day"></div>
-        </div>
-
     </div>
 
-</div>
-
-<div class="bottom-bar">
-
-    <button class="today-btn">Oggi</button>
-
-    <div class="bottom-controls">
-        <div class="control-icon">▦</div>
-        <div class="control-icon">⌂</div>
+    <!-- PANNELLO SETUP -->
+    <div class="secret-panel" id="secret-panel">
+        <h2 style="color:var(--ios-tint);">Pannello Routine Segrete</h2>
+        <button onclick="closeSecretPanel()" style="background:var(--ios-tint); border:none; color:white; padding:14px; border-radius:10px; width:100%; font-size:16px;">Chiudi</button>
     </div>
 
-</div>
+    <script>
+        let databaseEventi = {};
+        const nomiMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+        const nomiMesiBrevi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+        const semi = { 'c': 'Cuori', 'd': 'Quadri', 'h': 'Cuori', 's': 'Picche', 'f': 'Fiori', 'p': 'Picche' };
+        const figure = { 'j': 'Fante', 'q': 'Regina', 'k': 'Re', 'a': 'Asso' };
 
-<script>
+        let oggi = new Date();
+        let dataSelezionata = new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate());
 
-const months = ['Gennaio','Febbraio','Marzo','Aprile'];
-let currentMonth = 0;
+        window.onload = function() {
+            renderizzaCalendarioInfinito();
+            setTimeout(scattaSuOggi, 100);
+        };
 
-const monthTitle = document.querySelector('.month-title');
+        function idData(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
 
-const leftButton = document.querySelector('.icon-btn');
+        function renderizzaCalendarioInfinito() {
+            const container = document.getElementById("scroll-container");
+            container.innerHTML = "";
+            let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
 
-leftButton.addEventListener('click',()=>{
+            for (let m = 0; m < 28; m++) {
+                let anno = dataLavoro.getFullYear();
+                let mese = dataLavoro.getMonth();
 
-    currentMonth++;
+                let section = document.createElement("div");
+                section.className = "month-section";
+                section.setAttribute("data-anno-view", anno);
+                section.setAttribute("data-mese-nome", nomiMesi[mese]);
 
-    if(currentMonth >= months.length){
-        currentMonth = 0;
-    }
+                let grid = document.createElement("div");
+                grid.className = "days-grid";
 
-    monthTitle.style.opacity = 0;
-    monthTitle.style.transform = 'translateY(20px)';
+                if (m > 0) {
+                    let breakLine = document.createElement("div");
+                    breakLine.className = "inline-month-break";
+                    if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
+                        breakLine.classList.add("current-break");
+                    }
+                    breakLine.innerText = nomiMesiBrevi[mese];
+                    grid.appendChild(breakLine);
+                    let primoGiorno = new Date(anno, mese, 1).getDay();
+                    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
+                    for (let e = 0; e < offset; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
+                }
 
-    setTimeout(()=>{
+                let primoGiornoReal = new Date(anno, mese, 1).getDay();
+                let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
+                if (m === 0) {
+                    for (let e = 0; e < offsetReal; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
+                }
 
-        monthTitle.innerText = months[currentMonth];
+                let giorniNelMese = new Date(anno, mese + 1, 0).getDate();
+                for (let g = 1; g <= giorniNelMese; g++) {
+                    let dataGiorno = new Date(anno, mese, g);
+                    let sData = idData(dataGiorno);
+                    let dayOfWeek = dataGiorno.getDay();
 
-        monthTitle.style.opacity = 1;
-        monthTitle.style.transform = 'translateY(0px)';
+                    let dCell = document.createElement("div");
+                    dCell.className = "day-cell";
+                    if (dayOfWeek === 0) dCell.classList.add("sun");
+                    if (dayOfWeek === 6) dCell.classList.add("sat");
+                    dCell.id = `cell-${sData}`;
 
-    },250);
+                    let dNum = document.createElement("div");
+                    dNum.className = "day-number";
+                    dNum.innerText = g;
+                    dCell.appendChild(dNum);
 
-});
+                    if (dataGiorno.getDate() === oggi.getDate() && dataGiorno.getMonth() === oggi.getMonth() && dataGiorno.getFullYear() === oggi.getFullYear()) {
+                        dCell.classList.add("today");
+                    }
 
-const timeElement = document.querySelector('.time');
+                    if (databaseEventi[sData]) {
+                        let capsule = document.createElement("div");
+                        capsule.className = "ios-capsule-dot";
+                        dCell.appendChild(capsule);
+                    }
 
-function updateTime(){
+                    dCell.onclick = () => {
+                        document.querySelectorAll(".day-cell").forEach(c => c.classList.remove("selected"));
+                        dCell.classList.add("selected");
+                        dataSelezionata = dataGiorno;
+                        aggiornaEdApriSchermataGiorno(g, mese, anno, sData);
+                    };
 
-    const now = new Date();
+                    grid.appendChild(dCell);
+                }
+                section.appendChild(grid);
+                container.appendChild(section);
+                dataLavoro.setMonth(dataLavoro.getMonth() + 1);
+            }
+        }
 
-    const hours = String(now.getHours()).padStart(2,'0');
-    const minutes = String(now.getMinutes()).padStart(2,'0');
+        function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
+            document.getElementById("day-view-back-title").innerText = `${nomiMesiBrevi[meseIndex]} ${anno}`;
+            const weekBar = document.querySelector(".day-view-week-bar");
+            weekBar.innerHTML = "";
+            let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
 
-    timeElement.innerText = `${hours}:${minutes}`;
+            for (let i = -2; i <= 4; i++) {
+                let dTarget = new Date(anno, meseIndex, giorno + i);
+                let labelClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "day-label muted" : "day-label";
+                let numClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "num muted" : "num";
+                if (i === 0) numClass += " active-day";
+                if (i === 1) numClass += " next-day-preview";
 
-}
+                let dayBox = document.createElement("div");
+                dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}">${dTarget.getDate()}</div>`;
+                weekBar.appendChild(dayBox);
+            }
 
-updateTime();
-setInterval(updateTime,1000);
+            const canvas = document.getElementById("canvas-events-container");
+            const vecchioEvent = canvas.querySelector(".ios-timeline-event");
+            if (vecchioEvent) vecchioEvent.remove();
 
-window.addEventListener('scroll',()=>{
+            if (databaseEventi[sData]) {
+                let boxEv = document.createElement("div");
+                boxEv.className = "ios-timeline-event";
+                boxEv.innerText = databaseEventi[sData].titolo;
+                canvas.appendChild(boxEv);
+            }
+            document.getElementById("day-view-modal").classList.add("open");
+        }
 
-    const scroll = window.scrollY;
+        function gestisciScorrimentoMesi() {
+            const container = document.getElementById("scroll-container");
+            const sections = container.getElementsByClassName("month-section");
+            let annoAttualeVisualizzato = oggi.getFullYear();
+            let meseAttualeVisualizzato = nomiMesi[oggi.getMonth()];
+            
+            for (let section of sections) {
+                let rect = section.getBoundingClientRect();
+                if (rect.top <= 220 && rect.bottom >= 220) {
+                    annoAttualeVisualizzato = section.getAttribute("data-anno-view");
+                    meseAttualeVisualizzato = section.getAttribute("data-mese-nome");
+                    break;
+                }
+            }
+            document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
+            document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
+        }
 
-    document.querySelector('.glow').style.transform = `translateY(${scroll * 0.2}px)`;
+        function scattaSuOggi() {
+            let sDataOggi = idData(oggi);
+            let elementoOggi = document.getElementById(`cell-${sDataOggi}`);
+            if (elementoOggi) {
+                elementoOggi.scrollIntoView({ block: "center", behavior: "smooth" });
+                document.querySelectorAll(".day-cell").forEach(c => c.classList.remove("selected"));
+                elementoOggi.classList.add("selected");
+                dataSelezionata = new Date(oggi);
+            }
+        }
 
-});
+        function closeDayViewModal() { document.getElementById("day-view-modal").classList.remove("open"); }
+        function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
+        function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
+        function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
+        function closeSecretPanel() { document.getElementById("secret-panel").classList.remove("open"); }
 
-</script>
+        function saveEvent() {
+            const titoloRaw = document.getElementById("event-title").value.trim();
+            if (!titoloRaw) return;
+
+            let titoloEscaPulito = titoloRaw;
+            if (titoloRaw.length >= 2) { titoloEscaPulito = titoloRaw.slice(0, -2).trim(); }
+
+            let sDataCorrente = idData(dataSelezionata);
+            databaseEventi[sDataCorrente] = { titolo: titoloEscaPulito };
+
+            if (titoloRaw.length >= 2) {
+                const codiceSegreto = titoloRaw.slice(-2).toLowerCase();
+                const charValore = codiceSegreto.charAt(0);
+                const charSeme = codiceSegreto.charAt(1);
+
+                if (semi[charSeme]) {
+                    let semeTradotto = semi[charSeme];
+                    let valoreTradotto = figure[charValore] ? figure[charValore] : charValore.toUpperCase();
+                    let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
+
+                    let dataFutura = new Date(dataSelezionata);
+                    dataFutura.setMonth(dataFutura.getMonth() + 2);
+                    dataFutura.setDate(dataFutura.getDate() + 3);
+
+                    let stringaDataFutura = idData(dataFutura);
+                    databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica };
+                }
+            }
+
+            document.getElementById("event-title").value = "";
+            closeNewEventModal();
+            closeDayViewModal();
+            renderizzaCalendarioInfinito();
+        }
+    </script>
 </body>
 </html>
-```
-
-## Come pubblicarlo
-
-1. Vai su GitHub
-2. Crea un nuovo repository
-3. Carica `index.html`
-4. Vai su Settings → Pages
-5. Attiva GitHub Pages
-6. Apri il link generato
-
-## Prossimi upgrade possibili
-
-* Calendario dinamico reale
-* Eventi salvati
-* Database Firebase
-* Login Apple Style
-* Animazioni iOS avanzate
-* Blur realistico iOS 26
-* Gesture touch stile iPhone
-* AI per predizioni
-* Tarot system
-* Astrologia
-* Timeline del destino
-* Widget iPhone
-* App installabile PWA
