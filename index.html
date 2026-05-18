@@ -8,7 +8,7 @@
         :root {
             --ios-red: #ff453a;
             --ios-gray-text: #8e8e93;
-            --ios-weekend-gray: #48484a; /* Grigio spento per i weekend */
+            --ios-weekend-gray: #48484a;
             --ios-dark-bg: #000000;
             --ios-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
@@ -44,13 +44,14 @@
             flex-direction: column;
         }
 
-        /* --- HEADER FISSO --- */
+        /* --- HEADER FISSO CON SPAZIO PER NOTCH / ISOLA DINAMICA --- */
         .ios-header {
-            padding-top: env(safe-area-inset-top, 44px);
+            /* safe-area-inset-top rileva automaticamente l'altezza della barra di stato su iPhone (circa 47px) */
+            padding-top: env(safe-area-inset-top, 47px); 
             padding-left: 16px;
             padding-right: 16px;
-            padding-bottom: 10px;
-            background-color: rgba(0, 0, 0, 0.9);
+            padding-bottom: 6px;
+            background-color: rgba(0, 0, 0, 0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             position: relative;
@@ -61,7 +62,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            height: 36px;
+            margin-bottom: 10px;
         }
 
         .btn-year-back {
@@ -83,13 +85,17 @@
             margin-right: 4px;
         }
 
-        /* Testo dinamico del mese corrente nell'header */
+        /* Mese centrale nell'header: gestito con opacità fluida */
         .header-center-month {
             font-size: 17px;
             font-weight: 600;
             color: #ffffff;
-            opacity: 0; /* Appare solo quando il titolone scorre via */
-            transition: opacity 0.2s ease;
+            opacity: 0; 
+            pointer-events: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 0.1s linear;
         }
 
         .header-right-icons {
@@ -112,20 +118,21 @@
             stroke-width: 2;
         }
 
-        /* Gestione lettere giorni della settimana */
+        /* Settimana fissa sotto la barra dei comandi */
         .weekdays-bar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             text-align: center;
             font-size: 11px;
             font-weight: 600;
-            padding-top: 5px;
+            padding-top: 4px;
+            padding-bottom: 4px;
         }
-        .weekdays-bar div { color: #ffffff; } /* Feriali bianchi */
+        .weekdays-bar div { color: #ffffff; }
         .weekdays-bar div:nth-child(6), 
-        .weekdays-bar div:nth-child(7) { color: var(--ios-weekend-gray); } /* Sabato e Domenica spenti */
+        .weekdays-bar div:nth-child(7) { color: var(--ios-weekend-gray); }
 
-        /* --- CONTENITORE SCORREVOLE --- */
+        /* --- CONTENITORE SCORREVOLE DEL FLUSSO --- */
         .scroll-container {
             flex: 1;
             overflow-y: scroll;
@@ -137,17 +144,18 @@
         }
 
         .month-block {
-            padding-top: 10px;
+            padding-top: 8px;
         }
 
-        /* Titolo mese gigante */
+        /* Titolo mese grande ad opacità dinamica */
         .month-title {
             font-size: 34px;
             font-weight: 700;
             padding-left: 16px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
             color: #ffffff;
+            will-change: opacity, transform;
         }
 
         .calendar-grid {
@@ -169,7 +177,6 @@
             height: 40px;
         }
 
-        /* Etichetta abbreviata sopra il giorno 1 */
         .month-label-inline {
             position: absolute;
             top: -18px;
@@ -178,7 +185,7 @@
             color: var(--ios-gray-text);
             width: 100%;
             text-align: center;
-            display: none; /* Gestito dinamicamente da JS */
+            display: none;
         }
 
         .day-number {
@@ -188,22 +195,20 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            color: #ffffff; /* Feriali bianchi di base */
+            color: #ffffff;
         }
 
-        /* Colorazione Sabato (6ª colonna) e Domenica (7ª colonna) */
+        /* Disattivazione visiva Sabato e Domenica */
         .day-cell:nth-child(7n-1) .day-number,
         .day-cell:nth-child(7n) .day-number {
             color: var(--ios-weekend-gray);
         }
 
-        /* Oggi resta rosso */
         .day-cell.today .day-number {
             color: var(--ios-red) !important;
             font-weight: 600;
         }
 
-        /* Puntini eventi */
         .dots-container {
             display: flex;
             gap: 3px;
@@ -216,9 +221,8 @@
             border-radius: 50%;
         }
         .dot.purple { background-color: #af52de; }
-        .dot.green { background-color: #34c759; }
 
-        /* --- INTERFACCIA FLUTTUANTE IN BASSO --- */
+        /* --- ELEMENTI IN BASSO FLUTTUANTI --- */
         .floating-footer {
             position: absolute;
             bottom: env(safe-area-inset-bottom, 30px);
@@ -270,14 +274,14 @@
 
     <div id="phone-wrapper">
         
-        <!-- HEADER FISSO -->
-        <header class="ios-header">
+        <!-- HEADER FISSO CON DISTANZIAMENTO STATUR BAR -->
+        <header class="ios-header" id="main-header">
             <div class="header-top">
                 <div class="btn-year-back">
                     <svg width="8" height="14" viewBox="0 0 12 21"><path d="M10.5 19.5L1.5 10.5L10.5 1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <span id="label-year">2026</span>
                 </div>
-                <!-- Titolo mese piccolo centrale (appare durante lo scorrimento) -->
+                
                 <div class="header-center-month" id="header-small-month">Novembre</div>
                 
                 <div class="header-right-icons">
@@ -291,12 +295,12 @@
             </div>
         </header>
 
-        <!-- AREA DI SCORRIMENTO -->
+        <!-- FLUSSO CALENDARIO -->
         <div class="scroll-container" id="scroll-area">
-            <!-- Iniezione dinamica dei mesi -->
+            <!-- Mesi inseriti dinamicamente -->
         </div>
 
-        <!-- FOOTER FLUTTUANTE -->
+        <!-- MENU IN BASSO -->
         <div class="floating-footer">
             <button class="btn-today-floating" id="btn-today">Oggi</button>
             <div class="right-menu-floating">
@@ -314,6 +318,7 @@
         const scrollArea = document.getElementById('scroll-area');
         const labelYear = document.getElementById('label-year');
         const headerSmallMonth = document.getElementById('header-small-month');
+        const mainHeader = document.getElementById('main-header');
         const realToday = new Date();
 
         let startYear = realToday.getFullYear() - 1;
@@ -388,10 +393,9 @@
                 numSpan.innerText = day;
                 cell.appendChild(numSpan);
 
-                // Esempio puntini del tuo screenshot
                 const dotsContainer = document.createElement('div');
                 dotsContainer.classList.add('dots-container');
-                if (day === 8 && month === 11) {
+                if (day === 17 && month === 10) { // Test su Novembre
                     const dot = document.createElement('div');
                     dot.classList.add('dot', 'purple');
                     dotsContainer.appendChild(dot);
@@ -404,15 +408,16 @@
             scrollArea.appendChild(monthBlock);
         }
 
-        // GESTIONE SCORRIMENTO DINAMICO E TRANSIZIONI VISIVE
+        // --- ANIMAZIONE FLUIDA TITOLO GIGANTE / HEADER ---
         scrollArea.addEventListener('scroll', () => {
             const blocks = document.querySelectorAll('.month-block');
             let currentVisibleBlock = null;
+            const headerHeight = mainHeader.offsetHeight;
 
             for (let block of blocks) {
                 const rect = block.getBoundingClientRect();
-                // Identifichiamo il mese dominante nella parte alta dello schermo
-                if (rect.top <= 140 && rect.bottom > 140) {
+                // Determina quale mese sta occupando la sezione attiva sotto l'header
+                if (rect.top <= headerHeight + 20 && rect.bottom > headerHeight + 20) {
                     currentVisibleBlock = block;
                     break;
                 }
@@ -426,25 +431,36 @@
                 labelYear.innerText = year;
                 headerSmallMonth.innerText = monthName;
 
-                // Gestione della dissolvenza del titolo principale nell'header finto
                 const titleElement = currentVisibleBlock.querySelector('.month-title');
                 const titleRect = titleElement.getBoundingClientRect();
 
-                if (titleRect.top < 60) {
-                    headerSmallMonth.style.opacity = "1"; // Mostra mese piccolo al centro
+                // Calcolo della dissolvenza legata alla posizione esatta del titolone rispetto all'header finto
+                const triggerPoint = headerHeight; 
+                const distance = titleRect.top - triggerPoint;
+
+                if (distance <= 0) {
+                    // Il titolo ha impattato l'header finto: scompare quello grande e compare quello piccolo centralmente
+                    titleElement.style.opacity = "0";
+                    headerSmallMonth.style.opacity = "1";
+                } else if (distance > 0 && distance < 40) {
+                    // Sfumatura lineare durante gli ultimi 40 pixel di scorrimento prima del punto di contatto
+                    const ratio = distance / 40;
+                    titleElement.style.opacity = ratio;
+                    headerSmallMonth.style.opacity = 1 - ratio;
                 } else {
-                    headerSmallMonth.style.opacity = "0"; // Nascondi mese piccolo se il titolone è visibile
+                    // Stato iniziale standard
+                    titleElement.style.opacity = "1";
+                    headerSmallMonth.style.opacity = "0";
                 }
 
-                // MOSTRA/NASCONDI SCRITTE ABBREVIATE (Es: "Dic")
-                // Mostra la scritta corta solo sui mesi che non sono quello attualmente in primo piano
+                // Gestione scritte abbreviate ("Dic", "Gen"...) solo per i mesi non focalizzati
                 blocks.forEach(b => {
                     const inlineLabel = b.querySelector('.month-label-inline');
                     if (inlineLabel) {
                         if (b.dataset.monthIndex === monthIndex && b.dataset.year === year) {
-                            inlineLabel.style.display = "none"; // Nascondi nel mese corrente
+                            inlineLabel.style.display = "none";
                         } else {
-                            inlineLabel.style.display = "block"; // Mostra negli altri mesi che passano sotto
+                            inlineLabel.style.display = "block";
                         }
                     }
                 });
