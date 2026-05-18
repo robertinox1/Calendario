@@ -9,12 +9,11 @@
             --ios-bg: #000000;
             --ios-card: #1C1C1E;
             --ios-modal-bg: #151515;
-            --ios-input-bg: #242426;
             --ios-text: #FFFFFF;
             --ios-gray: #8E8E93;
-            --ios-dark-gray: #48484A; 
+            --ios-dark-gray: #3A3A3C; 
             --ios-tint: #FF453A; 
-            --ios-border: rgba(84, 84, 88, 0.45); /* Linea divisoria più evidente */
+            --ios-border: rgba(84, 84, 88, 0.28); /* Linea sottilissima originale di iOS */
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -39,17 +38,16 @@
             width: 100%;
             background-color: var(--ios-bg);
             z-index: 100;
-            padding: 20px 16px 4px 16px;
+            padding: 16px 16px 4px 16px;
         }
 
         .navbar-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 44px;
+            height: 50px;
         }
 
-        /* Anno con la bolla tonda grigia intorno */
         .back-year-btn {
             background-color: var(--ios-card);
             border: none;
@@ -57,7 +55,7 @@
             font-size: 16px;
             cursor: pointer;
             font-weight: 500;
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -76,82 +74,83 @@
         .main-month-title {
             font-size: 34px;
             font-weight: 700;
-            margin: 12px 0 8px 4px;
+            margin: 8px 0 6px 4px;
             color: var(--ios-text);
         }
 
+        /* Intestazione giorni della settimana come da screenshot (piccoli e grigi) */
         .weekdays-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             text-align: center;
             color: var(--ios-gray);
-            font-size: 11px;
-            font-weight: 500;
-            padding-bottom: 6px;
-            border-bottom: 0.5px solid var(--ios-border);
+            font-size: 10px;
+            font-weight: 400;
+            padding-bottom: 8px;
+            letter-spacing: 0.5px;
         }
         
         .weekdays-grid div:nth-child(6), .weekdays-grid div:nth-child(7) {
             color: var(--ios-dark-gray);
         }
 
-        /* VISTA SCORRIMENTO MESI */
+        /* SCORRIMENTO CALENDARIO SENZA RIGHE IN OGNI CELLA */
         .calendar-scroll-view {
             height: 100vh;
             overflow-y: scroll;
-            padding-top: 135px;
+            padding-top: 130px;
             padding-bottom: 120px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
 
         .month-section { 
-            padding: 0 16px 15px 16px; 
+            padding: 0 16px 10px 16px; 
         }
 
         .days-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 16px;
+            row-gap: 12px; /* Spaziatura verticale tra i numeri dallo screenshot */
         }
 
-        /* CELLA GIORNO E CARATTERISTICHE DEI NUMERI */
+        /* Cella numero pulita (senza bordi sotto) */
         .day-cell {
             position: relative;
             text-align: center;
-            font-size: 16px; /* Numeri più piccoli */
-            font-weight: 700; /* Carattere in Grassetto */
-            height: 50px;
+            font-size: 20px; /* Dimensione calibrata sulla foto */
+            font-weight: 400; 
+            height: 46px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             cursor: pointer;
         }
 
         .day-number {
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
         }
 
-        .day-cell.sat, .day-cell.sun { color: var(--ios-dark-gray); }
+        .day-cell.sat, .day-cell.sun { color: var(--ios-gray); opacity: 0.6; } /* Sabato e Domenica spenti */
 
         .day-cell.selected .day-number { background-color: #2C2C2E; color: #fff; }
-        .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
+        .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 600; }
 
-        /* LINEE ORIZZONTALI DIVISORIE PIÙ EVIDENTI TRA LE RIGHE */
+        /* LA VERA RIGA INTERRUZIONE MESE DELLO SCREENSHOT */
         .inline-month-break {
             grid-column: 1 / span 7;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--ios-text);
-            padding: 14px 0 6px 4px;
-            border-bottom: 0.8px solid var(--ios-border); /* Linea marcata */
-            margin-bottom: 8px;
+            padding: 16px 0 6px 4px;
+            border-bottom: 0.5px solid var(--ios-border); /* La linea orizzontale unica sotto il nome mese */
+            margin-bottom: 4px;
             text-align: left;
         }
         .inline-month-break.current-break { color: var(--ios-tint); }
@@ -162,10 +161,10 @@
             background-color: #FFFFFF;
             border-radius: 50%;
             position: absolute;
-            bottom: 2px;
+            bottom: -2px;
         }
 
-        /* FOOTER CON IMMAGINI */
+        /* FOOTER */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -192,7 +191,7 @@
         .today-png-btn { height: 44px; }
         .capsula-basso-img { height: 44px; }
 
-        /* SCHERMATA CREAZIONE PROMEMORIA CON RIGHE REALI */
+        /* SCHERMATA CREAZIONE EVENTO */
         .ios-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 250; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
@@ -206,26 +205,16 @@
         }
         .ios-modal.open .modal-body { transform: translateY(0); }
 
-        /* Header della modale con tasti tondi grigi */
         .modal-navbar {
             display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 0.5px solid var(--ios-border);
         }
         
         .modal-navbar button { 
-            background-color: var(--ios-card); 
-            border: none; 
-            font-size: 16px; 
-            color: var(--ios-gray); 
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: var(--ios-card); border: none; font-size: 20px; color: #FFFFFF; cursor: pointer;
+            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
         }
-        .modal-navbar button.check-btn { color: #fff; font-weight: 600; }
-        .modal-navbar h3 { margin: 0; font-size: 17px; font-weight: 600; color: #fff; }
+        .modal-navbar button.check-btn { color: var(--ios-tint); font-weight: 700; }
+        .modal-navbar h3 { margin: 0; font-size: 18px; font-weight: 600; color: #fff; }
 
         .modal-form { padding: 16px; overflow-y: auto; height: calc(100% - 60px); }
         
@@ -250,22 +239,11 @@
             background-color: var(--ios-card); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
             display: flex; justify-content: space-between; font-size: 17px; color: #fff; align-items: center;
         }
-        .finta-riga-opzioni.border-row {
-            border-radius: 12px 12px 0 0;
-            margin-bottom: 0;
-            border-bottom: 0.5px solid var(--ios-border);
-        }
-        .finta-riga-opzioni.mid-row {
-            border-radius: 0;
-            margin-bottom: 0;
-            border-bottom: 0.5px solid var(--ios-border);
-        }
-        .finta-riga-opzioni.end-row {
-            border-radius: 0 0 12px 12px;
-            margin-bottom: 18px;
-        }
+        .finta-riga-opzioni.border-row { border-radius: 12px 12px 0 0; margin-bottom: 0; border-bottom: 0.5px solid var(--ios-border); }
+        .finta-riga-opzioni.mid-row { border-radius: 0; margin-bottom: 0; border-bottom: 0.5px solid var(--ios-border); }
+        .finta-riga-opzioni.end-row { border-radius: 0 0 12px 12px; margin-bottom: 18px; }
 
-        /* LISTA COLONNE DEL GIORNO */
+        /* SCHERMATA DETTAGLIO GIORNO */
         .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
@@ -306,22 +284,22 @@
             <button class="back-year-btn" onclick="openSecretPanel()">‹ <span id="current-year-header">2026</span></button>
             <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
         </div>
-        <div class="main-month-title" id="main-title-display">Maggio</div>
+        <div class="main-month-title" id="main-title-display">Novembre</div>
         <div class="weekdays-grid">
             <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
     </div>
 
-    <!-- CALENDARIO -->
+    <!-- CALENDARIO INTERFACCIA REALE RIGIDA -->
     <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
 
-    <!-- FOOTER CON IMMAGINI PNG -->
+    <!-- FOOTER -->
     <div class="bottom-bar">
         <img src="pulsante-oggi.png" class="today-png-btn" alt="Oggi" onclick="scattaSuOggi()">
         <img src="capsula-basso.png" class="capsula-basso-img" alt="Viste">
     </div>
 
-    <!-- SCHERMATA CREAZIONE EVENTO REPLICATA -->
+    <!-- SCHERMATA CREAZIONE EVENTO -->
     <div class="ios-modal" id="event-modal">
         <div class="modal-body">
             <div class="modal-navbar">
@@ -350,23 +328,21 @@
 
                 <div class="finta-riga-opzioni"><span>Ripetizione</span><span style="color:var(--ios-gray); font-size:15px;">Mai ↕</span></div>
 
-                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">🔵 Lavorojd ↕</span></div>
+                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">🔵 Lavoro ↕</span></div>
                 <div class="finta-riga-opzioni mid-row"><span>Invitati</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ›</span></div>
                 <div class="finta-riga-opzioni end-row"><span>Avviso</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ↕</span></div>
             </div>
         </div>
     </div>
 
-    <!-- GRIGLIA ORARIA DEL GIORNO -->
+    <!-- GRIGLIA DETTAGLIO GIORNO -->
     <div class="day-view-modal" id="day-view-modal">
         <div class="day-view-header">
             <div class="navbar-top">
                 <button style="background:none; border:none; color:var(--ios-tint); font-size:17px; cursor:pointer;" onclick="closeDayViewModal()">‹ <span id="day-view-back-title">Mag 2026</span></button>
                 <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
             </div>
-            <div class="day-view-week-bar">
-                <!-- Compilato in automatico via JS -->
-            </div>
+            <div class="day-view-week-bar"></div>
         </div>
         
         <div class="day-view-columns-container">
@@ -418,9 +394,18 @@
                 section.setAttribute("data-anno-view", anno);
                 section.setAttribute("data-mese-nome", nomiMesi[mese]);
 
+                let title = document.createElement("div");
+                title.className = "month-title";
+                title.innerText = nomiMesi[mese];
+                section.appendChild(title);
+
                 let grid = document.createElement("div");
                 grid.className = "days-grid";
 
+                let primoGiornoReal = new Date(anno, mese, 1).getDay();
+                let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
+
+                // STRUTTURA SCREENSHOT: La riga con il mese abbreviato e la linea orizzontale sotto di lui
                 if (m > 0) {
                     let breakLine = document.createElement("div");
                     breakLine.className = "inline-month-break";
@@ -429,15 +414,13 @@
                     }
                     breakLine.innerText = nomiMesiBrevi[mese];
                     grid.appendChild(breakLine);
-                    let primoGiorno = new Date(anno, mese, 1).getDay();
-                    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
-                    for (let e = 0; e < offset; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
                 }
 
-                let primoGiornoReal = new Date(anno, mese, 1).getDay();
-                let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
-                if (m === 0) {
-                    for (let e = 0; e < offsetReal; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
+                // Genera i blocchi vuoti per allineare i giorni della settimana
+                for (let e = 0; e < offsetReal; e++) { 
+                    let empty = document.createElement("div");
+                    empty.className = "day-cell"; 
+                    grid.appendChild(empty); 
                 }
 
                 let giorniNelMese = new Date(anno, mese + 1, 0).getDate();
