@@ -71,7 +71,15 @@
             cursor: pointer;
         }
 
-        /* Lettere dei giorni feriali in bianco */
+        /* IL TITOLO GRANDE DEL MESE RIPRISTINATO */
+        .main-month-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin: 8px 0 6px 4px;
+            color: var(--ios-text);
+        }
+
+        /* Lettere dei giorni feriali accese */
         .weekdays-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -84,19 +92,15 @@
             margin-top: 10px;
         }
         
-        .weekdays-grid div {
-            padding: 0 4px; /* Allineamento spaziature orizzontali */
-        }
-        
         .weekdays-grid div:nth-child(6), .weekdays-grid div:nth-child(7) {
             color: var(--ios-dark-gray); 
         }
 
-        /* CALENDARIO A SCORRIMENTO VERTICALE CONTINUO */
+        /* CALENDARIO A SCORRIMENTO VERTICALE */
         .calendar-scroll-view {
             height: 100vh;
             overflow-y: scroll;
-            padding-top: 110px;
+            padding-top: 140px; /* Adattato per il titolo grande */
             padding-bottom: 120px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
@@ -110,26 +114,26 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             row-gap: 20px; 
-            column-gap: 8px; /* Aumentato lo spazio orizzontale tra le colonne di numeri */
+            column-gap: 8px;
         }
 
-        /* Cella giorno ricalibrata sui margini dello screenshot */
+        /* Cella giorno con linee orizzontali continue e spesse */
         .day-cell {
             position: relative;
             text-align: center;
-            font-size: 16.5px; /* Numeri leggermente più piccoli per lasciare più spazio */
+            font-size: 16.5px; 
             font-weight: 700; 
-            height: 48px;
+            height: 52px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-end; 
+            padding-bottom: 6px;
             cursor: pointer;
-            border-bottom: 0.8px solid var(--ios-border); 
+            border-bottom: 1.2px solid var(--ios-border); 
         }
 
         .day-number {
-            width: 32px; /* Area circolare più compatta per aumentare il vuoto orizzontale */
+            width: 32px; 
             height: 32px;
             display: flex;
             align-items: center;
@@ -142,18 +146,17 @@
         .day-cell.selected .day-number { background-color: #2C2C2E; color: #fff; }
         .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
 
-        /* LA RIGA DEL MESE ABBREVIATO COMPATTA */
-        .inline-month-break {
-            grid-column: 1 / span 7;
-            font-size: 26px; 
+        /* Mese abbreviato riposizionato sopra il giorno 1 */
+        .month-start-label {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 15px; 
             font-weight: 700; 
-            color: var(--ios-text);
-            padding: 24px 0 6px 4px; 
-            border-bottom: 0.8px solid var(--ios-border); 
-            margin-bottom: 4px;
-            text-align: left;
+            color: #FFFFFF;
+            text-transform: capitalize;
         }
-        .inline-month-break.current-break { color: var(--ios-tint); }
+        .month-start-label.current-break { color: var(--ios-tint); }
 
         .ios-capsule-dot {
             width: 6px;
@@ -161,7 +164,8 @@
             background-color: #FFFFFF;
             border-radius: 50%;
             position: absolute;
-            bottom: 2px;
+            bottom: -3px; 
+            z-index: 10;
         }
 
         /* FOOTER */
@@ -284,12 +288,14 @@
             <button class="back-year-btn" onclick="openSecretPanel()">‹ <span id="current-year-header">2026</span></button>
             <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
         </div>
+        <!-- TITOLO GRANDE DINAMICO COMPLETAMENTE RIPRISTINATO -->
+        <div class="main-month-title" id="main-title-display">Maggio</div>
         <div class="weekdays-grid">
             <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
     </div>
 
-    <!-- CALENDARIO INTERFACCIA REALE RIGIDA CONTINUA -->
+    <!-- CALENDARIO INTERFACCIA RIGIDA CONTINUA -->
     <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
 
     <!-- FOOTER -->
@@ -391,22 +397,13 @@
                 let section = document.createElement("div");
                 section.className = "month-section";
                 section.setAttribute("data-anno-view", anno);
+                section.setAttribute("data-mese-nome", nomiMesi[mese]);
 
                 let grid = document.createElement("div");
                 grid.className = "days-grid";
 
                 let primoGiornoReal = new Date(anno, mese, 1).getDay();
                 let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
-
-                if (m > 0) {
-                    let breakLine = document.createElement("div");
-                    breakLine.className = "inline-month-break";
-                    if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
-                        breakLine.classList.add("current-break");
-                    }
-                    breakLine.innerText = nomiMesiBrevi[mese];
-                    grid.appendChild(breakLine);
-                }
 
                 for (let e = 0; e < offsetReal; e++) { 
                     let empty = document.createElement("div");
@@ -425,6 +422,16 @@
                     if (dayOfWeek === 0) dCell.classList.add("sun");
                     if (dayOfWeek === 6) dCell.classList.add("sat");
                     dCell.id = `cell-${sData}`;
+
+                    if (g === 1) {
+                        let shortLabel = document.createElement("div");
+                        shortLabel.className = "month-start-label";
+                        if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
+                            shortLabel.classList.add("current-break");
+                        }
+                        shortLabel.innerText = nomiMesiBrevi[mese];
+                        dCell.appendChild(shortLabel);
+                    }
 
                     let dNum = document.createElement("div");
                     dNum.className = "day-number";
@@ -487,22 +494,25 @@
             document.getElementById("day-view-modal").classList.add("open");
         }
 
+        // AGGIORNA AL VOLO IL NOME DEL MESE GRANDE E L'ANNO DURANTE LO SCORRIMENTO
         function gestisciScorrimentoMesi() {
             const container = document.getElementById("scroll-container");
             const sections = container.getElementsByClassName("month-section");
             let annoAttualeVisualizzato = oggi.getFullYear();
+            let meseAttualeVisualizzato = nomiMesi[oggi.getMonth()];
             
             for (let section of sections) {
                 let rect = section.getBoundingClientRect();
-                if (rect.top <= 220 && rect.bottom >= 220) {
+                if (rect.top <= 250 && rect.bottom >= 250) {
                     annoAttualeVisualizzato = section.getAttribute("data-anno-view");
+                    meseAttualeVisualizzato = section.getAttribute("data-mese-nome");
                     break;
                 }
             }
             document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
+            document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
         }
 
-        // AGGIORNATO: Scatto su oggi calcola l'allineamento orizzontale esatto
         function scattaSuOggi() {
             let sDataOggi = idData(oggi);
             let elementoOggi = document.getElementById(`cell-${sDataOggi}`);
