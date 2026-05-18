@@ -2,81 +2,118 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calendario</title>
     <style>
-        /* --- STILE GRAFICO iOS (MODALITÀ SCURA) --- */
         :root {
             --ios-bg: #000000;
             --ios-card: #1C1C1E;
+            --ios-card-bg: #2C2C2E;
             --ios-text: #FFFFFF;
             --ios-gray: #8E8E93;
-            --ios-tint: #FF453A; /* Rosso iOS per evidenziare */
-            --ios-border: #2C2C2E;
+            --ios-tint: #FF453A; 
+            --ios-border: #222224;
+            --ios-today: #FF453A;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Helvetica, Arial, sans-serif;
             background-color: var(--ios-bg);
             color: var(--ios-text);
             margin: 0;
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
+            overflow: hidden;
+            height: 100vh;
         }
 
-        /* Nav Bar Superiore */
-        .ios-navbar {
+        /* HEADER FISSO iOS */
+        .ios-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            padding-top: env(safe-area-inset-top, 20px);
+            border-bottom: 0.5px solid var(--ios-border);
+        }
+
+        .navbar-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 40px 20px 10px 20px;
-            background-color: var(--ios-bg);
-            border-bottom: 1px solid var(--ios-border);
+            padding: 10px 16px;
         }
 
-        .ios-navbar h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
+        .navbar-top .left-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
-        .ios-navbar button {
+        .navbar-top button {
             background: none;
             border: none;
             color: var(--ios-tint);
-            font-size: 22px;
+            font-size: 17px;
             cursor: pointer;
-            padding: 5px 10px;
+            padding: 0;
         }
 
-        /* Griglia Giorni */
-        .calendar-container {
-            padding: 10px;
+        .navbar-top button.grid-icon {
+            font-size: 20px;
         }
 
-        .weekdays {
+        .weekdays-header {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             text-align: center;
             color: var(--ios-gray);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            margin-bottom: 10px;
+            padding-bottom: 6px;
             text-transform: uppercase;
         }
 
-        .calendar-grid {
+        /* CONTENITORE SCORRIMENTO VERTICALE INFINITO */
+        .calendar-scroll-view {
+            height: 100vh;
+            overflow-y: scroll;
+            padding-top: calc(85px + env(safe-area-inset-top, 20px));
+            padding-bottom: 100px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .month-section {
+            padding: 0 12px 25px 12px;
+        }
+
+        .month-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 12px 8px;
+            color: var(--ios-text);
+        }
+
+        .days-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 15px;
+            row-gap: 14px;
         }
 
         .day-cell {
             position: relative;
             text-align: center;
-            font-size: 18px;
-            height: 40px;
+            font-size: 19px;
+            font-weight: 400;
+            height: 44px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -84,261 +121,410 @@
             cursor: pointer;
         }
 
-        /* Il Pallino dell'Evento di iOS */
+        .day-number {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .day-cell.selected .day-number {
+            background-color: #333335;
+        }
+
+        .day-cell.today .day-number {
+            background-color: var(--ios-today);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Pallino evento sotto il numero */
         .ios-dot {
             width: 6px;
             height: 6px;
             background-color: var(--ios-gray);
             border-radius: 50%;
             position: absolute;
-            bottom: 2px;
+            bottom: -2px;
         }
 
-        /* Lista Eventi in Basso */
-        .events-list-container {
-            margin-top: 20px;
-            padding: 20px;
-            border-top: 1px solid var(--ios-border);
+        .day-cell.today .ios-dot {
+            background-color: #fff;
+        }
+
+        /* LISTA EVENTI IN BASSO STILE iOS 26 */
+        .events-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30vh;
             background-color: var(--ios-bg);
-            min-height: 150px;
+            border-top: 0.5px solid var(--ios-border);
+            padding: 16px;
+            overflow-y: auto;
+            z-index: 90;
         }
 
-        .event-item {
+        .event-card {
             background-color: var(--ios-card);
-            padding: 12px;
-            border-radius: 8px;
+            border-left: 4px solid var(--ios-tint);
+            padding: 12px 16px;
+            border-radius: 4px;
             margin-bottom: 10px;
-            font-size: 16px;
-            display: flex;
-            gap: 15px;
         }
 
-        .event-item strong {
+        .event-card .time {
+            font-size: 12px;
             color: var(--ios-tint);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .event-card .title {
+            font-size: 15px;
+            font-weight: 500;
         }
 
         .no-events {
             color: var(--ios-gray);
-            font-size: 15px;
             text-align: center;
-            margin-top: 20px;
+            font-size: 15px;
+            margin-top: 30px;
         }
 
-        /* Pop-up Modali (Inserimento e Menu Segreto) */
-        .modal {
+        /* REPLICA SCHERMATA "NUOVO EVENTO" DI IPHONE */
+        .ios-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: var(--ios-card);
-            padding: 20px;
-            border-radius: 14px;
-            width: 80%;
-            max-width: 300px;
-            text-align: center;
-            border: 1px solid var(--ios-border);
-        }
-
-        .modal-content input {
-            width: 90%;
-            padding: 10px;
-            margin: 15px 0;
             background-color: var(--ios-bg);
-            border: 1px solid var(--ios-border);
-            color: var(--ios-text);
-            border-radius: 8px;
-            font-size: 16px;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.15, 0.45, 0.05, 1);
+            padding-top: env(safe-area-inset-top, 20px);
         }
 
-        .modal-buttons {
+        .ios-modal.open {
+            transform: translateY(0);
+        }
+
+        .modal-navbar {
             display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 0.5px solid var(--ios-border);
         }
 
-        .modal-buttons button {
+        .modal-navbar h3 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .modal-navbar button {
             background: none;
             border: none;
             color: var(--ios-tint);
-            font-size: 16px;
+            font-size: 17px;
             cursor: pointer;
-            font-weight: 500;
         }
 
-        .modal-buttons .add-bold {
-            font-weight: 700;
+        .modal-form {
+            padding: 18px 16px;
         }
 
-        .secret-bg {
-            background-color: #111111;
-            border: 2px dashed #333;
+        .input-group {
+            background-color: var(--ios-card);
+            border-radius: 10px;
+            padding: 4px 16px;
+            margin-bottom: 20px;
         }
 
-        .hidden {
-            display: none !important;
+        .input-group input, .input-group textarea {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 17px;
+            padding: 12px 0;
+            outline: none;
         }
+
+        .input-group input::placeholder, .input-group textarea::placeholder {
+            color: #48484A;
+        }
+
+        .input-group input {
+            border-bottom: 0.5px solid var(--ios-border);
+        }
+
+        .input-group textarea {
+            height: 100px;
+            resize: none;
+            font-family: inherit;
+        }
+
+        /* PANNELLO ROUTINE SEGRETE */
+        .secret-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 300;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .secret-panel.open { display: block; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- INTERFACCIA CALENDARIO -->
-    <div class="ios-navbar">
-        <!-- Cliccando sulle griglie si apre il pannello segreto delle routine -->
-        <button id="grid-btn" onclick="toggleMenuSegreto()">☰</button>
-        <h2 id="month-year-display">Maggio 2026</h2>
-        <button id="add-event-btn" onclick="apriModaleNuovoEvento()">+</button>
-    </div>
-
-    <div class="calendar-container">
-        <div class="weekdays">
+    <!-- NAVBAR FISSA SUPERIORE -->
+    <div class="ios-header">
+        <div class="navbar-top">
+            <div class="left-actions">
+                <button class="grid-icon" onclick="openSecretPanel()">☰</button>
+                <button style="font-weight:600;">Oggi</button>
+            </div>
+            <button onclick="openNewEventModal()">＋</button>
+        </div>
+        <div class="weekdays-header">
             <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
-        <div class="calendar-grid" id="days-grid"></div>
     </div>
 
-    <div class="events-list-container" id="events-list">
-        <p class="no-events">Nessun evento</p>
+    <!-- VISTA CALENDARIO A SCORRIMENTO VERTICALE -->
+    <div class="calendar-scroll-view" id="scroll-container" onscroll="handleScroll()">
+        <!-- I mesi verranno generati dinamicamente via JS -->
     </div>
 
-    <!-- MODALE INSERIMENTO EVENTO (ESCA) -->
-    <div id="event-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3 style="margin-top:0;">Nuovo evento</h3>
-            <input type="text" id="event-title" placeholder="Titolo promemoria">
-            <div class="modal-buttons">
-                <button onclick="chiudiModale()">Annulla</button>
-                <button onclick="salvaNuovoEvento()" class="add-bold">Aggiungi</button>
+    <!-- PANNELLO DETTAGLIO EVENTI IN BASSO -->
+    <div class="events-panel" id="events-panel">
+        <div class="no-events">Nessun evento</div>
+    </div>
+
+    <!-- REPLICA SCHERMATA CREAZIONE EVENTO DI APPLE iOS -->
+    <div class="ios-modal" id="event-modal">
+        <div class="modal-navbar">
+            <button onclick="closeNewEventModal()">Annulla</button>
+            <h3>Nuovo evento</h3>
+            <button onclick="saveEvent()" style="font-weight:600;">Aggiungi</button>
+        </div>
+        <div class="modal-form">
+            <div class="input-group">
+                <input type="text" id="event-title" placeholder="Titolo">
+                <input type="text" id="event-location" placeholder="Posizione o videochiamata">
+            </div>
+            <div class="input-group">
+                <textarea id="event-notes" placeholder="Note (Metti il codice della carta qui alla fine es. 6d)"></textarea>
             </div>
         </div>
     </div>
 
-    <!-- PAGINA SEGRETA DELLE ROUTINE (ATTIVATA DALLA GRIGLIA) -->
-    <div id="secret-panel" class="modal hidden">
-        <div class="modal-content secret-bg">
-            <h3 style="color: #FF453A; margin-top:0;">Pannello Setup</h3>
-            <p style="font-size: 14px; color: #8E8E93;">Qui puoi gestire le routine magiche dell'applicazione.</p>
-            <p style="font-size: 13px; text-align: left; background: #222; padding: 8px; border-radius: 5px;">
-                <strong>Routine 1 attiva:</strong><br>
-                Input automatico su inserimento testo.<br>
-                Regola: -2 mesi, -3 giorni dall'obiettivo (equivale a generare l'evento finale +2 mesi e +3 giorni dopo).
-            </p>
-            <button onclick="toggleMenuSegreto()" style="background: none; border: none; color: #FFF; font-size: 16px; margin-top: 15px; cursor: pointer; text-decoration: underline;">Chiudi</button>
+    <!-- SCHERMATA SEGRETA DELLE ROUTINE (ATTIVATA DA ☰) -->
+    <div class="secret-panel" id="secret-panel">
+        <h2 style="color:var(--ios-tint);">Pannello Magic Setup</h2>
+        <p style="color:var(--ios-gray);">Configurazione delle routine dell'applicazione.</p>
+        <div style="background:#1C1C1E; padding:15px; border-radius:10px; margin-top:20px;">
+            <strong>Metodo Attivo:</strong><br>
+            Note End-Hook input.<br>
+            Algoritmo: +2 Mesi e +3 Giorni automatici.
         </div>
+        <button onclick="closeSecretPanel()" style="background:var(--ios-tint); border:none; color:white; padding:12px 24px; border-radius:8px; margin-top:30px; font-size:16px; width:100%;">Chiudi Pannello</button>
     </div>
 
-    <!-- LOGICA IN JAVASCRIPT -->
     <script>
-        // Database locale temporaneo degli eventi
-        let eventiSalvati = {}; 
-
-        // Mappatura semi in italiano
-        const semi = { 'c': 'Cuori', 'd': 'Quadri', 'h': 'Cuori', 's': 'Picche', 'f': 'Fiori', 'p': 'Picche' }; 
-
-        // Data iniziale di simulazione dell'app (Maggio 2026)
-        let dataSelezionata = new Date(2026, 4, 18); 
-
+        let databaseEventi = {};
         const nomiMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+        const semi = { 'c': 'Cuori', 'd': 'Quadri', 'h': 'Cuori', 's': 'Picche', 'f': 'Fiori', 'p': 'Picche' };
+        const figure = { 'j': 'Fante', 'q': 'Regina', 'k': 'Re', 'a': 'Asso' };
+
+        // Data corrente reale
+        let oggi = new Date();
+        let dataSelezionata = new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate());
+        let stringaGiornoSelezionato = idData(dataSelezionata);
+
+        // Generiamo i mesi da visualizzare nello scorrimento (6 mesi prima e 12 mesi dopo oggi)
+        let annoPartenza = oggi.getFullYear();
+        let mesePartenza = oggi.getMonth() - 6;
 
         window.onload = function() {
-            renderizzaCalendario();
+            renderizzaMesiInfiniti();
+            selezionaGiornoInInterfaccia(document.getElementById(`cell-${stringaGiornoSelezionato}`), dataSelezionata);
+            aggiornaListaEventi();
         };
 
-        function renderizzaCalendario() {
-            document.getElementById("month-year-display").innerText = `${nomiMesi[dataSelezionata.getMonth()]} ${dataSelezionata.getFullYear()}`;
-            const grid = document.getElementById("days-grid");
-            grid.innerHTML = "";
+        function idData(d) {
+            return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+        }
 
-            // Genera una griglia fissa di 31 giorni per il test visivo
-            for (let i = 1; i <= 31; i++) {
-                let daySquare = document.createElement("div");
-                daySquare.className = "day-cell";
-                daySquare.innerText = i;
+        // CREAZIONE DELLO SCORRIMENTO VERTICALE STILE APPLE
+        function renderizzaMesiInfiniti() {
+            const container = document.getElementById("scroll-container");
+            container.innerHTML = "";
 
-                let dataStringa = `${dataSelezionata.getFullYear()}-${dataSelezionata.getMonth()}-${i}`;
+            let dataLavoro = new Date(annoPartenza, mesePartenza, 1);
 
-                // Se c'è un evento associato, inserisce il pallino grigio
-                if (eventiSalvati[dataStringa]) {
-                    let dot = document.createElement("div");
-                    dot.className = "ios-dot";
-                    daySquare.appendChild(dot);
+            // Genera 18 mesi totali da scorrere in verticale
+            for (let m = 0; m < 18; m++) {
+                let annoAttuale = dataLavoro.getFullYear();
+                let meseAttuale = dataLavoro.getMonth();
+
+                let section = document.createElement("div");
+                section.className = "month-section";
+
+                let title = document.createElement("div");
+                title.className = "month-title";
+                title.innerText = `${nomiMesi[meseAttuale]} ${annoAttuale}`;
+                section.appendChild(title);
+
+                let grid = document.createElement("div");
+                grid.className = "days-grid";
+
+                // Calcolo spaziatura primo giorno del mese (Lunedì=0, Domenica=6)
+                let primoGiornoSettimana = new Date(annoAttuale, meseAttuale, 1).getDay();
+                let offset = primoGiornoSettimana === 0 ? 6 : primoGiornoSettimana - 1;
+
+                for (let e = 0; e < offset; e++) {
+                    let empty = document.createElement("div");
+                    grid.appendChild(empty);
                 }
 
-                daySquare.onclick = () => selezionaGiorno(i, dataStringa);
-                grid.appendChild(daySquare);
+                // Genera i giorni effettivi del mese
+                let giorniNelMese = new Date(annoAttuale, meseAttuale + 1, 0).getDate();
+                for (let g = 1; g <= giorniNelMese; g++) {
+                    let dCell = document.createElement("div");
+                    dCell.className = "day-cell";
+                    
+                    let dataQuestoGiorno = new Date(annoAttuale, meseAttuale, g);
+                    let sData = idData(dataQuestoGiorno);
+                    dCell.id = `cell-${sData}`;
+
+                    let dNum = document.createElement("div");
+                    dNum.className = "day-number";
+                    dNum.innerText = g;
+                    dCell.appendChild(dNum);
+
+                    // Controlla se è oggi
+                    if (dataQuestoGiorno.getDate() === oggi.getDate() && dataQuestoGiorno.getMonth() === oggi.getMonth() && dataQuestoGiorno.getFullYear() === oggi.getFullYear()) {
+                        dCell.classList.add("today");
+                    }
+
+                    // Click per selezionare il giorno
+                    dCell.onclick = (e) => {
+                        e.stopPropagation();
+                        selezionaGiornoInInterfaccia(dCell, dataQuestoGiorno);
+                    };
+
+                    grid.appendChild(dCell);
+                }
+
+                section.appendChild(grid);
+                container.appendChild(section);
+
+                dataLavoro.setMonth(dataLavoro.getMonth() + 1);
             }
         }
 
-        function selezionaGiorno(giorno, dataStringa) {
-            const listContainer = document.getElementById("events-list");
-            listContainer.innerHTML = "";
+        function selezionaGiornoInInterfaccia(elemento, dataOggetto) {
+            document.querySelectorAll(".day-cell").forEach(c => c.classList.remove("selected"));
+            if(elemento) elemento.classList.add("selected");
+            
+            dataSelezionata = new Date(dataOggetto);
+            stringaGiornoSelezionato = idData(dataSelezionata);
+            aggiornaListaEventi();
+        }
 
-            if (eventiSalvati[dataStringa]) {
-                eventiSalvati[dataStringa].forEach(ev => {
-                    let item = document.createElement("div");
-                    item.className = "event-item";
-                    item.innerHTML = `<strong>${ev.ora}</strong> <span>${ev.titolo}</span>`;
-                    listContainer.appendChild(item);
+        // AGGIORNA I PALLINI E LA LISTA IN BASSO
+        function aggiornaListaEventi() {
+            const panel = document.getElementById("events-panel");
+            panel.innerHTML = "";
+
+            if (databaseEventi[stringaGiornoSelezionato] && databaseEventi[stringaGiornoSelezionato].length > 0) {
+                databaseEventi[stringaGiornoSelezionato].forEach(ev => {
+                    let card = document.createElement("div");
+                    card.className = "event-card";
+                    card.innerHTML = `<div class="time">12:00</div><div class="title">${ev.titolo}</div>`;
+                    panel.appendChild(card);
                 });
             } else {
-                listContainer.innerHTML = `<p class="no-events">Nessun evento per il giorno ${giorno}</p>`;
+                panel.innerHTML = `<div class="no-events">Nessun evento</div>`;
             }
-            
-            dataSelezionata.setDate(giorno);
+
+            // Aggiorna visivamente tutti i pallini del calendario
+            document.querySelectorAll(".day-cell").forEach(cell => {
+                let id = cell.id.replace("cell-", "");
+                let dot = cell.querySelector(".ios-dot");
+                if (databaseEventi[id] && databaseEventi[id].length > 0) {
+                    if (!dot) {
+                        let newDot = document.createElement("div");
+                        newDot.className = "ios-dot";
+                        cell.appendChild(newDot);
+                    }
+                } else {
+                    if (dot) dot.remove();
+                }
+            });
         }
 
-        function apriModaleNuovoEvento() { document.getElementById("event-modal").classList.remove("hidden"); }
-        function chiudiModale() { document.getElementById("event-modal").classList.add("hidden"); }
-        function toggleMenuSegreto() { document.getElementById("secret-panel").classList.toggle("hidden"); }
+        // FUNZIONI APERTURA SCHERMATE
+        function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
+        function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
+        function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
+        function closeSecretPanel() { document.getElementById("secret-panel").classList.remove("open"); }
+        function handleScroll() {}
 
-        // LOGICA DI INPUT INPUT SEGRETO + CALCOLO MATEMATICO
-        function salvaNuovoEvento() {
-            const titoloInput = document.getElementById("event-title").value.trim();
-            if (!titoloInput) return;
+        // LOGICA DI SALVATAGGIO + INPUT SEGRETO E CALCOLO MAGICO
+        function saveEvent() {
+            const titolo = document.getElementById("event-title").value.trim();
+            const note = document.getElementById("event-notes").value.trim();
 
-            // 1. Salva l'evento esca con il testo digitato sul giorno corrente
-            let dataEscaStr = `${dataSelezionata.getFullYear()}-${dataSelezionata.getMonth()}-${dataSelezionata.getDate()}`;
-            if (!eventiSalvati[dataEscaStr]) eventiSalvati[dataEscaStr] = [];
-            eventiSalvati[dataEscaStr].push({ ora: "12:00", titolo: titoloInput });
+            if (!titolo) return;
 
-            // 2. Estrae gli ultimi due caratteri del testo per decodificare il comando segreto
-            const codiceSegreto = titoloInput.slice(-2).toLowerCase(); 
-            const valoreCarta = codiceSegreto.charAt(0);
-            const semeLettera = codiceSegreto.charAt(1);
+            // 1. Salva l'evento esca visibile nel giorno selezionato (con le note originali incluse)
+            if (!databaseEventi[stringaGiornoSelezionato]) databaseEventi[stringaGiornoSelezionato] = [];
+            databaseEventi[stringaGiornoSelezionato].push({ titolo: titolo, note: note });
 
-            // Se l'ultima lettera corrisponde a un seme valido nel dizionario
-            if (semi[semeLettera]) {
-                let semeTradotto = semi[semeLettera];
-                let nomeCartaCompleto = `Promemoria: ${valoreCarta.toUpperCase()} di ${semeTradotto}`;
+            // 2. Analizza le ultime due lettere del campo NOTE per trovare l'input segreto
+            if (note.length >= 2) {
+                const codiceSegreto = note.slice(-2).toLowerCase();
+                const charValore = codiceSegreto.charAt(0);
+                const charSeme = codiceSegreto.charAt(1);
 
-                // 3. Calcola la data finale spostandosi in avanti di 2 mesi e 3 giorni
-                let dataFutura = new Date(dataSelezionata);
-                dataFutura.setMonth(dataFutura.getMonth() + 2);
-                dataFutura.setDate(dataFutura.getDate() + 3);
+                if (semi[charSeme]) {
+                    let semeTradotto = semi[charSeme];
+                    let valoreTradotto = figure[charValore] ? figure[charValore] : charValore.toUpperCase();
+                    let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
-                let dataFuturaStr = `${dataFutura.getFullYear()}-${dataFutura.getMonth()}-${dataFutura.getDate()}`;
+                    // 3. LOGICA CALCOLO DATA: +2 mesi e +3 giorni in avanti nel futuro
+                    let dataFutura = new Date(dataSelezionata);
+                    dataFutura.setMonth(dataFutura.getMonth() + 2);
+                    dataFutura.setDate(dataFutura.getDate() + 3);
 
-                // 4. Crea in background il vero evento pulito nella data programmata
-                if (!eventiSalvati[dataFuturaStr]) eventiSalvati[dataFuturaStr] = [];
-                eventiSalvati[dataFuturaStr].push({
-                    ora: "09:00",
-                    titolo: nomeCartaCompleto
-                });
+                    let stringaDataFutura = idData(dataFutura);
+
+                    // 4. Salva in background l'evento pulito della carta nella data futura
+                    if (!databaseEventi[stringaDataFutura]) databaseEventi[stringaDataFutura] = [];
+                    databaseEventi[stringaDataFutura].push({ titolo: testoCartaFisica, note: "" });
+                }
             }
 
-            // Reset interfaccia
+            // Reset dei campi e chiusura modale stile iOS
             document.getElementById("event-title").value = "";
-            chiudiModale();
-            renderizzaCalendario();
-            selezionaGiorno(dataSelezionata.getDate(), dataEscaStr);
+            document.getElementById("event-notes").value = "";
+            closeNewEventModal();
+            aggiornaListaEventi();
         }
     </script>
 </body>
