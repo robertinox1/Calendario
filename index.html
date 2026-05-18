@@ -131,7 +131,7 @@
         .weekdays-bar div:nth-child(6), 
         .weekdays-bar div:nth-child(7) { color: var(--ios-weekend-gray); }
 
-        /* --- FLUSSO CONTINUO UNICO A GRIGLIA --- */
+        /* --- FLUSSO CONTINUO UNICO --- */
         .scroll-container {
             flex: 1;
             overflow-y: scroll;
@@ -142,7 +142,6 @@
             display: none;
         }
 
-        /* Contenitore unico globale per non avere interruzioni di celle */
         .infinite-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -151,7 +150,7 @@
             padding: 16px 4px;
         }
 
-        /* Elemento Titolo Mese che si estende su tutte e 7 le colonne */
+        /* Titolo Mese Singolo Esteso */
         .grid-month-title {
             grid-column: span 7;
             font-size: 34px;
@@ -161,6 +160,8 @@
             margin-top: 10px;
             margin-bottom: -5px;
             color: #ffffff;
+            will-change: opacity;
+            visibility: hidden; /* Gestito via JS: visibile solo se attivo */
         }
 
         .day-cell {
@@ -174,7 +175,6 @@
             height: 44px;
         }
 
-        /* Etichetta abbreviata sopra il giorno 1 */
         .month-label-inline {
             position: absolute;
             top: -16px;
@@ -198,20 +198,17 @@
             color: #ffffff;
         }
 
-        /* Disattivazione Sabato (6ª colonna) e Domenica (7ª colonna) */
         .day-cell:nth-child(7n-1) .day-number,
         .day-cell:nth-child(7n) .day-number {
             color: var(--ios-weekend-gray);
         }
 
-        /* Cerchio rosso pieno per OGGI */
         .day-cell.today .day-number {
             background-color: var(--ios-red) !important;
             color: #ffffff !important;
             font-weight: 600;
         }
 
-        /* Puntini eventi sotto i numeri */
         .dots-container {
             display: flex;
             gap: 3px;
@@ -226,7 +223,7 @@
         .dot.purple { background-color: #af52de; }
         .dot.green { background-color: #34c759; }
 
-        /* --- FOOTER FLUTTUANTE --- */
+        /* --- FOOTER --- */
         .floating-footer {
             position: absolute;
             bottom: env(safe-area-inset-bottom, 30px);
@@ -300,7 +297,7 @@
 
         <div class="scroll-container" id="scroll-area">
             <div class="infinite-calendar-grid" id="main-grid">
-                <!-- Giorni e titoli inseriti in modo lineare e continuo -->
+                <!-- Generazione continua -->
             </div>
         </div>
 
@@ -315,7 +312,7 @@
     </div>
 
     <script>
-        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Octobre", "Novembre", "Dicembre"];
+        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
         const monthShortNames = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
         
         const mainGrid = document.getElementById('main-grid');
@@ -324,34 +321,26 @@
         const headerSmallMonth = document.getElementById('header-small-month');
         const mainHeader = document.getElementById('main-header');
         
-        const realToday = new Date(); // Imposta la data corrente reale
+        const realToday = new Date(2026, 4, 18); // Data odierna fissa di sistema
 
-        // Generiamo una linea temporale continua da Gennaio dell'anno scorso a Dicembre dell'anno prossimo
         let startYear = realToday.getFullYear() - 1;
         let endYear = realToday.getFullYear() + 1;
-
-        // Array per tracciare la posizione dei mesi per l'header dinamico
-        let monthPositions = [];
 
         function buildContinuousCalendar() {
             mainGrid.innerHTML = '';
             
-            // Trova il giorno della settimana del 1° Gennaio dello startYear
             let firstDayOfYear = new Date(startYear, 0, 1);
             let startDayOfWeek = firstDayOfYear.getDay() - 1;
             if (startDayOfWeek === -1) startDayOfWeek = 6;
 
-            // Riempi l'inizio assoluto della griglia con celle vuote solo per allineare il primo Gennaio
             for (let e = 0; e < startDayOfWeek; e++) {
                 const emptyCell = document.createElement('div');
                 mainGrid.appendChild(emptyCell);
             }
 
-            // Flusso lineare anno per anno, mese per mese
             for (let year = startYear; year <= endYear; year++) {
                 for (let month = 0; month < 12; month++) {
                     
-                    // Crea il blocco del Titolo del Mese che si ancora sopra i giorni
                     const titleRow = document.createElement('div');
                     titleRow.classList.add('grid-month-title');
                     titleRow.id = `title-${year}-${month}`;
@@ -365,11 +354,7 @@
                     for (let day = 1; day <= totalDays; day++) {
                         const cell = document.createElement('div');
                         cell.classList.add('day-cell');
-                        cell.dataset.year = year;
-                        cell.dataset.month = month;
-                        cell.dataset.day = day;
 
-                        // Aggiungi la label abbreviata (es: "Dic") solo sopra il giorno 1
                         if (day === 1) {
                             const labelInline = document.createElement('div');
                             labelInline.classList.add('month-label-inline');
@@ -380,7 +365,6 @@
                             cell.appendChild(labelInline);
                         }
 
-                        // Evidenzia Oggi con il cerchio rosso pieno
                         if (day === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
                             cell.classList.add('today');
                         }
@@ -390,21 +374,13 @@
                         numSpan.innerText = day;
                         cell.appendChild(numSpan);
 
-                        // Esempi di puntini colorati stabili
+                        // Puntini estetici provvisori
                         const dotsContainer = document.createElement('div');
                         dotsContainer.classList.add('dots-container');
-                        if (day === 8 && month === 11) { // 8 Dicembre -> Viola
+                        if (day === 25 && month === 3) {
                             const dot = document.createElement('div');
                             dot.classList.add('dot', 'purple');
                             dotsContainer.appendChild(dot);
-                        }
-                        if (day === 25 && month === 11) { // 25 Dicembre -> Viola e Verde
-                            const dot1 = document.createElement('div');
-                            dot1.classList.add('dot', 'purple');
-                            const dot2 = document.createElement('div');
-                            dot2.classList.add('dot', 'green');
-                            dotsContainer.appendChild(dot1);
-                            dotsContainer.appendChild(dot2);
                         }
                         cell.appendChild(dotsContainer);
 
@@ -413,7 +389,6 @@
                 }
             }
 
-            // Rimbalza sul mese corrente all'avvio
             setTimeout(() => {
                 const currentTitle = document.getElementById(`title-${realToday.getFullYear()}-${realToday.getMonth()}`);
                 if (currentTitle) {
@@ -423,15 +398,16 @@
             }, 100);
         }
 
-        // --- GESTIONE DINAMICA OPACITÀ E HEADER IN SCORRIMENTO ---
+        // --- SISTEMA DI FILTRAGGIO ESCLUSIVO DEI TITOLI ---
         scrollArea.addEventListener('scroll', () => {
             const titles = document.querySelectorAll('.grid-month-title');
             let activeTitle = null;
             const headerHeight = mainHeader.offsetHeight;
 
+            // 1. Identifica il titolo del mese principale dominante
             for (let title of titles) {
                 const rect = title.getBoundingClientRect();
-                if (rect.top <= headerHeight + 50) {
+                if (rect.top <= headerHeight + 60) {
                     activeTitle = title;
                 }
             }
@@ -446,6 +422,17 @@
                 const rect = activeTitle.getBoundingClientRect();
                 const distance = rect.top - headerHeight;
 
+                // 2. REGOLA RESTRITTIVA: Spegne immediatamente tutti i titoli non attivi
+                titles.forEach(title => {
+                    if (title !== activeTitle) {
+                        title.style.visibility = "hidden";
+                    }
+                });
+
+                // Rende visibile solo ed esclusivamente il titolo del mese corrente
+                activeTitle.style.visibility = "visible";
+
+                // Gestione della dissolvenza fluida all'impatto con l'header
                 if (distance <= 0) {
                     activeTitle.style.opacity = "0";
                     headerSmallMonth.style.opacity = "1";
