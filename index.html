@@ -144,17 +144,16 @@
         .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
 
         /* LINEE ORIZZONTALI DIVISORIE PIÙ EVIDENTI TRA LE RIGHE */
-              /* LINEE ORIZZONTALI DIVISORIE PIÙ EVIDENTI TRA LE RIGHE */
         .inline-month-break {
-            font-size: 34px;          /* 1. Rende il testo molto grande, stile iOS originale */
-            font-weight: 700;         /* 2. Imposta il grassetto marcato (Bold) */
+            grid-column: 1 / span 7;
+            font-size: 16px;
+            font-weight: 600;
             color: var(--ios-text);
-            padding: 24px 0 6px 0;    /* 3. Aumenta lo spazio sopra il mese per non appiccicarlo al mese precedente */
-            margin-bottom: 4px;
-            text-align: left;         /* 4. Mantiene il testo allineato a sinistra del suo blocco */
-            border-bottom: none;      /* 5. ELIMINA la linea di fondo grigia */
+            padding: 14px 0 6px 4px;
+            border-bottom: 0.8px solid var(--ios-border); /* Linea marcata */
+            margin-bottom: 8px;
+            text-align: left;
         }
-
         .inline-month-break.current-break { color: var(--ios-tint); }
 
         .ios-capsule-dot {
@@ -422,31 +421,18 @@
                 let grid = document.createElement("div");
                 grid.className = "days-grid";
 
-                               if (m > 0) {
+                if (m > 0) {
                     let breakLine = document.createElement("div");
                     breakLine.className = "inline-month-break";
                     if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
                         breakLine.classList.add("current-break");
                     }
                     breakLine.innerText = nomiMesiBrevi[mese];
-
-                    // 1. Calcola in che giorno della settimana cade il giorno 1 di questo mese
-                    let primoGiorno = new Date(anno, mese, 1).getDay(); // 0 = Domenica, 1 = Lunedì...
-                    
-                    // 2. Calcola quante colonne vuote servono (offset) per arrivare al giorno giusto
-                    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
-                    
-                    // 3. Trova il numero della colonna esatta in cui inizierà il numero 1 (da 1 a 7)
-                    let colonnaInizio = offset + 1;
-
-                    // 4. Dice al CSS della griglia di far partire il titolo del mese da quella colonna esatta
-                    breakLine.style.gridColumn = `${colonnaInizio} / span 7`;
-
-                    // 5. Inserisce il mese e i quadratini vuoti nella griglia
                     grid.appendChild(breakLine);
+                    let primoGiorno = new Date(anno, mese, 1).getDay();
+                    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
                     for (let e = 0; e < offset; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
                 }
-
 
                 let primoGiornoReal = new Date(anno, mese, 1).getDay();
                 let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
