@@ -13,7 +13,7 @@
             --ios-gray: #8E8E93;
             --ios-dark-gray: #48484A; 
             --ios-tint: #FF453A; 
-            --ios-border: rgba(84, 84, 88, 0.6); 
+            --ios-border: rgba(84, 84, 88, 0.7); /* Linea divisoria spessa */
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -71,7 +71,7 @@
             cursor: pointer;
         }
 
-        /* IL TITOLO GRANDE DEL MESE RIPRISTINATO */
+        /* MESE GRANDE RIPRISTINATO */
         .main-month-title {
             font-size: 34px;
             font-weight: 700;
@@ -96,11 +96,11 @@
             color: var(--ios-dark-gray); 
         }
 
-        /* CALENDARIO A SCORRIMENTO VERTICALE */
+        /* CALENDARIO A SCORRIMENTO VERTICALE CONTINUO */
         .calendar-scroll-view {
             height: 100vh;
             overflow-y: scroll;
-            padding-top: 140px; /* Adattato per il titolo grande */
+            padding-top: 140px; 
             padding-bottom: 120px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
@@ -117,7 +117,7 @@
             column-gap: 8px;
         }
 
-        /* Cella giorno con linee orizzontali continue e spesse */
+        /* Cella giorno con numeri in grassetto e linee orizzontali continue e spesse */
         .day-cell {
             position: relative;
             text-align: center;
@@ -129,7 +129,7 @@
             justify-content: flex-end; 
             padding-bottom: 6px;
             cursor: pointer;
-            border-bottom: 1.2px solid var(--ios-border); 
+            border-bottom: 1.2px solid var(--ios-border); /* Linea continua e spessa richiesta */
         }
 
         .day-number {
@@ -146,7 +146,7 @@
         .day-cell.selected .day-number { background-color: #2C2C2E; color: #fff; }
         .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
 
-        /* Mese abbreviato riposizionato sopra il giorno 1 */
+        /* MESE ABBREVIATO RIPRISTINATO ESATTAMENTE SOPRA IL GIORNO 1 */
         .month-start-label {
             position: absolute;
             top: 2px;
@@ -288,14 +288,14 @@
             <button class="back-year-btn" onclick="openSecretPanel()">‹ <span id="current-year-header">2026</span></button>
             <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
         </div>
-        <!-- TITOLO GRANDE DINAMICO COMPLETAMENTE RIPRISTINATO -->
+        <!-- TITOLO GRANDE DINAMICO COMPRESO -->
         <div class="main-month-title" id="main-title-display">Maggio</div>
         <div class="weekdays-grid">
             <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
     </div>
 
-    <!-- CALENDARIO INTERFACCIA RIGIDA CONTINUA -->
+    <!-- CALENDARIO INTERFACCIA CONTINUA -->
     <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
 
     <!-- FOOTER -->
@@ -388,7 +388,9 @@
         function renderizzaCalendarioInfinito() {
             const container = document.getElementById("scroll-container");
             container.innerHTML = "";
-            let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
+            let dataLavoro = new Date(oggi.getFullYear() - 1, Admin_mese_offset(), 1);
+
+            function Admin_mese_offset() { return oggi.getMonth() - 2; }
 
             for (let m = 0; m < 28; m++) {
                 let anno = dataLavoro.getFullYear();
@@ -423,6 +425,7 @@
                     if (dayOfWeek === 6) dCell.classList.add("sat");
                     dCell.id = `cell-${sData}`;
 
+                    // REINSERITO IL MESE ABBREVIATO POSIZIONATO SOPRA IL GIORNO 1
                     if (g === 1) {
                         let shortLabel = document.createElement("div");
                         shortLabel.className = "month-start-label";
@@ -494,7 +497,6 @@
             document.getElementById("day-view-modal").classList.add("open");
         }
 
-        // AGGIORNA AL VOLO IL NOME DEL MESE GRANDE E L'ANNO DURANTE LO SCORRIMENTO
         function gestisciScorrimentoMesi() {
             const container = document.getElementById("scroll-container");
             const sections = container.getElementsByClassName("month-section");
