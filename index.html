@@ -10,6 +10,7 @@
             --ios-gray-text: #8e8e93;
             --ios-weekend-gray: #48484a;
             --ios-dark-bg: #000000;
+            --ios-grid-line: #1c1c1e;
             --ios-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -44,9 +45,8 @@
             flex-direction: column;
         }
 
-        /* --- HEADER FISSO CON SPAZIO PER NOTCH / ISOLA DINAMICA --- */
+        /* --- HEADER FISSO --- */
         .ios-header {
-            /* safe-area-inset-top rileva automaticamente l'altezza della barra di stato su iPhone (circa 47px) */
             padding-top: env(safe-area-inset-top, 47px); 
             padding-left: 16px;
             padding-right: 16px;
@@ -85,7 +85,6 @@
             margin-right: 4px;
         }
 
-        /* Mese centrale nell'header: gestito con opacità fluida */
         .header-center-month {
             font-size: 17px;
             font-weight: 600;
@@ -118,7 +117,6 @@
             stroke-width: 2;
         }
 
-        /* Settimana fissa sotto la barra dei comandi */
         .weekdays-bar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -126,13 +124,14 @@
             font-size: 11px;
             font-weight: 600;
             padding-top: 4px;
-            padding-bottom: 4px;
+            padding-bottom: 8px;
+            border-bottom: 0.5px solid var(--ios-grid-line);
         }
-        .weekdays-bar div { color: #ffffff; }
+        .weekdays-bar div { color: var(--ios-gray-text); }
         .weekdays-bar div:nth-child(6), 
         .weekdays-bar div:nth-child(7) { color: var(--ios-weekend-gray); }
 
-        /* --- CONTENITORE SCORREVOLE DEL FLUSSO --- */
+        /* --- FLUSSO CONTINUO UNICO A GRIGLIA --- */
         .scroll-container {
             flex: 1;
             overflow-y: scroll;
@@ -143,27 +142,25 @@
             display: none;
         }
 
-        .month-block {
-            padding-top: 8px;
-        }
-
-        /* Titolo mese grande ad opacità dinamica */
-        .month-title {
-            font-size: 34px;
-            font-weight: 700;
-            padding-left: 16px;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-            color: #ffffff;
-            will-change: opacity, transform;
-        }
-
-        .calendar-grid {
+        /* Contenitore unico globale per non avere interruzioni di celle */
+        .infinite-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 24px;
+            row-gap: 22px;
             text-align: center;
-            padding: 0 4px;
+            padding: 16px 4px;
+        }
+
+        /* Elemento Titolo Mese che si estende su tutte e 7 le colonne */
+        .grid-month-title {
+            grid-column: span 7;
+            font-size: 34px;
+            font-weight: 700;
+            padding-left: 12px;
+            text-align: left;
+            margin-top: 10px;
+            margin-bottom: -5px;
+            color: #ffffff;
         }
 
         .day-cell {
@@ -174,18 +171,21 @@
             font-size: 20px;
             font-weight: 400;
             position: relative;
-            height: 40px;
+            height: 44px;
         }
 
+        /* Etichetta abbreviata sopra il giorno 1 */
         .month-label-inline {
             position: absolute;
-            top: -18px;
+            top: -16px;
             font-size: 13px;
             font-weight: 600;
-            color: var(--ios-gray-text);
             width: 100%;
             text-align: center;
-            display: none;
+            color: #ffffff;
+        }
+        .month-label-inline.current-label {
+            color: var(--ios-red);
         }
 
         .day-number {
@@ -198,22 +198,25 @@
             color: #ffffff;
         }
 
-        /* Disattivazione visiva Sabato e Domenica */
+        /* Disattivazione Sabato (6ª colonna) e Domenica (7ª colonna) */
         .day-cell:nth-child(7n-1) .day-number,
         .day-cell:nth-child(7n) .day-number {
             color: var(--ios-weekend-gray);
         }
 
+        /* Cerchio rosso pieno per OGGI */
         .day-cell.today .day-number {
-            color: var(--ios-red) !important;
+            background-color: var(--ios-red) !important;
+            color: #ffffff !important;
             font-weight: 600;
         }
 
+        /* Puntini eventi sotto i numeri */
         .dots-container {
             display: flex;
             gap: 3px;
             position: absolute;
-            bottom: -6px;
+            bottom: -4px;
         }
         .dot {
             width: 5px;
@@ -221,8 +224,9 @@
             border-radius: 50%;
         }
         .dot.purple { background-color: #af52de; }
+        .dot.green { background-color: #34c759; }
 
-        /* --- ELEMENTI IN BASSO FLUTTUANTI --- */
+        /* --- FOOTER FLUTTUANTE --- */
         .floating-footer {
             position: absolute;
             bottom: env(safe-area-inset-bottom, 30px);
@@ -274,7 +278,6 @@
 
     <div id="phone-wrapper">
         
-        <!-- HEADER FISSO CON DISTANZIAMENTO STATUR BAR -->
         <header class="ios-header" id="main-header">
             <div class="header-top">
                 <div class="btn-year-back">
@@ -282,7 +285,7 @@
                     <span id="label-year">2026</span>
                 </div>
                 
-                <div class="header-center-month" id="header-small-month">Novembre</div>
+                <div class="header-center-month" id="header-small-month">Aprile</div>
                 
                 <div class="header-right-icons">
                     <svg class="stroke-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
@@ -295,12 +298,12 @@
             </div>
         </header>
 
-        <!-- FLUSSO CALENDARIO -->
         <div class="scroll-container" id="scroll-area">
-            <!-- Mesi inseriti dinamicamente -->
+            <div class="infinite-calendar-grid" id="main-grid">
+                <!-- Giorni e titoli inseriti in modo lineare e continuo -->
+            </div>
         </div>
 
-        <!-- MENU IN BASSO -->
         <div class="floating-footer">
             <button class="btn-today-floating" id="btn-today">Oggi</button>
             <div class="right-menu-floating">
@@ -312,169 +315,159 @@
     </div>
 
     <script>
-        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Octobre", "Novembre", "Dicembre"];
         const monthShortNames = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
         
+        const mainGrid = document.getElementById('main-grid');
         const scrollArea = document.getElementById('scroll-area');
         const labelYear = document.getElementById('label-year');
         const headerSmallMonth = document.getElementById('header-small-month');
         const mainHeader = document.getElementById('main-header');
-        const realToday = new Date();
+        
+        const realToday = new Date(); // Imposta la data corrente reale
 
+        // Generiamo una linea temporale continua da Gennaio dell'anno scorso a Dicembre dell'anno prossimo
         let startYear = realToday.getFullYear() - 1;
-        let startMonth = 0; 
-        let totalMonthsToRender = 36; 
+        let endYear = realToday.getFullYear() + 1;
 
-        function initCalendar() {
-            let currentY = startYear;
-            let currentM = startMonth;
+        // Array per tracciare la posizione dei mesi per l'header dinamico
+        let monthPositions = [];
 
-            for (let i = 0; i < totalMonthsToRender; i++) {
-                renderMonthBlock(currentY, currentM);
-                currentM++;
-                if (currentM > 11) {
-                    currentM = 0;
-                    currentY++;
+        function buildContinuousCalendar() {
+            mainGrid.innerHTML = '';
+            
+            // Trova il giorno della settimana del 1° Gennaio dello startYear
+            let firstDayOfYear = new Date(startYear, 0, 1);
+            let startDayOfWeek = firstDayOfYear.getDay() - 1;
+            if (startDayOfWeek === -1) startDayOfWeek = 6;
+
+            // Riempi l'inizio assoluto della griglia con celle vuote solo per allineare il primo Gennaio
+            for (let e = 0; e < startDayOfWeek; e++) {
+                const emptyCell = document.createElement('div');
+                mainGrid.appendChild(emptyCell);
+            }
+
+            // Flusso lineare anno per anno, mese per mese
+            for (let year = startYear; year <= endYear; year++) {
+                for (let month = 0; month < 12; month++) {
+                    
+                    // Crea il blocco del Titolo del Mese che si ancora sopra i giorni
+                    const titleRow = document.createElement('div');
+                    titleRow.classList.add('grid-month-title');
+                    titleRow.id = `title-${year}-${month}`;
+                    titleRow.innerText = monthNames[month];
+                    titleRow.dataset.year = year;
+                    titleRow.dataset.monthName = monthNames[month];
+                    mainGrid.appendChild(titleRow);
+
+                    const totalDays = new Date(year, month + 1, 0).getDate();
+                    
+                    for (let day = 1; day <= totalDays; day++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('day-cell');
+                        cell.dataset.year = year;
+                        cell.dataset.month = month;
+                        cell.dataset.day = day;
+
+                        // Aggiungi la label abbreviata (es: "Dic") solo sopra il giorno 1
+                        if (day === 1) {
+                            const labelInline = document.createElement('div');
+                            labelInline.classList.add('month-label-inline');
+                            if (month === realToday.getMonth() && year === realToday.getFullYear()) {
+                                labelInline.classList.add('current-label');
+                            }
+                            labelInline.innerText = monthShortNames[month];
+                            cell.appendChild(labelInline);
+                        }
+
+                        // Evidenzia Oggi con il cerchio rosso pieno
+                        if (day === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
+                            cell.classList.add('today');
+                        }
+
+                        const numSpan = document.createElement('span');
+                        numSpan.classList.add('day-number');
+                        numSpan.innerText = day;
+                        cell.appendChild(numSpan);
+
+                        // Esempi di puntini colorati stabili
+                        const dotsContainer = document.createElement('div');
+                        dotsContainer.classList.add('dots-container');
+                        if (day === 8 && month === 11) { // 8 Dicembre -> Viola
+                            const dot = document.createElement('div');
+                            dot.classList.add('dot', 'purple');
+                            dotsContainer.appendChild(dot);
+                        }
+                        if (day === 25 && month === 11) { // 25 Dicembre -> Viola e Verde
+                            const dot1 = document.createElement('div');
+                            dot1.classList.add('dot', 'purple');
+                            const dot2 = document.createElement('div');
+                            dot2.classList.add('dot', 'green');
+                            dotsContainer.appendChild(dot1);
+                            dotsContainer.appendChild(dot2);
+                        }
+                        cell.appendChild(dotsContainer);
+
+                        mainGrid.appendChild(cell);
+                    }
                 }
             }
 
+            // Rimbalza sul mese corrente all'avvio
             setTimeout(() => {
-                const todayBlock = document.getElementById(`month-${realToday.getFullYear()}-${realToday.getMonth()}`);
-                if (todayBlock) {
-                    todayBlock.scrollIntoView({ block: 'start' });
+                const currentTitle = document.getElementById(`title-${realToday.getFullYear()}-${realToday.getMonth()}`);
+                if (currentTitle) {
+                    currentTitle.scrollIntoView({ block: 'start' });
+                    scrollArea.scrollTop -= 10;
                 }
             }, 100);
         }
 
-        function renderMonthBlock(year, month) {
-            const monthBlock = document.createElement('div');
-            monthBlock.classList.add('month-block');
-            monthBlock.id = `month-${year}-${month}`;
-            monthBlock.dataset.year = year;
-            monthBlock.dataset.monthName = monthNames[month];
-            monthBlock.dataset.monthIndex = month;
-
-            const title = document.createElement('div');
-            title.classList.add('month-title');
-            title.innerText = monthNames[month];
-            monthBlock.appendChild(title);
-
-            const grid = document.createElement('div');
-            grid.classList.add('calendar-grid');
-
-            const firstDay = new Date(year, month, 1);
-            let startDayOfWeek = firstDay.getDay() - 1;
-            if (startDayOfWeek === -1) startDayOfWeek = 6;
-
-            for (let e = 0; e < startDayOfWeek; e++) {
-                const emptyCell = document.createElement('div');
-                grid.appendChild(emptyCell);
-            }
-
-            const totalDays = new Date(year, month + 1, 0).getDate();
-            for (let day = 1; day <= totalDays; day++) {
-                const cell = document.createElement('div');
-                cell.classList.add('day-cell');
-
-                if (day === 1) {
-                    const labelInline = document.createElement('div');
-                    labelInline.classList.add('month-label-inline');
-                    labelInline.id = `label-inline-${year}-${month}`;
-                    labelInline.innerText = monthShortNames[month];
-                    cell.appendChild(labelInline);
-                }
-
-                if (day === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
-                    cell.classList.add('today');
-                }
-
-                const numSpan = document.createElement('span');
-                numSpan.classList.add('day-number');
-                numSpan.innerText = day;
-                cell.appendChild(numSpan);
-
-                const dotsContainer = document.createElement('div');
-                dotsContainer.classList.add('dots-container');
-                if (day === 17 && month === 10) { // Test su Novembre
-                    const dot = document.createElement('div');
-                    dot.classList.add('dot', 'purple');
-                    dotsContainer.appendChild(dot);
-                }
-                cell.appendChild(dotsContainer);
-                grid.appendChild(cell);
-            }
-
-            monthBlock.appendChild(grid);
-            scrollArea.appendChild(monthBlock);
-        }
-
-        // --- ANIMAZIONE FLUIDA TITOLO GIGANTE / HEADER ---
+        // --- GESTIONE DINAMICA OPACITÀ E HEADER IN SCORRIMENTO ---
         scrollArea.addEventListener('scroll', () => {
-            const blocks = document.querySelectorAll('.month-block');
-            let currentVisibleBlock = null;
+            const titles = document.querySelectorAll('.grid-month-title');
+            let activeTitle = null;
             const headerHeight = mainHeader.offsetHeight;
 
-            for (let block of blocks) {
-                const rect = block.getBoundingClientRect();
-                // Determina quale mese sta occupando la sezione attiva sotto l'header
-                if (rect.top <= headerHeight + 20 && rect.bottom > headerHeight + 20) {
-                    currentVisibleBlock = block;
-                    break;
+            for (let title of titles) {
+                const rect = title.getBoundingClientRect();
+                if (rect.top <= headerHeight + 50) {
+                    activeTitle = title;
                 }
             }
 
-            if (currentVisibleBlock) {
-                const year = currentVisibleBlock.dataset.year;
-                const monthName = currentVisibleBlock.dataset.monthName;
-                const monthIndex = currentVisibleBlock.dataset.monthIndex;
-                
+            if (activeTitle) {
+                const year = activeTitle.dataset.year;
+                const monthName = activeTitle.dataset.monthName;
+
                 labelYear.innerText = year;
                 headerSmallMonth.innerText = monthName;
 
-                const titleElement = currentVisibleBlock.querySelector('.month-title');
-                const titleRect = titleElement.getBoundingClientRect();
-
-                // Calcolo della dissolvenza legata alla posizione esatta del titolone rispetto all'header finto
-                const triggerPoint = headerHeight; 
-                const distance = titleRect.top - triggerPoint;
+                const rect = activeTitle.getBoundingClientRect();
+                const distance = rect.top - headerHeight;
 
                 if (distance <= 0) {
-                    // Il titolo ha impattato l'header finto: scompare quello grande e compare quello piccolo centralmente
-                    titleElement.style.opacity = "0";
+                    activeTitle.style.opacity = "0";
                     headerSmallMonth.style.opacity = "1";
                 } else if (distance > 0 && distance < 40) {
-                    // Sfumatura lineare durante gli ultimi 40 pixel di scorrimento prima del punto di contatto
                     const ratio = distance / 40;
-                    titleElement.style.opacity = ratio;
+                    activeTitle.style.opacity = ratio;
                     headerSmallMonth.style.opacity = 1 - ratio;
                 } else {
-                    // Stato iniziale standard
-                    titleElement.style.opacity = "1";
+                    activeTitle.style.opacity = "1";
                     headerSmallMonth.style.opacity = "0";
                 }
-
-                // Gestione scritte abbreviate ("Dic", "Gen"...) solo per i mesi non focalizzati
-                blocks.forEach(b => {
-                    const inlineLabel = b.querySelector('.month-label-inline');
-                    if (inlineLabel) {
-                        if (b.dataset.monthIndex === monthIndex && b.dataset.year === year) {
-                            inlineLabel.style.display = "none";
-                        } else {
-                            inlineLabel.style.display = "block";
-                        }
-                    }
-                });
             }
         });
 
         document.getElementById('btn-today').addEventListener('click', () => {
-            const todayBlock = document.getElementById(`month-${realToday.getFullYear()}-${realToday.getMonth()}`);
-            if (todayBlock) {
-                todayBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const currentTitle = document.getElementById(`title-${realToday.getFullYear()}-${realToday.getMonth()}`);
+            if (currentTitle) {
+                currentTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
 
-        initCalendar();
+        buildContinuousCalendar();
     </script>
 </body>
 </html>
