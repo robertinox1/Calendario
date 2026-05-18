@@ -85,6 +85,7 @@
             margin-right: 4px;
         }
 
+        /* Titolo del Mese Dinamico nell'Header */
         .header-center-month {
             font-size: 17px;
             font-weight: 600;
@@ -125,43 +126,43 @@
             font-weight: 600;
             padding-top: 4px;
             padding-bottom: 8px;
-            border-bottom: 0.5px solid var(--ios-grid-line);
         }
         .weekdays-bar div { color: var(--ios-gray-text); }
         .weekdays-bar div:nth-child(6), 
         .weekdays-bar div:nth-child(7) { color: var(--ios-weekend-gray); }
 
-        /* --- FLUSSO CONTINUO UNICO --- */
+        /* --- TITOLO FLUTTUANTE DEL MESE CORRENTE --- */
+        .floating-month-title {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 47px) + 55px);
+            left: 16px;
+            font-size: 34px;
+            font-weight: 700;
+            color: #ffffff;
+            z-index: 5;
+            pointer-events: none;
+            letter-spacing: -0.5px;
+            will-change: opacity, transform;
+        }
+
+        /* --- SCROLL CONTAINER --- */
         .scroll-container {
             flex: 1;
             overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
+            padding-top: 60px; /* Spazio per far fluttuare il titolo iniziale */
             padding-bottom: 140px;
         }
         .scroll-container::-webkit-scrollbar {
             display: none;
         }
 
+        /* Griglia unica, compatta e reale senza interruzioni */
         .infinite-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 22px;
             text-align: center;
-            padding: 16px 4px;
-        }
-
-        /* Titolo Mese Singolo Esteso */
-        .grid-month-title {
-            grid-column: span 7;
-            font-size: 34px;
-            font-weight: 700;
-            padding-left: 12px;
-            text-align: left;
-            margin-top: 10px;
-            margin-bottom: -5px;
-            color: #ffffff;
-            will-change: opacity;
-            visibility: hidden; /* Gestito via JS: visibile solo se attivo */
+            padding: 0 4px;
         }
 
         .day-cell {
@@ -172,20 +173,8 @@
             font-size: 20px;
             font-weight: 400;
             position: relative;
-            height: 44px;
-        }
-
-        .month-label-inline {
-            position: absolute;
-            top: -16px;
-            font-size: 13px;
-            font-weight: 600;
-            width: 100%;
-            text-align: center;
-            color: #ffffff;
-        }
-        .month-label-inline.current-label {
-            color: var(--ios-red);
+            height: 64px; /* Altezza bilanciata comprensiva di linee divisorie */
+            border-bottom: 0.5px solid var(--ios-grid-line);
         }
 
         .day-number {
@@ -198,32 +187,33 @@
             color: #ffffff;
         }
 
+        /* Testo speciale compatto del Giorno 1 (es: "1 Dic") dello stesso colore dei numeri */
+        .first-day-text {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            color: #ffffff;
+        }
+        .first-day-text.current-month-red {
+            color: var(--ios-red); /* Diventa rosso se è il mese di oggi */
+        }
+
+        /* Sabato e Domenica spenti */
         .day-cell:nth-child(7n-1) .day-number,
-        .day-cell:nth-child(7n) .day-number {
+        .day-cell:nth-child(7n) .day-number,
+        .day-cell:nth-child(7n-1) .first-day-text,
+        .day-cell:nth-child(7n) .first-day-text {
             color: var(--ios-weekend-gray);
         }
 
+        /* Cerchio rosso pieno per OGGI */
         .day-cell.today .day-number {
             background-color: var(--ios-red) !important;
             color: #ffffff !important;
             font-weight: 600;
         }
 
-        .dots-container {
-            display: flex;
-            gap: 3px;
-            position: absolute;
-            bottom: -4px;
-        }
-        .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-        }
-        .dot.purple { background-color: #af52de; }
-        .dot.green { background-color: #34c759; }
-
-        /* --- FOOTER --- */
+        /* --- FOOTER FLUTTUANTE --- */
         .floating-footer {
             position: absolute;
             bottom: env(safe-area-inset-bottom, 30px);
@@ -275,6 +265,7 @@
 
     <div id="phone-wrapper">
         
+        <!-- HEADER -->
         <header class="ios-header" id="main-header">
             <div class="header-top">
                 <div class="btn-year-back">
@@ -295,12 +286,17 @@
             </div>
         </header>
 
+        <!-- TITOLO GIGANTE FLUTTUANTE ESTERNO -->
+        <div class="floating-month-title" id="dynamic-big-title">Aprile</div>
+
+        <!-- FLUSSO DEL CALENDARIO CONTINUO REALE -->
         <div class="scroll-container" id="scroll-area">
             <div class="infinite-calendar-grid" id="main-grid">
-                <!-- Generazione continua -->
+                <!-- Generato via JavaScript -->
             </div>
         </div>
 
+        <!-- FOOTER -->
         <div class="floating-footer">
             <button class="btn-today-floating" id="btn-today">Oggi</button>
             <div class="right-menu-floating">
@@ -319,142 +315,151 @@
         const scrollArea = document.getElementById('scroll-area');
         const labelYear = document.getElementById('label-year');
         const headerSmallMonth = document.getElementById('header-small-month');
+        const dynamicBigTitle = document.getElementById('dynamic-big-title');
         const mainHeader = document.getElementById('main-header');
         
-        const realToday = new Date(2026, 4, 18); // Data odierna fissa di sistema
+        const realToday = new Date(); // Impostazione odierna reale e dinamica
 
         let startYear = realToday.getFullYear() - 1;
-        let endYear = realToday.getFullYear() + 1;
+        let endYear = realToday.getFullYear() + 2;
 
-        function buildContinuousCalendar() {
+        // Mappa per salvare l'altezza esatta in pixel a cui compare il giorno 1 di ogni mese
+        let monthTriggers = [];
+
+        function buildPerfectCalendar() {
             mainGrid.innerHTML = '';
+            monthTriggers = [];
             
-            let firstDayOfYear = new Date(startYear, 0, 1);
-            let startDayOfWeek = firstDayOfYear.getDay() - 1;
+            let cursorDate = new Date(startYear, 0, 1);
+            
+            let startDayOfWeek = cursorDate.getDay() - 1;
             if (startDayOfWeek === -1) startDayOfWeek = 6;
-
             for (let e = 0; e < startDayOfWeek; e++) {
                 const emptyCell = document.createElement('div');
+                emptyCell.style.borderBottom = "0.5px solid var(--ios-grid-line)";
                 mainGrid.appendChild(emptyCell);
             }
 
-            for (let year = startYear; year <= endYear; year++) {
-                for (let month = 0; month < 12; month++) {
+            let lastMonthTracked = -1;
+
+            while (cursorDate.getFullYear() <= endYear) {
+                let currentYear = cursorDate.getFullYear();
+                let currentMonth = cursorDate.getMonth();
+                let currentDay = cursorDate.getDate();
+
+                const cell = document.createElement('div');
+                cell.classList.add('day-cell');
+                cell.dataset.year = currentYear;
+                cell.dataset.monthName = monthNames[currentMonth];
+
+                // REGOLA VIDEO: Il giorno 1 viene rimpiazzato dall'etichetta "1 Mese" (es: 1 Dic)
+                if (currentDay === 1) {
+                    cell.id = `trigger-${currentYear}-${currentMonth}`; // Identificatore per lo scroll
                     
-                    const titleRow = document.createElement('div');
-                    titleRow.classList.add('grid-month-title');
-                    titleRow.id = `title-${year}-${month}`;
-                    titleRow.innerText = monthNames[month];
-                    titleRow.dataset.year = year;
-                    titleRow.dataset.monthName = monthNames[month];
-                    mainGrid.appendChild(titleRow);
-
-                    const totalDays = new Date(year, month + 1, 0).getDate();
-                    
-                    for (let day = 1; day <= totalDays; day++) {
-                        const cell = document.createElement('div');
-                        cell.classList.add('day-cell');
-
-                        if (day === 1) {
-                            const labelInline = document.createElement('div');
-                            labelInline.classList.add('month-label-inline');
-                            if (month === realToday.getMonth() && year === realToday.getFullYear()) {
-                                labelInline.classList.add('current-label');
-                            }
-                            labelInline.innerText = monthShortNames[month];
-                            cell.appendChild(labelInline);
-                        }
-
-                        if (day === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
-                            cell.classList.add('today');
-                        }
-
-                        const numSpan = document.createElement('span');
-                        numSpan.classList.add('day-number');
-                        numSpan.innerText = day;
-                        cell.appendChild(numSpan);
-
-                        // Puntini estetici provvisori
-                        const dotsContainer = document.createElement('div');
-                        dotsContainer.classList.add('dots-container');
-                        if (day === 25 && month === 3) {
-                            const dot = document.createElement('div');
-                            dot.classList.add('dot', 'purple');
-                            dotsContainer.appendChild(dot);
-                        }
-                        cell.appendChild(dotsContainer);
-
-                        mainGrid.appendChild(cell);
+                    const textSpan = document.createElement('span');
+                    textSpan.classList.add('first-day-text');
+                    if (currentMonth === realToday.getMonth() && currentYear === realToday.getFullYear()) {
+                        textSpan.classList.add('current-month-red');
                     }
+                    textSpan.innerText = `1 ${monthShortNames[currentMonth]}`;
+                    cell.appendChild(textSpan);
+                } else {
+                    // Giorni normali dal 2 in poi
+                    const numSpan = document.createElement('span');
+                    numSpan.classList.add('day-number');
+                    numSpan.innerText = currentDay;
+                    cell.appendChild(numSpan);
                 }
+
+                // Gestione del cerchio rosso per Oggi (sia che sia il giorno 1 o un giorno normale)
+                if (currentDay === realToday.getDate() && currentMonth === realToday.getMonth() && currentYear === realToday.getFullYear()) {
+                    cell.classList.add('today');
+                }
+
+                mainGrid.appendChild(cell);
+                cursorDate.setDate(cursorDate.getDate() + 1);
             }
 
+            // Riposizionamento istantaneo su oggi all'avvio dell'applicazione
             setTimeout(() => {
-                const currentTitle = document.getElementById(`title-${realToday.getFullYear()}-${realToday.getMonth()}`);
-                if (currentTitle) {
-                    currentTitle.scrollIntoView({ block: 'start' });
-                    scrollArea.scrollTop -= 10;
+                const todayTrigger = document.getElementById(`trigger-${realToday.getFullYear()}-${realToday.getMonth()}`);
+                if (todayTrigger) {
+                    // Trova la posizione del giorno 1 del mese attuale e sincronizza lo scroll
+                    scrollArea.scrollTop = todayTrigger.offsetTop - 20;
+                    calculateMonthPositions();
                 }
-            }, 100);
+            }, 150);
         }
 
-        // --- SISTEMA DI FILTRAGGIO ESCLUSIVO DEI TITOLI ---
-        scrollArea.addEventListener('scroll', () => {
-            const titles = document.querySelectorAll('.grid-month-title');
-            let activeTitle = null;
-            const headerHeight = mainHeader.offsetHeight;
+        // Salva le posizioni corrette di ogni mese per renderle pronte durante lo scroll veloce
+        function calculateMonthPositions() {
+            monthTriggers = [];
+            for (let year = startYear; year <= endYear; year++) {
+                for (let month = 0; month < 12; month++) {
+                    const el = document.getElementById(`trigger-${year}-${month}`);
+                    if (el) {
+                        monthTriggers.push({
+                            year: year,
+                            monthName: monthNames[month],
+                            offsetTop: el.offsetTop
+                        });
+                    }
+                }
+            }
+        }
 
-            // 1. Identifica il titolo del mese principale dominante
-            for (let title of titles) {
-                const rect = title.getBoundingClientRect();
-                if (rect.top <= headerHeight + 60) {
-                    activeTitle = title;
+        // --- CALCOLO INTERCESSORE DEL MOVIMENTO DEL TITOLO (REGOLA VIDEO Apple) ---
+        scrollArea.addEventListener('scroll', () => {
+            const currentScroll = scrollArea.scrollTop;
+            let activeMonth = monthTriggers[0];
+
+            // Trova il mese attualmente visibile in base all'altezza dello scroll
+            for (let i = 0; i < monthTriggers.length; i++) {
+                if (currentScroll >= monthTriggers[i].offsetTop - 120) {
+                    activeMonth = monthTriggers[i];
                 }
             }
 
-            if (activeTitle) {
-                const year = activeTitle.dataset.year;
-                const monthName = activeTitle.dataset.monthName;
+            if (activeMonth) {
+                labelYear.innerText = activeMonth.year;
+                dynamicBigTitle.innerText = activeMonth.monthName;
+                headerSmallMonth.innerText = activeMonth.monthName;
 
-                labelYear.innerText = year;
-                headerSmallMonth.innerText = monthName;
+                // Calcolo della distanza del prossimo mese in arrivo dal basso per creare la spinta del titolo
+                const nextMonthIndex = monthTriggers.indexOf(activeMonth) + 1;
+                if (nextMonthIndex < monthTriggers.length) {
+                    const nextMonth = monthTriggers[nextMonthIndex];
+                    const distanceToNext = nextMonth.offsetTop - currentScroll;
 
-                const rect = activeTitle.getBoundingClientRect();
-                const distance = rect.top - headerHeight;
-
-                // 2. REGOLA RESTRITTIVA: Spegne immediatamente tutti i titoli non attivi
-                titles.forEach(title => {
-                    if (title !== activeTitle) {
-                        title.style.visibility = "hidden";
+                    // Se il prossimo mese è a meno di 80px dall'header, sposta e sfuma il titolo grande verso l'alto
+                    if (distanceToNext > 0 && distanceToNext < 80) {
+                        const ratio = distanceToNext / 80;
+                        dynamicBigTitle.style.opacity = ratio;
+                        dynamicBigTitle.style.transform = `translateY(${(ratio - 1) * 20}px)`;
+                        headerSmallMonth.style.opacity = window.getComputedStyle(dynamicBigTitle).opacity === "0" ? "1" : "0";
+                    } else if (distanceToNext <= 0) {
+                        dynamicBigTitle.style.opacity = "0";
+                        headerSmallMonth.style.opacity = "1";
+                    } else {
+                        dynamicBigTitle.style.opacity = "1";
+                        dynamicBigTitle.style.transform = "translateY(0px)";
+                        headerSmallMonth.style.opacity = "0";
                     }
-                });
-
-                // Rende visibile solo ed esclusivamente il titolo del mese corrente
-                activeTitle.style.visibility = "visible";
-
-                // Gestione della dissolvenza fluida all'impatto con l'header
-                if (distance <= 0) {
-                    activeTitle.style.opacity = "0";
-                    headerSmallMonth.style.opacity = "1";
-                } else if (distance > 0 && distance < 40) {
-                    const ratio = distance / 40;
-                    activeTitle.style.opacity = ratio;
-                    headerSmallMonth.style.opacity = 1 - ratio;
-                } else {
-                    activeTitle.style.opacity = "1";
-                    headerSmallMonth.style.opacity = "0";
                 }
             }
         });
 
         document.getElementById('btn-today').addEventListener('click', () => {
-            const currentTitle = document.getElementById(`title-${realToday.getFullYear()}-${realToday.getMonth()}`);
-            if (currentTitle) {
-                currentTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const todayTrigger = document.getElementById(`trigger-${realToday.getFullYear()}-${realToday.getMonth()}`);
+            if (todayTrigger) {
+                scrollArea.scrollTo({ top: todayTrigger.offsetTop - 20, behavior: 'smooth' });
             }
         });
 
-        buildContinuousCalendar();
+        buildPerfectCalendar();
+        
+        // Ricalcola i posizionamenti se la finestra cambia dimensione o ruota
+        window.addEventListener('resize', calculateMonthPositions);
     </script>
 </body>
 </html>
