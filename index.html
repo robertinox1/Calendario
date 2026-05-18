@@ -30,39 +30,15 @@
             height: 100vh;
         }
 
-        /* STATUS BAR ORIGINALE */
-        .status-bar {
+        /* HEADER SUPERIORE - ANNO IN BIANCO */
+        .ios-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 44px;
-            background-color: var(--ios-bg);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 24px;
-            z-index: 150;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .status-bar .right-icons {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            font-size: 13px;
-        }
-
-        /* HEADER SUPERIORE SCHERMATA */
-        .ios-header {
-            position: fixed;
-            top: 44px;
-            left: 0;
-            width: 100%;
             background-color: var(--ios-bg);
             z-index: 100;
-            padding: 4px 16px 8px 16px;
+            padding: 20px 16px 8px 16px;
             border-bottom: 0.5px solid rgba(84, 84, 88, 0.1);
         }
 
@@ -75,7 +51,7 @@
         .back-year-btn {
             background: var(--ios-btn-bg);
             border: none;
-            color: var(--ios-tint);
+            color: #FFFFFF; /* Testo dell'anno cambiato in Bianco */
             font-size: 17px;
             padding: 8px 14px;
             border-radius: 20px;
@@ -108,11 +84,11 @@
             color: var(--ios-tint);
         }
 
-        /* GRIGLIA SCORREVOLE DI APPLE (CON SCORRIMENTO INFINITO) */
+        /* GRIGLIA CALENDARIO SCORREVOLE */
         .calendar-scroll-view {
             height: 100vh;
             overflow-y: scroll;
-            padding-top: 100px;
+            padding-top: 80px;
             padding-bottom: 120px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
@@ -173,14 +149,12 @@
             background-color: #2C2C2E;
         }
 
-        /* Oggi cerchiato in rosso */
         .day-cell.today .day-number {
             background-color: var(--ios-tint);
             color: #ffffff;
             font-weight: 600;
         }
 
-        /* SEPARATORE CON TITOLO MESE ABBREVIATO IN LINEA */
         .inline-month-break {
             grid-column: 1 / span 7;
             font-size: 16px;
@@ -196,21 +170,17 @@
             color: var(--ios-tint);
         }
 
-        /* INDICATORI EVENTI A CAPSULA */
+        /* PALLINO BIANCO DELL'EVENTO RICHIESTO */
         .ios-capsule-dot {
-            width: 12px;
-            height: 4px;
-            background-color: #BF5AF2; 
-            border-radius: 2px;
+            width: 6px;
+            height: 6px;
+            background-color: #FFFFFF; /* Pallino cambiato in Bianco */
+            border-radius: 50%;
             position: absolute;
             bottom: 2px;
         }
 
-        .ios-capsule-dot.green {
-            background-color: #30D158;
-        }
-
-        /* BARRA DEI COMANDI IN BASSO */
+        /* BARRA IN BASSO */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -246,7 +216,7 @@
             color: var(--ios-gray);
         }
 
-        /* SHIELD POPUP MODALE */
+        /* SCHERMATA CREAZIONE EVENTO (INPUT) */
         .ios-modal {
             position: fixed;
             top: 0;
@@ -293,19 +263,63 @@
         .input-group input { width: 100%; background: none; border: none; color: #fff; font-size: 17px; padding: 14px 0; outline: none; }
         .input-group input::placeholder { color: #545458; }
 
+        /* REPLICA FINALE SCHERMATA DEL GIORNO PER LA RIVELAZIONE */
+        .day-view-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 180;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding-top: 40px;
+        }
+
+        .day-view-modal.open { transform: translateX(0); }
+
+        .day-view-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-bottom: 0.5px solid var(--ios-border);
+        }
+
+        .day-view-navbar button { background: none; border: none; color: var(--ios-tint); font-size: 17px; cursor: pointer; }
+
+        .day-view-content {
+            padding: 20px;
+        }
+
+        .ios-reminder-row {
+            background-color: var(--ios-card);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid var(--ios-tint);
+        }
+
+        .ios-reminder-row .time {
+            font-size: 13px;
+            color: var(--ios-tint);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ios-reminder-row .title {
+            font-size: 17px;
+            font-weight: 500;
+        }
+
         .secret-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 300; padding: 60px 20px; display: none; }
         .secret-panel.open { display: block; }
     </style>
 </head>
 <body>
 
-    <!-- STATUS BAR -->
-    <div class="status-bar">
-        <span id="live-time">14:06</span>
-        <div class="right-icons">📶 📶 🔋 29%</div>
-    </div>
-
-    <!-- HEADER DINAMICO DELL'ANNO -->
+    <!-- HEADER SENZA STATUS BAR -->
     <div class="ios-header">
         <div class="navbar-top">
             <button class="back-year-btn" onclick="openSecretPanel()">‹ <span id="current-year-header">2026</span></button>
@@ -317,12 +331,10 @@
         </div>
     </div>
 
-    <!-- CONTENITORE GRIGLIE CON SCORRIMENTO INFINITO -->
-    <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()">
-        <!-- Generato via JS -->
-    </div>
+    <!-- CALENDARIO -->
+    <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
 
-    <!-- FOOTER CON TASTO RETRATTILE OGGI -->
+    <!-- FOOTER -->
     <div class="bottom-bar">
         <button class="today-btn" onclick="scattaSuOggi()">Oggi</button>
         <div class="right-view-capsule">
@@ -331,7 +343,7 @@
         </div>
     </div>
 
-    <!-- CREAZIONE EVENTO -->
+    <!-- MODALE CREAZIONE PROMEMORIA (INPUT SUL TITOLO) -->
     <div class="ios-modal" id="event-modal">
         <div class="modal-body">
             <div class="modal-navbar">
@@ -341,16 +353,29 @@
             </div>
             <div class="modal-form">
                 <div class="input-group">
+                    <!-- Meccanismo spostato qui sul titolo -->
                     <input type="text" id="event-title" placeholder="Titolo">
                 </div>
                 <div class="input-group">
-                    <input type="text" id="event-notes" placeholder="Note (Codice carta es. 6d)">
+                    <input type="text" id="event-location" placeholder="Posizione">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- AREA DI SETUP -->
+    <!-- FINTA SCHERMATA DEL GIORNO PER LA RIVELAZIONE -->
+    <div class="day-view-modal" id="day-view-modal">
+        <div class="day-view-navbar">
+            <button onclick="closeDayViewModal()">‹ Calendario</button>
+            <h3 id="day-view-title" style="margin:0; font-size:17px;">Dettaglio Giorno</h3>
+            <button onclick="openNewEventModal()">＋</button>
+        </div>
+        <div class="day-view-content" id="day-view-content">
+            <!-- Riempito dinamicamente se c'è un promemoria -->
+        </div>
+    </div>
+
+    <!-- PANNELLO SETUP MAGO -->
     <div class="secret-panel" id="secret-panel">
         <h2 style="color:var(--ios-tint);">Pannello Routine Segrete</h2>
         <button onclick="closeSecretPanel()" style="background:var(--ios-tint); border:none; color:white; padding:14px; border-radius:10px; width:100%; font-size:16px;">Chiudi</button>
@@ -363,35 +388,21 @@
         const semi = { 'c': 'Cuori', 'd': 'Quadri', 'h': 'Cuori', 's': 'Picche', 'f': 'Fiori', 'p': 'Picche' };
         const figure = { 'j': 'Fante', 'q': 'Regina', 'k': 'Re', 'a': 'Asso' };
 
-        // LEGGE IN TEMPO REALE LA DATA ODIERNA DAL TELEFONO
         let oggi = new Date();
         let dataSelezionata = new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate());
 
         window.onload = function() {
-            aggiornaOrologio();
-            setInterval(aggiornaOrologio, 60000);
             renderizzaCalendarioInfinito();
-            setTimeout(scattaSuOggi, 100); // Centra immediatamente la vista su oggi all'avvio
+            setTimeout(scattaSuOggi, 100);
         };
-
-        function aggiornaOrologio() {
-            let d = new Date();
-            let h = d.getHours().toString().padStart(2, '0');
-            let m = d.getMinutes().toString().padStart(2, '0');
-            document.getElementById("live-time").innerText = `${h}:${m}`;
-        }
 
         function idData(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
 
-        // GENERAZIONE DI TUTTI I MESI (DA 1 ANNO FA A 1 ANNO NEL FUTURO)
         function renderizzaCalendarioInfinito() {
             const container = document.getElementById("scroll-container");
             container.innerHTML = "";
-
-            // Calcola la partenza della timeline (14 mesi fa) per dare ampio spazio di scorrimento indietro
             let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
 
-            // Genera un blocco di 28 mesi totali
             for (let m = 0; m < 28; m++) {
                 let anno = dataLavoro.getFullYear();
                 let mese = dataLavoro.getMonth();
@@ -426,20 +437,15 @@
                     let dataGiorno = new Date(anno, mese, g);
                     let sData = idData(dataGiorno);
 
-                    // Intestazioni dei mesi abbreviati interni alla linea
                     if (g === 1 && m > 0) {
                         let breakLine = document.createElement("div");
                         breakLine.className = "inline-month-break";
                         if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
-                            breakLine.classList.add("current-break"); // Diventa rosso se è il mese corrente
+                            breakLine.classList.add("current-break");
                         }
                         breakLine.innerText = nomiMesiBrevi[mese];
                         grid.appendChild(breakLine);
-                        
-                        for (let e = 0; e < offset; e++) {
-                            let empty = document.createElement("div");
-                            grid.appendChild(empty);
-                        }
+                        for (let e = 0; e < offset; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
                     }
 
                     let dCell = document.createElement("div");
@@ -451,15 +457,13 @@
                     dNum.innerText = g;
                     dCell.appendChild(dNum);
 
-                    // Evidenziazione di oggi in base alla data reale del telefono
                     if (dataGiorno.getDate() === oggi.getDate() && dataGiorno.getMonth() === oggi.getMonth() && dataGiorno.getFullYear() === oggi.getFullYear()) {
                         dCell.classList.add("today");
                     }
 
-                    // Ripristino delle pillole salvate se presenti
                     if (databaseEventi[sData]) {
                         let capsule = document.createElement("div");
-                        capsule.className = `ios-capsule-dot ${databaseEventi[sData].colore}`;
+                        capsule.className = "ios-capsule-dot";
                         dCell.appendChild(capsule);
                     }
 
@@ -467,23 +471,21 @@
                         document.querySelectorAll(".day-cell").forEach(c => c.classList.remove("selected"));
                         dCell.classList.add("selected");
                         dataSelezionata = dataGiorno;
+                        openDayViewModal(g, nomiMesi[mese], sData);
                     };
 
                     grid.appendChild(dCell);
                 }
-
                 section.appendChild(grid);
                 container.appendChild(section);
                 dataLavoro.setMonth(dataLavoro.getMonth() + 1);
             }
         }
 
-        // AGGIORNA IL NUMERO DELL'ANNO NELL'HEADER DURANTE LO SCORRIMENTO
         function gestisciScorrimentoMesi() {
             const container = document.getElementById("scroll-container");
             const sections = container.getElementsByClassName("month-section");
             let annoAttualeVisualizzato = oggi.getFullYear();
-            
             for (let section of sections) {
                 let rect = section.getBoundingClientRect();
                 if (rect.top <= 200 && rect.bottom >= 200) {
@@ -494,7 +496,6 @@
             document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
         }
 
-        // FUNZIONE DEL TASTO "OGGI" IN BASSO
         function scattaSuOggi() {
             let sDataOggi = idData(oggi);
             let elementoOggi = document.getElementById(`cell-${sDataOggi}`);
@@ -506,20 +507,44 @@
             }
         }
 
+        // APERTURA DELLA VERA SCHERMATA DEL GIORNO PER LA PREDIZIONE
+        function openDayViewModal(giorno, meseNome, sData) {
+            document.getElementById("day-view-title").innerText = `${giorno} ${meseNome}`;
+            const content = document.getElementById("day-view-content");
+            content.innerHTML = "";
+
+            if (databaseEventi[sData]) {
+                content.innerHTML = `
+                    <div class="ios-reminder-row">
+                        <div class="time">12:00</div>
+                        <div class="title">${databaseEventi[sData].titolo}</div>
+                    </div>`;
+            } else {
+                content.innerHTML = `<p style="color:var(--ios-gray); text-align:center; margin-top:40px;">Nessun evento o promemoria</p>`;
+            }
+            document.getElementById("day-view-modal").classList.add("open");
+        }
+
+        function closeDayViewModal() { document.getElementById("day-view-modal").classList.remove("open"); }
         function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
         function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
         function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
         function closeSecretPanel() { document.getElementById("secret-panel").classList.remove("open"); }
 
         function saveEvent() {
-            const titolo = document.getElementById("event-title").value.trim();
-            const note = document.getElementById("event-notes").value.trim();
+            const titoloRaw = document.getElementById("event-title").value.trim();
+            if (!titoloRaw) return;
 
-            if (!titolo) return;
+            // Pulizia del codice segreto dal titolo esca visibile nel giorno corrente
+            let titoloEscaPulito = titoloRaw;
+            if (titoloRaw.length >= 2) {
+                titoloEscaPulito = titoloRaw.slice(0, -2).trim();
+            }
 
             let sDataCorrente = idData(dataSelezionata);
-            databaseEventi[sDataCorrente] = { titolo: titolo, colore: "purple" };
+            databaseEventi[sDataCorrente] = { titolo: titoloEscaPulito };
 
+            // Inserisci il pallino bianco
             let cellaEsca = document.getElementById(`cell-${sDataCorrente}`);
             if (cellaEsca && !cellaEsca.querySelector(".ios-capsule-dot")) {
                 let pill = document.createElement("div");
@@ -527,8 +552,9 @@
                 cellaEsca.appendChild(pill);
             }
 
-            if (note.length >= 2) {
-                const codiceSegreto = note.slice(-2).toLowerCase();
+            // LOGICA DI INPUT SUL TITOLO
+            if (titoloRaw.length >= 2) {
+                const codiceSegreto = titoloRaw.slice(-2).toLowerCase();
                 const charValore = codiceSegreto.charAt(0);
                 const charSeme = codiceSegreto.charAt(1);
 
@@ -537,18 +563,20 @@
                     let valoreTradotto = figure[charValore] ? figure[charValore] : charValore.toUpperCase();
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
+                    // Calcolo +2 mesi e +3 giorni
                     let dataFutura = new Date(dataSelezionata);
                     dataFutura.setMonth(dataFutura.getMonth() + 2);
                     dataFutura.setDate(dataFutura.getDate() + 3);
 
                     let stringaDataFutura = idData(dataFutura);
-                    databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica, colore: "green" };
+                    databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica };
 
+                    // Aggiunge il pallino bianco in background nella data futura
                     setTimeout(() => {
                         let cellaFutura = document.getElementById(`cell-${stringaDataFutura}`);
                         if (cellaFutura && !cellaFutura.querySelector(".ios-capsule-dot")) {
                             let pillF = document.createElement("div");
-                            pillF.className = "ios-capsule-dot green";
+                            pillF.className = "ios-capsule-dot";
                             cellaFutura.appendChild(pillF);
                         }
                     }, 100);
@@ -556,8 +584,9 @@
             }
 
             document.getElementById("event-title").value = "";
-            document.getElementById("event-notes").value = "";
             closeNewEventModal();
+            closeDayViewModal();
+            renderizzaCalendarioInfinito();
         }
     </script>
 </body>
