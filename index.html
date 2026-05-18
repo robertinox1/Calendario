@@ -5,307 +5,426 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calendario</title>
     <style>
+        /* --- STILI BASE E VARIABILI APPLE --- */
         :root {
-            --ios-bg: #000000;
-            --ios-card: #1C1C1E;
-            --ios-text: #FFFFFF;
-            --ios-gray: #8E8E93;
-            --ios-dark-gray: #48484A; 
-            --ios-tint: #FF453A; 
-            --ios-border: rgba(84, 84, 88, 0.65); 
+            --ios-red: #ff3b30;
+            --ios-gray-text: #8e8e93;
+            --ios-bg: #ffffff;
+            --ios-grid-line: #e5e5ea;
+            --ios-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
-            background-color: var(--ios-bg);
-            color: var(--ios-text);
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--ios-font);
+            background-color: var(--ios-bg);
+            color: #000000;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
         }
 
-        /* HEADER PRINCIPALE CONFERMATO */
-        .ios-header {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Contenitore stile iPhone */
+        #phone-wrapper {
             width: 100%;
-            background-color: var(--ios-bg);
-            z-index: 100;
-            padding: 20px 16px 4px 16px;
+            height: 100%;
+            max-width: 430px; /* Dimensione iPhone Pro Max */
+            max-height: 932px;
+            background: var(--ios-bg);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        .navbar-top {
+        /* --- HEADER --- */
+        .ios-header {
+            padding-top: env(safe-area-inset-top, 20px);
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 50px;
+            border-bottom: 0.5px solid var(--ios-grid-line);
         }
 
-        .back-year-btn {
-            background-color: var(--ios-card);
-            border: none;
-            color: #FFFFFF; 
-            font-size: 16px;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-
-        .capsula-alto-img {
-            height: 38px;
-            object-fit: contain;
-            opacity: 0.45;
-        }
-
-        .main-month-title {
-            font-size: 34px;
-            font-weight: 700;
-            margin: 8px 0 6px 4px;
-        }
-
-        /* Lettere feriali accese (Confermate) */
-        .weekdays-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            color: #FFFFFF; 
-            font-size: 11px;
-            font-weight: 600;
-            padding-bottom: 8px;
-            border-bottom: 0.5px solid var(--ios-border);
-            margin-top: 10px;
-        }
-        
-        .weekdays-grid div:nth-child(6), .weekdays-grid div:nth-child(7) {
-            color: var(--ios-dark-gray); 
-        }
-
-        /* CALENDARIO A GRIGLIA UNICA CONTINUA */
-        .calendar-scroll-view {
-            height: 100vh;
-            overflow-y: scroll;
-            padding-top: 140px; 
-            padding-bottom: 120px;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .grid-continua {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            padding: 0 16px;
-        }
-
-        /* CELLA GIORNO: Linea spessa e continua sotto ogni singola riga di numeri */
-        .day-cell {
-            position: relative;
-            text-align: center;
-            font-size: 16px; 
-            font-weight: 700; 
-            height: 58px; /* Spaziatura verticale calibrata sullo screenshot */
+        .header-left {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end; 
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--ios-border); /* Linea orizzontale che attraversa tutto lo schermo */
+            align-items: center;
+            color: var(--ios-red);
+            font-size: 17px;
             cursor: pointer;
         }
 
-        /* Celle vuote di riempimento per mantenere le linee continue */
-        .day-cell.empty {
-            cursor: default;
+        .header-left svg {
+            fill: var(--ios-red);
+            margin-right: 5px;
         }
 
+        .header-center {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-right svg {
+            fill: var(--ios-red);
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        /* --- GIORNI DELLA SETTIMANA --- */
+        .weekdays-bar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            padding: 8px 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--ios-gray-text);
+            border-bottom: 0.5px solid var(--ios-grid-line);
+        }
+
+        /* --- GRIGLIA CALENDARIO --- */
+        .calendar-body {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: 1fr;
+            height: 85%; /* Lascia spazio sotto per gli eventi vuoti */
+            padding-top: 5px;
+            position: absolute;
+            width: 100%;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .day-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 8px;
+            font-size: 20px;
+            font-weight: 400;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Giorni fuori dal mese corrente */
+        .day-adjacent {
+            color: #d1d1d6;
+        }
+
+        /* Giorno Oggi */
+        .day-cell.today .day-number {
+            color: var(--ios-red);
+            font-weight: 600;
+        }
+
+        /* Giorno Selezionato */
         .day-number {
-            width: 34px; 
-            height: 34px;
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            transition: background 0.1s, color 0.1s;
         }
 
-        /* Sabato e Domenica spenti */
-        .day-cell.sat, .day-cell.sun { color: var(--ios-dark-gray); } 
-        
-        /* Giorno corrente cerchiato in rosso */
-        .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; }
+        .day-cell.selected .day-number {
+            background-color: #000000;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
 
-        /* IL VERO MESE ABBREVIATO DI iOS: Grande, in grassetto, inserito sopra il giorno 1 */
-        .month-start-label {
+        /* Se OGGI è selezionato, lo sfondo diventa rosso */
+        .day-cell.today.selected .day-number {
+            background-color: var(--ios-red);
+            color: #ffffff !important;
+        }
+
+        /* Puntino finto per l'evento magico (futuro) */
+        .event-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--ios-gray-text);
+            border-radius: 50%;
             position: absolute;
-            top: 2px;
-            left: 4px;
-            font-size: 15px; /* Ingrandito come da richiesta */
-            font-weight: 700; /* Grassetto marcato */
-            color: #FFFFFF;
-            letter-spacing: -0.2px;
+            bottom: 4px;
+            display: none;
         }
-        .day-cell.current-month-break .month-start-label { 
-            color: var(--ios-tint); /* Diventa rosso (es. Mag) se è il mese corrente */
+        .day-cell.has-event .event-dot {
+            display: block;
         }
 
-        /* FOOTER */
-        .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 84px;
+        /* --- CONTENITORE VISTA GIORNALIERA (Sotto la griglia) --- */
+        .events-preview {
+            height: 15%;
+            border-top: 0.5px solid var(--ios-grid-line);
+            padding: 16px;
+            font-size: 15px;
+            color: var(--ios-gray-text);
+            background-color: #f2f2f7;
+        }
+
+        /* --- FOOTER DI NAVIGAZIONE --- */
+        .ios-footer {
+            padding-bottom: env(safe-area-inset-bottom, 12px);
+            padding-top: 10px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 16px 24px 16px;
-            z-index: 120;
+            justify-content: space-around;
+            border-top: 0.5px solid var(--ios-grid-line);
+            background-color: #f9f9f9;
         }
 
-        .today-png-btn, .capsula-basso-img {
-            height: 44px;
-            object-fit: contain;
-            opacity: 0.45;
+        .footer-btn {
+            background: none;
+            border: none;
+            color: var(--ios-red);
+            font-size: 17px;
+            cursor: pointer;
+            font-family: var(--ios-font);
+        }
+        .footer-btn.center-btn {
+            color: var(--ios-red);
+            font-weight: 400;
         }
     </style>
 </head>
 <body>
 
-    <div class="ios-header">
-        <div class="navbar-top">
-            <button class="back-year-btn">‹ <span id="current-year-header">2026</span></button>
-            <img src="capsula-alto.png" class="capsula-alto-img" alt="">
-        </div>
-        <div class="main-month-title" id="main-title-display">Maggio</div>
-        <div class="weekdays-grid">
+    <div id="phone-wrapper">
+        
+        <!-- HEADER -->
+        <header class="ios-header">
+            <div class="header-left" id="btn-prev">
+                <svg width="12" height="21" viewBox="0 0 12 21"><path d="M10.5 19.5L1.5 10.5L10.5 1.5" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <span id="back-year">2025</span>
+            </div>
+            <div class="header-center" id="current-month-year">
+                Maggio 2026
+            </div>
+            <div class="header-right">
+                <!-- Icona Cerca -->
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <!-- Icona Più -->
+                <svg id="btn-next" style="transform: rotate(180deg);" width="12" height="21" viewBox="0 0 12 21"><path d="M10.5 19.5L1.5 10.5L10.5 1.5" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </div>
+        </header>
+
+        <!-- GIORNI DELLA SETTIMANA -->
+        <div class="weekdays-bar">
             <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
+
+        <!-- AREA CALENDARIO SCORREVOLE -->
+        <div class="calendar-body" id="swipe-area">
+            <div class="calendar-grid" id="days-container">
+                <!-- Generato dinamicamente da JS -->
+            </div>
+        </div>
+
+        <!-- SPECCHIO EVENTI IN BASSO -->
+        <div class="events-preview" id="event-desc">
+            Nessun evento
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="ios-footer">
+            <button class="footer-btn" id="btn-today">Oggi</button>
+            <button class="footer-btn center-btn" style="color:#8e8e93;">Calendari</button>
+            <button class="footer-btn" style="color:#8e8e93;">In arrivo</button>
+        </footer>
+
     </div>
 
-    <!-- CONTENITORE UNICO PER TUTTI I MESI -->
-    <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()">
-        <div class="grid-continua" id="main-grid"></div>
-    </div>
-
-    <div class="bottom-bar">
-        <img src="pulsante-oggi.png" class="today-png-btn" alt="" onclick="scattaSuOggi()">
-        <img src="capsula-basso.png" class="capsula-basso-img" alt="">
-    </div>
-
+    <!-- LOGICA DI SISTEMA ED EMULAZIONE CALENDARIO -->
     <script>
-        const nomiMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-        const nomiMesiBrevi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
         
-        let oggi = new Date();
-        let annoCorrenteView = oggi.getFullYear();
+        // Manteniamo lo stato della data visualizzata
+        let currentDate = new Date(); 
+        // Salviamo il giorno odierno reale per il marcatore rosso
+        const realToday = new Date(); 
+        // Giorno correntemente selezionato dall'utente (di default oggi)
+        let selectedDate = new Date();
 
-        window.onload = function() {
-            renderizzaCalendarioContinuo();
-            setTimeout(scattaSuOggi, 100); // Centra in automatico su oggi al caricamento
-        };
+        const container = document.getElementById('days-container');
+        const monthYearLabel = document.getElementById('current-month-year');
+        const backYearLabel = document.getElementById('back-year');
+        const eventDesc = document.getElementById('event-desc');
 
-        function idData(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
-
-        function renderizzaCalendarioContinuo() {
-            const grid = document.getElementById("main-grid");
-            grid.innerHTML = "";
-
-            // Genera la timeline da 14 mesi fa a 14 mesi nel futuro (ampio raggio di oltre due anni completi)
-            let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
-
-            for (let m = 0; m < 28; m++) {
-                let anno = dataLavoro.getFullYear();
-                let mese = dataLavoro.getMonth();
-
-                let primoGiornoReal = new Date(anno, mese, 1).getDay();
-                let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
-
-                // Se è il primissimo mese della timeline, inseriamo i quadrati vuoti iniziali per allineare i giorni della settimana
-                if (m === 0) {
-                    for (let e = 0; e < offsetReal; e++) { 
-                        let empty = document.createElement("div");
-                        empty.className = "day-cell empty"; 
-                        grid.appendChild(empty); 
-                    }
-                }
-
-                let giorniNelMese = new Date(anno, mese + 1, 0).getDate();
-                for (let g = 1; g <= giorniNelMese; g++) {
-                    let dataGiorno = new Date(anno, mese, g);
-                    let dayOfWeek = dataGiorno.getDay();
-                    let sData = idData(dataGiorno);
-
-                    let dCell = document.createElement("div");
-                    dCell.className = "day-cell";
-                    dCell.setAttribute("data-anno", anno);
-                    dCell.setAttribute("data-mese-nome", nomiMesi[mese]);
-                    dCell.id = `cell-${sData}`;
-
-                    if (dayOfWeek === 0) dCell.classList.add("sun");
-                    if (dayOfWeek === 6) dCell.classList.add("sat");
-
-                    // LOGICA DEFINITIVA: Inserisce il mese abbreviato (Dic, Gen) sopra il numero 1
-                    if (g === 1) {
-                        let shortLabel = document.createElement("div");
-                        shortLabel.className = "month-start-label";
-                        if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
-                            dCell.classList.add("current-month-break");
-                        }
-                        shortLabel.innerText = nomiMesiBrevi[mese];
-                        dCell.appendChild(shortLabel);
-                    }
-
-                    let dNum = document.createElement("div");
-                    dNum.className = "day-number";
-                    dNum.innerText = g;
-                    dCell.appendChild(dNum);
-
-                    // Evidenziazione tempo reale di oggi
-                    if (dataGiorno.getDate() === oggi.getDate() && dataGiorno.getMonth() === oggi.getMonth() && dataGiorno.getFullYear() === oggi.getFullYear()) {
-                        dCell.classList.add("today");
-                    }
-
-                    grid.appendChild(dCell);
-                }
-
-                dataLavoro.setMonth(dataLavoro.getMonth() + 1);
-            }
-        }
-
-        // AGGIORNA IN TEMPO REALE IL TITOLO GRANDE DEL MESE E IL NUMERO DELL'ANNO DURANTE LO SCORRIMENTO
-        function gestisciScorrimentoMesi() {
-            const cells = document.getElementsByClassName("day-cell");
-            let meseAttuale = nomiMesi[oggi.getMonth()];
-            let annoAttuale = oggi.getFullYear();
+        function renderCalendar(date) {
+            container.innerHTML = '';
             
-            for (let cell of cells) {
-                let rect = cell.getBoundingClientRect();
-                if (rect.top >= 150 && rect.top <= 220) {
-                    let mNome = cell.getAttribute("data-mese-nome");
-                    let aNome = cell.getAttribute("data-anno");
-                    if (mNome) meseAttuale = mNome;
-                    if (aNome) annoAttuale = aNome;
-                    break;
-                }
+            const year = date.getFullYear();
+            const month = date.getMonth();
+
+            // Aggiorna Header
+            monthYearLabel.innerText = `${monthNames[month]} ${year}`;
+            backYearLabel.innerText = year - 1;
+
+            // Primo giorno del mese corrente
+            const firstDayOfMonth = new Date(year, month, 1);
+            // Il giorno della settimana del primo giorno (0 = Dom, 1 = Lun... trasforma in 0=Lun, 6=Dom)
+            let startDayOfWeek = firstDayOfMonth.getDay() - 1;
+            if (startDayOfWeek === -1) startDayOfWeek = 6;
+
+            // Numero totale di giorni nel mese attuale
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+            // Numero totale di giorni nel mese precedente
+            const totalDaysInPrevMonth = new Date(year, month, 0).getDate();
+
+            // 1. Genera i giorni del mese PRECEDENTE (sfumati) per riempire la griglia iniziale
+            for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                const dayNum = totalDaysInPrevMonth - i;
+                createDayCell(dayNum, true, new Date(year, month - 1, dayNum));
             }
-            document.getElementById("main-title-display").innerText = meseAttuale;
-            document.getElementById("current-year-header").innerText = annoAttuale;
+
+            // 2. Genera i giorni del mese CORRENTE
+            for (let day = 1; day <= totalDaysInMonth; day++) {
+                createDayCell(day, false, new Date(year, month, day));
+            }
+
+            // 3. Genera i giorni del mese SUCCESSIVO per completare l'ultima riga della griglia (6 righe totali standard iOS = 42 celle)
+            const totalCells = 42;
+            const remainingCells = totalCells - container.children.length;
+            for (let day = 1; day <= remainingCells; day++) {
+                createDayCell(day, true, new Date(year, month + 1, day));
+            }
         }
 
-        function scattaSuOggi() {
-            let sDataOggi = idData(oggi);
-            let elementoOggi = document.getElementById(`cell-${sDataOggi}`);
-            if (elementoOggi) {
-                elementoOggi.scrollIntoView({ block: "center", behavior: "smooth" });
-                meseCorrenteView = oggi.getMonth();
-                annoCorrenteView = oggi.getFullYear();
-                document.getElementById("main-title-display").innerText = nomiMesi[oggi.getMonth()];
-                document.getElementById("current-year-header").innerText = oggi.getFullYear();
+        function createDayCell(number, isAdjacent, cellDate) {
+            const cell = document.createElement('div');
+            cell.classList.add('day-cell');
+            if (isAdjacent) cell.classList.add('day-adjacent');
+
+            // Controlla se è proprio OGGI
+            if (cellDate.getDate() === realToday.getDate() && 
+                cellDate.getMonth() === realToday.getMonth() && 
+                cellDate.getFullYear() === realToday.getFullYear()) {
+                cell.classList.add('today');
+            }
+
+            // Controlla se è il giorno SELEZIONATO
+            if (cellDate.getDate() === selectedDate.getDate() && 
+                cellDate.getMonth() === selectedDate.getMonth() && 
+                cellDate.getFullYear() === selectedDate.getFullYear()) {
+                cell.classList.add('selected');
+                updateEventText(cellDate);
+            }
+
+            // Struttura interna numerica
+            const numSpan = document.createElement('span');
+            numSpan.classList.add('day-number');
+            numSpan.innerText = number;
+            cell.appendChild(numSpan);
+
+            // Puntino evento vuoto di default
+            const dot = document.createElement('div');
+            dot.classList.add('event-dot');
+            cell.appendChild(dot);
+
+            // Gestore del Click sul Giorno
+            cell.addEventListener('click', () => {
+                document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
+                cell.classList.add('selected');
+                selectedDate = new Date(cellDate);
+                updateEventText(selectedDate);
+            });
+
+            container.appendChild(cell);
+        }
+
+        function updateEventText(date) {
+            // Per ora mostra solo la data in basso. Qui inietterai il trucco di mentalismo.
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            eventDesc.innerText = date.toLocaleDateString('it-IT', options).toUpperCase() + "\nNessun evento in programma.";
+        }
+
+        // --- SISTEMA DI NAVIGAZIONE ---
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            animateTransition('left');
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            animateTransition('right');
+        });
+
+        document.getElementById('btn-today').addEventListener('click', () => {
+            currentDate = new Date(realToday);
+            selectedDate = new Date(realToday);
+            renderCalendar(currentDate);
+        });
+
+        // Animazione fluida cambio mese
+        function animateTransition(direction) {
+            container.style.opacity = '0';
+            container.style.transform = direction === 'right' ? 'translateX(20px)' : 'translateX(-20px)';
+            
+            setTimeout(() => {
+                renderCalendar(currentDate);
+                container.style.transform = direction === 'right' ? 'translateX(-20px)' : 'translateX(20px)';
+                setTimeout(() => {
+                    container.style.opacity = '1';
+                    container.style.transform = 'translateX(0)';
+                }, 50);
+            }, 200);
+        }
+
+        // --- LOGICA GESTURE SWIPE (Per scorrere con il dito sullo schermo) ---
+        let touchstartX = 0;
+        let touchendX = 0;
+        const swipeArea = document.getElementById('swipe-area');
+
+        swipeArea.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, false);
+
+        swipeArea.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            if (touchendX < touchstartX - 60) {
+                // Swipe a sinistra -> Mese successivo
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                animateTransition('right');
+            }
+            if (touchendX > touchstartX + 60) {
+                // Swipe a destra -> Mese precedente
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                animateTransition('left');
             }
         }
+
+        // Primo Avvio automatico al mese corrente
+        renderCalendar(currentDate);
     </script>
 </body>
 </html>
