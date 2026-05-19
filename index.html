@@ -113,13 +113,15 @@
             margin-bottom: 40px; 
         }
 
-        /* Spostato il padding dentro la griglia così i numeri non toccano i bordi */
-        .days-grid {
+           .days-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             row-gap: 10px;
             padding: 0 0px;
+            width: 104% !important; /* Allarga la griglia del 4% oltre lo schermo per spingere i numeri all'esterno */
+            margin-left: -2% !important; /* Centra la griglia allargata in modo simmetrico a destra e a sinistra */
         }
+
 
 
         /* CELLA GIORNO E CARATTERISTICHE DEI NUMERI */
@@ -343,21 +345,7 @@
         .days-grid .day-cell:nth-child(7n) {
             color: var(--ios-gray) !important;
         }
-        
-             /* 1. Avvicina il primo e l'ultimo numero ai bordi esterni (da 16px a 8px) */
-        .days-grid .day-cell:nth-child(7n-6) {
-            padding-left: 8px !important;
-        }
-        .days-grid .day-cell:nth-child(7n) {
-            padding-right: 8px !important;
-        }
-
-        /* 2. Adatta e riallinea le lettere dei giorni in perfetta corrispondenza sopra i numeri */
-        .weekdays-grid {
-            padding-left: 8px !important;
-            padding-right: 8px !important;
-            width: 100% !important;
-        }
+  
 
         /* 3. Mantiene il titolo del mese e il tasto dell'anno agganciati a 16px dal bordo */
         .ios-header {
