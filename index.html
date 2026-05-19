@@ -64,15 +64,17 @@
             justify-content: center;
         }
 
-        .capsula-alto-img {
-            height: 38px;
+            .capsula-alto-img {
+            height: 38px; /* Ritorniamo a una dimensione grande e visibile */
             object-fit: contain;
-            opacity: 0.45;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             cursor: pointer;
-            content: url("capsula-alto.PNG") !important; /* Forziamo il caricamento dell'immagine corretta direttamente dal CSS */
+            content: url("capsula-alto.PNG") !important;
+            opacity: 1 !important; /* Forza l'immagine ad essere bianca e nera accesa, senza trasparenze */
+            background-color: #1C1C1E; /* Colore di sfondo della capsula scura di Apple */
+            border-radius: 20px; /* Bordi arrotondati perfetti per la capsula */
+            padding: 2px 4px; /* Un minimo di respiro interno */
         }
+
 
 
         .main-month-title {
