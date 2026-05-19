@@ -344,11 +344,24 @@
             color: var(--ios-gray) !important;
         }
         
-        /* Protezione bordi dello schermo per i numeri del weekend e feriali esterni */
+             /* 1. Avvicina il primo e l'ultimo numero ai bordi esterni (da 16px a 8px) */
         .days-grid .day-cell:nth-child(7n-6) {
-            padding-left: 16px !important;
+            padding-left: 8px !important;
         }
         .days-grid .day-cell:nth-child(7n) {
+            padding-right: 8px !important;
+        }
+
+        /* 2. Adatta e riallinea le lettere dei giorni in perfetta corrispondenza sopra i numeri */
+        .weekdays-grid {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+            width: 100% !important;
+        }
+
+        /* 3. Mantiene il titolo del mese e il tasto dell'anno agganciati a 16px dal bordo */
+        .ios-header {
+            padding-left: 16px !important;
             padding-right: 16px !important;
         }
 
