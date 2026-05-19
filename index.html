@@ -622,8 +622,9 @@
         function gestisciScorrimentoMesi() {
             const container = document.getElementById("scroll-container");
             const sections = container.getElementsByClassName("month-section");
-            let annoAttualeVisualizzato = oggi.getFullYear();
-            let meseAttualeVisualizzato = nomiMesi[oggi.getMonth()];
+           let annoAttualeVisualizzato = null;
+let meseAttualeVisualizzato = null;
+
             
             for (let section of sections) {
                 let rect = section.getBoundingClientRect();
@@ -633,9 +634,11 @@
                     break;
                 }
             }
-            document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
-            document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
-        }
+          if (meseAttualeVisualizzato !== null && annoAttualeVisualizzato !== null) {
+    document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
+    document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
+}
+
 
         function scattaSuOggi() {
             let sDataOggi = idData(oggi);
