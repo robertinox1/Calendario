@@ -380,10 +380,8 @@
             content: url("pulsante-oggi.png") !important; /* Forza il caricamento da GitHub */
             z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
             opacity: 1 !important;
-               padding: 2px !important;
-            clip-path: inset(2px 2px 2px 2px round 16px) !important;
-            image-rendering: -webkit-optimize-contrast !important;
-            image-rendering: crisp-edges !important;
+                mask-image: radial-gradient(circle, black 70%, transparent 100%) !important;
+            -webkit-mask-image: inset(1px 1px 1px 1px round 17px) !important;
         }
 
         /* IMMAGINE 2: Capsula viste (Basso a destra) sovrapposta alla barra */
@@ -398,10 +396,8 @@
             content: url("capsula-basso.png") !important; /* Forza il caricamento da GitHub */
             z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
             opacity: 1 !important; 
-              padding: 2px !important;
-            clip-path: inset(2px 2px 2px 2px round 18px) !important;
-            image-rendering: -webkit-optimize-contrast !important;
-            image-rendering: crisp-edges !important;
+              mask-image: radial-gradient(circle, black 70%, transparent 100%) !important;
+            -webkit-mask-image: inset(1px 1px 1px 1px round 20px) !important;
         }
  /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
         html, body {
