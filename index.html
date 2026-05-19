@@ -381,7 +381,9 @@
             z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
             opacity: 1 !important;
                clip-path: inset(0.5px 0.5px 0.5px 0.5px round 18px) !important;
-             
+               image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            filter: contrast(110%) brightness(100%) !important;
         }
 
         /* IMMAGINE 2: Capsula viste (Basso a destra) sovrapposta alla barra */
@@ -397,6 +399,9 @@
             z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
             opacity: 1 !important; 
              clip-path: inset(0px round 22px) !important;
+             image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            filter: contrast(110%) brightness(100%) !important;
         }
  /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
         html, body {
