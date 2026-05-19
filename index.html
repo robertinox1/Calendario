@@ -80,7 +80,7 @@
             color: var(--ios-text);
         }
 
-        .weekdays-grid {
+              .weekdays-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             text-align: center;
@@ -89,7 +89,10 @@
             font-weight: 500;
             padding-bottom: 6px;
             border-bottom: 0.5px solid var(--ios-border);
+            width: 102% !important; /* Allarga le lettere del 102% per pareggiare i numeri */
+            margin-left: -1% !important; /* Sposta le lettere a sinistra dell'1% come i numeri */
         }
+
         
         .weekdays-grid div:nth-child(6), .weekdays-grid div:nth-child(7) {
             color: var(--ios-dark-gray);
