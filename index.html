@@ -318,37 +318,47 @@
         .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 600; background-color: transparent !important; }
 
         /* GRIGLIA A DUE COLONNE TOTALMENTE SCORREVOLE */
+              /* CONTENITORE PRINCIPALE: Lo forziamo Flex orizzontale per affiancare tutto */
         .day-view-columns-container {
-            display: grid !important; 
-            grid-template-columns: 55px 1fr 1fr !important; 
+            display: flex !important;
+            flex-direction: row !important;
             width: 100% !important; 
-            height: calc(100vh - 150px) !important; /* Calibrato per dare massimo spazio allo scorrimento */
-            overflow-y: scroll !important; /* Sbloccato lo scorrimento verticale totale */
+            height: calc(100vh - 140px) !important; 
+            overflow-y: scroll !important; /* Questo sblocca lo scorrimento di tutti gli orari */
             -webkit-overflow-scrolling: touch;
             position: relative; 
             background-color: var(--ios-bg);
         }
 
         .column-header-title {
-            grid-column: span 1; text-align: center; font-size: 13px; color: var(--ios-gray);
+            text-align: center; font-size: 13px; color: var(--ios-gray);
             padding: 10px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
         }
 
-        .time-labels-col { display: flex; flex-direction: column; gap: 44px; color: var(--ios-gray); font-size: 11px; padding-left: 12px; padding-top: 45px; }
-        
-        .column-events-canvas { position: relative; border-left: 1.5px solid var(--ios-border); padding-top: 5px; }
-        
-        /* LINEE ORARIE DA 1.5PX (Come richiesto) */
-        .hour-row-line { 
-            height: 60px; 
-            border-bottom: 1.5px solid rgba(84, 84, 88, 0.45); /* Spessore aumentato a 1.5px e più visibile */
-            width: 100%; 
+        /* COLONNA ORARIA A SINISTRA */
+        .time-labels-col { 
+            width: 55px !important; 
+            display: flex !important; 
+            flex-direction: column !important; 
+            color: var(--ios-gray); 
+            font-size: 11px; 
+            padding-left: 12px; 
+            padding-top: 10px;
         }
         
-        .ios-timeline-event {
-            position: absolute; left: 10px; right: 20px; top: 120px; height: 50px;
-            background-color: rgba(255, 255, 255, 0.12); border-left: 4px solid #FFFFFF;
-            border-radius: 4px; padding: 6px 10px; font-size: 14px; font-weight: 500; z-index: 10;
+        /* LE DUE COLONNE AFFIANCATE: Ognuna prende il 50% e crea la linea verticale da 1.5px */
+        .column-events-canvas, .hours-grid-canvas { 
+            flex: 1 !important; 
+            position: relative; 
+            border-left: 1.5px solid var(--ios-border) !important; 
+        }
+        
+        /* LINEE ORARIE: Con width 100% dentro il flex corrono fino al bordo destro dello schermo */
+        .hour-row-line { 
+            height: 60px !important; 
+            border-bottom: 1.5px solid rgba(84, 84, 88, 0.45) !important; 
+            width: 100% !important; 
+            box-sizing: border-box !important;
         }
 
 
