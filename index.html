@@ -332,21 +332,13 @@
         /* TITOLI GRIGI SOPRA LE DUE COLONNE (Es: gio - 21 mag) */
         .column-header-title {
             text-align: center; font-size: 13px; color: var(--ios-gray);
-            padding: 10px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
+            padding: 6px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
             background-color: #000;
         }
 
         /* COLONNA DELLE ORE A SINISTRA */
-        .time-labels-col { 
-            width: 55px !important; 
-            flex-shrink: 0 !important;
-            display: flex !important; 
-            flex-direction: column !important; 
-            color: var(--ios-gray); 
-            font-size: 11px; 
-            padding-left: 12px; 
-            padding-top: 38px; /* Allinea gli orari sotto i titoli */
-        }
+        .time-labels-col { display: contents !important; }
+
         .time-labels-col div {
             height: 60px !important;
             display: flex !important;
