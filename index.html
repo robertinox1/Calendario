@@ -105,9 +105,12 @@
             -webkit-overflow-scrolling: touch;
         }
 
+               /* Più spazio verticale netto tra i blocchi dei mesi */
         .month-section { 
             padding: 0 16px 15px 16px; 
+            margin-bottom: 40px; /* Aggiunto margine inferiore per staccare visivamente i mesi */
         }
+
 
         .days-grid {
             display: grid;
@@ -150,7 +153,7 @@
 
            /* Linea continua orizzontale sopra i giorni reali */
         .linea-mela-top {
-            border-top: 0.5px solid var(--ios-border) !important;
+            border-top: 1.5px solid var(--ios-border) !important;
         }
 
         /* Scritta del mese abbreviato ingrandita e distanziata */
