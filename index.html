@@ -633,10 +633,9 @@
                     break;
                 }
             }
-           if (annoAttualeVisualizzato !== oggi.getFullYear() || meseAttualeVisualizzato !== nomiMesi[oggi.getMonth()]) {
-    document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
-    document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
-}
+            document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
+            document.getElementById("main-title-display").innerText = meseAttualeVisualizzato;
+        }
 
         function scattaSuOggi() {
             let sDataOggi = idData(oggi);
