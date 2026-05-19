@@ -191,37 +191,39 @@
             bottom: 2px;
         }
 
-              /* Rimosso il guscio della barra per lasciarle fluttuare libere */
+                  /* Nasconde il vecchio guscio della barra inferiore */
         .bottom-bar {
             display: none !important;
         }
 
-        /* CONFIGURAZIONE IMMAGINI PURE: Rimosso lo sbiadito e l'effetto sfocatura che creava il riquadro */
+        /* Configurazione delle immagini: rimosso lo sbiadito (opacity 1) e cancellata la sfocatura che creava il riquadro */
         .today-png-btn, .capsula-basso-img {
             object-fit: contain;
-            opacity: 1 !important; /* Forza la luminosità accesa al 100%, senza sbiaditure */
+            opacity: 1 !important; /* Massima luminosità accesa per il bianco e nero */
             cursor: pointer;
             pointer-events: auto !important;
-            /* Rimossi completamente i backdrop-filter per polverizzare il riquadro sfumato */
         }
 
-        /* Tasto Oggi (Basso a sinistra) - Configurato sulle tue misure reali */
+        /* Tasto Oggi (Basso a sinistra) - Collegato al tuo file di GitHub */
         .today-png-btn { 
             position: absolute !important;
             bottom: 14px !important;  /* I tuoi 14px dal fondo */
             left: 23px !important;    /* I tuoi 23px dal bordo sinistro */
-            width: 75px !important;   /* I tuoi 75px di larghezza */
+            width: 75px !important;   /* La tua larghezza di 75px */
             height: auto !important;
+            content: url("pulsante-oggi.PNG") !important; /* ECCO IL COLLEGAMENTO AL TUO FILE */
         }
 
-        /* Capsula viste (Basso a destra) - Configurata sulle tue misure reali */
+        /* Capsula viste (Basso a destra) - Collegata al tuo file di GitHub */
         .capsula-basso-img { 
             position: absolute !important;
             bottom: 14px !important;  /* I tuoi 14px dal fondo */
             right: 23px !important;   /* I tuoi 23px dal bordo destro */
             width: 130px !important;  /* La tua larghezza di 130px */
             height: auto !important;
+            content: url("capsula-basso.PNG") !important; /* ECCO IL COLLEGAMENTO AL TUO FILE */
         }
+
 
         /* SCHERMATA CREAZIONE PROMEMORIA CON RIGHE REALI */
         .ios-modal {
