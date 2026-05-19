@@ -119,15 +119,16 @@
         .day-cell {
             position: relative;
             text-align: center;
-            font-size: 16px; /* Numeri più piccoli */
-            font-weight: 700; /* Carattere in Grassetto */
-            height: 50px;
+            font-size: 16px; 
+            font-weight: 700; 
+            height: 60px; /* Aumentato da 50px a 60px per dare più spazio verticale */
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center; /* Modificato in center per centrare verticalmente i numeri tra le linee */
             align-items: center;
             cursor: pointer;
         }
+
 
         .day-number {
             width: 34px;
@@ -147,23 +148,24 @@
                /* Rimuoviamo il vecchio blocco per non far sballare la griglia */
         .inline-month-break { display: none !important; }
 
-        /* Linea continua orizzontale sopra i giorni reali */
+           /* Linea continua orizzontale sopra i giorni reali */
         .linea-mela-top {
             border-top: 0.5px solid var(--ios-border) !important;
         }
 
-        /* Scritta del mese abbreviato (es. Gen, Feb) sopra il numero 1 */
+        /* Scritta del mese abbreviato ingrandita e distanziata */
         .day-cell[data-primo="true"]::before {
             content: attr(data-mese-abbreviato);
             position: absolute;
-            top: -26px; /* Spinge la scritta perfettamente sopra il numero 1 */
+            top: -32px; /* Adattato per la nuova altezza della cella */
             left: 50%;
             transform: translateX(-50%);
-            font-size: 15px;
+            font-size: 19px; /* Aumentata la grandezza del mese abbreviato come richiesto */
             font-weight: 700;
             color: var(--ios-text);
             white-space: nowrap;
         }
+
 
         .ios-capsule-dot {
             width: 6px;
