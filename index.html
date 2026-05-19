@@ -143,18 +143,30 @@
         .day-cell.selected .day-number { background-color: #2C2C2E; color: #fff; }
         .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
 
-        /* LINEE ORIZZONTALI DIVISORIE PIÙ EVIDENTI TRA LE RIGHE */
+             /* La scritta del mese abbreviato (es. Dic, Gen) sopra il numero 1 */
         .inline-month-break {
-            grid-column: 1 / span 7;
-            font-size: 16px;
-            font-weight: 600;
+            grid-column-start: var(--colonna-inizio, 1);
+            grid-column-end: span 1;
+            font-size: 20px; 
+            font-weight: 700;
             color: var(--ios-text);
-            padding: 14px 0 6px 4px;
-            border-bottom: 0.8px solid var(--ios-border); /* Linea marcata */
-            margin-bottom: 8px;
-            text-align: left;
+            padding: 16px 0 4px 0;
+            margin-bottom: 4px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .inline-month-break.current-break { color: var(--ios-tint); }
+        .inline-month-break.current-break { color: var(--ios-text); }
+
+        /* Le linee orizzontali spesse che seguono i giorni del mese */
+        .linea-settimanale-separatore {
+            grid-column: var(--colonna-inizio, 1) / span var(--colonne-occupate, 7);
+            border-top: 1px solid var(--ios-border);
+            height: 0;
+            margin-top: 5px;
+            margin-bottom: -5px;
+        }
 
         .ios-capsule-dot {
             width: 6px;
@@ -410,7 +422,7 @@
             let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
 
             for (let m = 0; m < 28; m++) {
-                let anno = dataLavoro.getFullYear();
+                              let anno = dataLavoro.getFullYear();
                 let mese = dataLavoro.getMonth();
 
                 let section = document.createElement("div");
@@ -421,35 +433,51 @@
                 let grid = document.createElement("div");
                 grid.className = "days-grid";
 
-                if (m > 0) {
-                    let breakLine = document.createElement("div");
-                    breakLine.className = "inline-month-break";
-                    if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
-                        breakLine.classList.add("current-break");
-                    }
-                    breakLine.innerText = nomiMesiBrevi[mese];
-                    grid.appendChild(breakLine);
-                    let primoGiorno = new Date(anno, mese, 1).getDay();
-                    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
-                    for (let e = 0; e < offset; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
-                }
-
                 let primoGiornoReal = new Date(anno, mese, 1).getDay();
                 let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
-                if (m === 0) {
-                    for (let e = 0; e < offsetReal; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
+
+                if (m > 0) {
+                    let lineaInizio = document.createElement("div");
+                    lineaInizio.className = "linea-settimanale-separatore";
+                    let colInizio = offsetReal + 1;
+                    let colOccupate = 7 - offsetReal;
+                    lineaInizio.style.setProperty('--colonna-inizio', colInizio);
+                    lineaInizio.style.setProperty('--colonne-occupate', colOccupate);
+                    grid.appendChild(lineaInizio);
+
+                    let breakLine = document.createElement("div");
+                    breakLine.className = "inline-month-break";
+                    breakLine.innerText = nomiMesiBrevi[mese];
+                    breakLine.style.setProperty('--colonna-inizio', colInizio);
+                    grid.appendChild(breakLine);
+                }
+
+                for (let e = 0; e < offsetReal; e++) { 
+                    let empty = document.createElement("div"); 
+                    grid.appendChild(empty); 
                 }
 
                 let giorniNelMese = new Date(anno, mese + 1, 0).getDate();
                 for (let g = 1; g <= giorniNelMese; g++) {
                     let dataGiorno = new Date(anno, mese, g);
                     let sData = idData(dataGiorno);
-                    let dayOfWeek = dataGiorno.getDay();
+                    let dayOfWeek = dataGiorno.getDay(); 
+                    let colonnaAttuale = dayOfWeek === 0 ? 7 : dayOfWeek;
+
+                    if (colonnaAttuale === 1 && g > 1) {
+                        let lineaPassante = document.createElement("div");
+                        lineaPassante.className = "linea-settimanale-separatore";
+                        lineaPassante.style.setProperty('--colonna-inizio', 1);
+                        
+                        let giorniRimasti = (giorniNelMese - g) + 1;
+                        let colOccupate = giorniRimasti < 7 ? giorniRimasti : 7;
+                        lineaPassante.style.setProperty('--colonne-occupate', colOccupate);
+                        
+                        grid.appendChild(lineaPassante);
+                    }
 
                     let dCell = document.createElement("div");
                     dCell.className = "day-cell";
-                    if (dayOfWeek === 0) dCell.classList.add("sun");
-                    if (dayOfWeek === 6) dCell.classList.add("sat");
                     dCell.id = `cell-${sData}`;
 
                     let dNum = document.createElement("div");
@@ -476,8 +504,10 @@
 
                     grid.appendChild(dCell);
                 }
+                
                 section.appendChild(grid);
                 container.appendChild(section);
+
                 dataLavoro.setMonth(dataLavoro.getMonth() + 1);
             }
         }
