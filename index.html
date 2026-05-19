@@ -328,7 +328,7 @@
             left: 0; 
             width: 92px; 
             height: 38px; /* Aumentata l'altezza della parte grigia */
-            background-color: rgba(255, 255, 255, 0.22) !important; /* Grigio nettamente più chiaro e visibile */
+            background-color: rgba(255, 255, 255, 0.35) !important; /* Grigio nettamente più chiaro e visibile */
             border-radius: 19px; /* Arrotondamento aggiornato per la nuova altezza */
             z-index: -1; 
         }
@@ -499,6 +499,10 @@
             -webkit-overflow-scrolling: touch;
         }
         .day-view-header .capsula-alto-img { margin-right: -16px !important; }
+        /* Se il giorno successivo dentro la bolla è Sabato o Domenica, diventa un grigio ancora più chiaro e morbido */
+        .day-view-week-bar .num.next-day-preview.muted { 
+            color: rgba(255, 255, 255, 0.6) !important; 
+        }
 
     </style>
 </head>
