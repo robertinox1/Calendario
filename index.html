@@ -270,7 +270,7 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
-                     .day-view-modal {
+        .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
             z-index: 180; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -279,12 +279,12 @@
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
-            padding: 20px 16px 10px 16px; /* Ridotto il padding top per spingere tutto in alto */
+            padding: 20px 16px 10px 16px; 
             background-color: #000; 
-            border-bottom: 1.5px solid var(--ios-border); /* Spessore linea uniformato */
+            border-bottom: 1.5px solid var(--ios-border); 
         }
         
-        /* LA NUOVA BOLLA DEL MESE (Identica a quella dell'anno) */
+        /* LA BOLLA DEL MESE GRIGIA */
         .back-month-btn {
             background-color: var(--ios-card);
             border: none;
@@ -317,25 +317,26 @@
         }
         .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 600; background-color: transparent !important; }
 
-        /* GRIGLIA A DUE COLONNE TOTALMENTE SCORREVOLE */
-              /* CONTENITORE PRINCIPALE: Lo forziamo Flex orizzontale per affiancare tutto */
+        /* CONTENITORE FLEX: AFFIANCA LE COLONNE E ABILITA LO SCORRIMENTO */
         .day-view-columns-container {
             display: flex !important;
             flex-direction: row !important;
             width: 100% !important; 
             height: calc(100vh - 140px) !important; 
-            overflow-y: scroll !important; /* Questo sblocca lo scorrimento di tutti gli orari */
+            overflow-y: scroll !important; /* Forza lo scorrimento totale di tutti gli orari */
             -webkit-overflow-scrolling: touch;
             position: relative; 
             background-color: var(--ios-bg);
         }
 
+        /* TITOLI GRIGI SOPRA LE DUE COLONNE (Es: gio - 21 mag) */
         .column-header-title {
             text-align: center; font-size: 13px; color: var(--ios-gray);
             padding: 10px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
+            background-color: #000;
         }
 
-        /* COLONNA ORARIA A SINISTRA */
+        /* COLONNA DELLE ORE A SINISTRA */
         .time-labels-col { 
             width: 55px !important; 
             display: flex !important; 
@@ -343,22 +344,33 @@
             color: var(--ios-gray); 
             font-size: 11px; 
             padding-left: 12px; 
-            padding-top: 10px;
+            padding-top: 43px; /* Allinea gli orari sotto i titoli */
+        }
+        .time-labels-col div {
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
         }
         
-        /* LE DUE COLONNE AFFIANCATE: Ognuna prende il 50% e crea la linea verticale da 1.5px */
-        .column-events-canvas, .hours-grid-canvas { 
+        /* LE DUE COLONNE CON LE LINEE VERTICALI DA 1.5PX */
+        .column-events-canvas { 
             flex: 1 !important; 
             position: relative; 
             border-left: 1.5px solid var(--ios-border) !important; 
         }
         
-        /* LINEE ORARIE: Con width 100% dentro il flex corrono fino al bordo destro dello schermo */
+        /* LINEE ORARIE DA 1.5PX CHE TOCCANO IL BORDO DESTRO */
         .hour-row-line { 
             height: 60px !important; 
             border-bottom: 1.5px solid rgba(84, 84, 88, 0.45) !important; 
             width: 100% !important; 
             box-sizing: border-box !important;
+        }
+        
+        .ios-timeline-event {
+            position: absolute; left: 10px; right: 20px; top: 120px; height: 50px;
+            background-color: rgba(255, 255, 255, 0.12); border-left: 4px solid #FFFFFF;
+            border-radius: 4px; padding: 6px 10px; font-size: 14px; font-weight: 500; z-index: 10;
         }
 
 
@@ -535,16 +547,32 @@
             </div>
         </div>
         
-        <div class="day-view-columns-container">
+              <div class="day-view-columns-container">
+            <!-- Colonna con tutti i 24 orari della giornata per lo scorrimento totale -->
             <div class="time-labels-col">
-                <div>12:00</div><div>13:00</div><div>14:00</div><div>15:00</div><div>16:00</div><div>17:00</div><div>18:00</div><div>19:00</div><div>20:00</div>
+                <div>00:00</div><div>01:00</div><div>02:00</div><div>03:00</div><div>04:00</div><div>05:00</div>
+                <div>06:00</div><div>07:00</div><div>08:00</div><div>09:00</div><div>10:00</div><div>11:00</div>
+                <div>12:00</div><div>13:00</div><div>14:00</div><div>15:00</div><div>16:00</div><div>17:00</div>
+                <div>18:00</div><div>19:00</div><div>20:00</div><div>21:00</div><div>22:00</div><div>23:00</div>
             </div>
-            <div class="hours-grid-canvas" id="canvas-events-container">
-                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
-                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
-                <div class="hour-row-line"></div>
+            
+            <!-- Colonna 1: Giorno Corrente (Sinistra) -->
+            <div class="column-events-canvas" id="canvas-events-container-sinistro">
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+            </div>
+
+            <!-- Colonna 2: Giorno Successivo (Destra) -->
+            <div class="column-events-canvas" id="canvas-events-container-destro">
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
+                <div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div><div class="hour-row-line"></div>
             </div>
         </div>
+
     </div>
 
     <!-- PANNELLO SETUP -->
@@ -658,34 +686,83 @@
             }
         }
 
-        function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
-            document.getElementById("day-view-back-title").innerText = `${nomiMesiBrevi[meseIndex]} ${anno}`;
+              function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
+            document.getElementById("day-view-back-title").innerText = `${nomiMesiBrevi[meseIndex]}`;
             const weekBar = document.querySelector(".day-view-week-bar");
             weekBar.innerHTML = "";
             let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
+            let sDataOggi = idData(oggi);
 
             for (let i = -2; i <= 4; i++) {
-                let dTarget = new Date(anno, meseIndex, giorno + i);
+                let dTarget = new Date(anno, meseIndex, giorno + i, 0, 0, 0, 0);
+                let sDataTarget = idData(dTarget);
+
                 let labelClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "day-label muted" : "day-label";
                 let numClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "num muted" : "num";
+                let stileRossoInLine = "";
+
+                // SE IL GIORNO ANALIZZATO È OGGI: lo colora di rosso nativo nella barra in alto
+                if (sDataTarget === sDataOggi) {
+                    stileRossoInLine = "style='color: var(--ios-tint) !important;'";
+                }
+
                 if (i === 0) numClass += " active-day";
                 if (i === 1) numClass += " next-day-preview";
 
                 let dayBox = document.createElement("div");
-                dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}">${dTarget.getDate()}</div>`;
+                dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
                 weekBar.appendChild(dayBox);
             }
 
-            const canvas = document.getElementById("canvas-events-container");
-            const vecchioEvent = canvas.querySelector(".ios-timeline-event");
-            if (vecchioEvent) vecchioEvent.remove();
+            // AGGIORNAMENTO DINAMICO DEI TITOLI DELLE COLONNE (gio - 21 mag)
+            let dCorrente = new Date(anno, meseIndex, giorno, 0, 0, 0, 0);
+            let dSuccessivo = new Date(anno, meseIndex, giorno + 1, 0, 0, 0, 0);
+            let giorniLettereEstesi = ["dom", "lun", "mar", "mer", "gio", "ven", "sab"];
 
+            const canvasSinistro = document.getElementById("canvas-events-container-sinistro");
+            const canvasDestro = document.getElementById("canvas-events-container-destro");
+
+            // Rimuoviamo i vecchi titoli se già presenti per non duplicarli
+            const vecchioTitoloS = canvasSinistro.querySelector(".column-header-title");
+            if (vecchioTitoloS) vecchioTitoloS.remove();
+            const vecchioTitoloD = canvasDestro.querySelector(".column-header-title");
+            if (vecchioTitoloD) vecchioTitoloD.remove();
+
+            // Inseriamo il titolo nella colonna di sinistra
+            let tSinistro = document.createElement("div");
+            tSinistro.className = "column-header-title";
+            tSinistro.innerText = `${giorniLettereEstesi[dCorrente.getDay()]} - ${dCorrente.getDate()} ${nomiMesiBrevi[dCorrente.getMonth()]}`;
+            canvasSinistro.insertBefore(tSinistro, canvasSinistro.firstChild);
+
+            // Inseriamo il titolo nella colonna di destra
+            let tDestro = document.createElement("div");
+            tDestro.className = "column-header-title";
+            tDestro.innerText = `${giorniLettereEstesi[dSuccessivo.getDay()]} - ${dSuccessivo.getDate()} ${nomiMesiBrevi[dSuccessivo.getMonth()]}`;
+            canvasDestro.insertBefore(tDestro, canvasDestro.firstChild);
+
+            // GESTIONE EVENTI SULLE DUE COLONNE
+            const vecchioEventS = canvasSinistro.querySelector(".ios-timeline-event");
+            if (vecchioEventS) vecchioEventS.remove();
+            const vecchioEventD = canvasDestro.querySelector(".ios-timeline-event");
+            if (vecchioEventD) vecchioEventD.remove();
+
+            // Evento nel giorno corrente (Sinistra)
             if (databaseEventi[sData]) {
                 let boxEv = document.createElement("div");
                 boxEv.className = "ios-timeline-event";
                 boxEv.innerText = databaseEventi[sData].titolo;
-                canvas.appendChild(boxEv);
+                canvasSinistro.appendChild(boxEv);
             }
+
+            // Evento nel giorno successivo (Destra - Previsione Segreta)
+            let sDataSuccessiva = idData(dSuccessivo);
+            if (databaseEventi[sDataSuccessiva]) {
+                let boxEvPost = document.createElement("div");
+                boxEvPost.className = "ios-timeline-event";
+                boxEvPost.innerText = databaseEventi[sDataSuccessiva].titolo;
+                canvasDestro.appendChild(boxEvPost);
+            }
+
             document.getElementById("day-view-modal").classList.add("open");
         }
 
