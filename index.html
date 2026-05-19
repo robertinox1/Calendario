@@ -192,19 +192,25 @@
         }
 
         /* FOOTER CON IMMAGINI */
+             /* FOOTER CON IMMAGINI POSIZIONATE ALL'ALTEZZA NATIVA IOS */
         .bottom-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 84px;
+            height: 92px; /* Altezza perfetta per ospitare le icone sopra la barra di navigazione di iOS */
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 0 16px 24px 16px;
+            align-items: flex-start; /* Allinea le immagini verso l'alto della barra, lasciando lo spazio vuoto sotto per la gesture bar dell'iPhone */
+            padding: 12px 20px 0 20px; /* Distanza millimetrica dai bordi laterali dell'iPhone */
             z-index: 120;
-            pointer-events: none;
+            background-color: rgba(28, 28, 30, 0.92); /* Grigio scuro traslucido originale Apple */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid var(--ios-border);
+            pointer-events: auto !important;
         }
+
 
         .today-png-btn, .capsula-basso-img {
             object-fit: contain;
@@ -215,8 +221,25 @@
             pointer-events: auto;
         }
 
-        .today-png-btn { height: 44px; }
-        .capsula-basso-img { height: 44px; }
+           /* Pulsante "Oggi" in basso a sinistra */
+        .today-png-btn {
+            width: 90px !important; /* Larghezza iniziale proporzionata */
+            height: auto !important;
+            object-fit: contain;
+            cursor: pointer;
+            content: url("pulsante-oggi.PNG") !important; /* Forza il caricamento da GitHub */
+            opacity: 1 !important; /* Colori accesi senza trasparenze */
+        }
+
+        /* Capsula con le icone viste in basso a destra */
+        .capsula-basso-img {
+            width: 120px !important; /* Larghezza iniziale per la capsula inferiore */
+            height: auto !important;
+            object-fit: contain;
+            cursor: pointer;
+            content: url("capsula-basso.PNG") !important; /* Forza il caricamento da GitHub */
+            opacity: 1 !important; /* Colori accesi senza trasparenze */
+        }
 
         /* SCHERMATA CREAZIONE PROMEMORIA CON RIGHE REALI */
         .ios-modal {
