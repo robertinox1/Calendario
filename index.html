@@ -350,11 +350,16 @@
         }
   
 
-        /* 3. Mantiene il titolo del mese e il tasto dell'anno agganciati a 16px dal bordo */
+            /* 3. Libera le lettere per allinearle, ma tiene protetti il mese e l'anno */
         .ios-header {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+        .main-month-title, .navbar-top {
             padding-left: 16px !important;
             padding-right: 16px !important;
         }
+
 
         
     </style>
