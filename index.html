@@ -321,17 +321,18 @@
             z-index: 3; /* Sta sopra alla bolla grigia */
         }
 
-               .day-view-week-bar .num.active-day::after {
+                     .day-view-week-bar .num.active-day::after {
             content: ""; 
             position: absolute; 
-            top: 0; 
+            top: -3px; /* Centra verticalmente la bolla più alta rispetto al cerchio bianco */
             left: 0; 
-            width: 84px; /* Lunghezza calibrata per coprire interamente entrambi i numeri */
-            height: 32px;
-            background-color: rgba(255, 255, 255, 0.12) !important; /* Grigio chiaro semi-trasparente nativo iOS */
-            border-radius: 16px; /* Arrotonda perfettamente i bordi della pillola esterna */
-            z-index: -1; /* Si posiziona dietro i numeri */
+            width: 84px; 
+            height: 38px; /* Aumentata l'altezza della parte grigia */
+            background-color: rgba(255, 255, 255, 0.22) !important; /* Grigio nettamente più chiaro e visibile */
+            border-radius: 19px; /* Arrotondamento aggiornato per la nuova altezza */
+            z-index: -1; 
         }
+
 
         .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 600; background-color: transparent !important; }
 
