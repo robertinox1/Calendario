@@ -312,11 +312,27 @@
         }
 
         /* STRUTTURA CAPSULA UNIFICATA */
-        .day-view-week-bar .num.active-day { background-color: #FFFFFF !important; color: #000000 !important; border-radius: 50%; font-weight: 700; }
-        .day-view-week-bar .num.active-day::after {
-            content: ""; position: absolute; top: 0; left: 16px; width: 52px; height: 32px;
-            background-color: #3A3A3C !important; border-top-right-radius: 16px; border-bottom-right-radius: 16px; z-index: -1;
+              .day-view-week-bar .num.active-day { 
+            background-color: #FFFFFF !important; 
+            color: #000000 !important; 
+            border-radius: 50%; 
+            font-weight: 700;
+            position: relative;
+            z-index: 3; /* Sta sopra alla bolla grigia */
         }
+
+               .day-view-week-bar .num.active-day::after {
+            content: ""; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 84px; /* Lunghezza calibrata per coprire interamente entrambi i numeri */
+            height: 32px;
+            background-color: rgba(255, 255, 255, 0.12) !important; /* Grigio chiaro semi-trasparente nativo iOS */
+            border-radius: 16px; /* Arrotonda perfettamente i bordi della pillola esterna */
+            z-index: -1; /* Si posiziona dietro i numeri */
+        }
+
         .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 600; background-color: transparent !important; }
 
         /* CONTENITORE FLEX: AFFIANCA LE COLONNE E ABILITA LO SCORRIMENTO */
