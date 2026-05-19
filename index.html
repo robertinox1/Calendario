@@ -191,32 +191,37 @@
             bottom: 2px;
         }
 
-        /* FOOTER CON IMMAGINI */
+              /* Rimosso il guscio della barra per lasciarle fluttuare libere */
         .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 84px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 16px 24px 16px;
-            z-index: 120;
-            pointer-events: none;
+            display: none !important;
         }
 
+        /* CONFIGURAZIONE IMMAGINI PURE: Rimosso lo sbiadito e l'effetto sfocatura che creava il riquadro */
         .today-png-btn, .capsula-basso-img {
             object-fit: contain;
-            opacity: 0.45;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            opacity: 1 !important; /* Forza la luminosità accesa al 100%, senza sbiaditure */
             cursor: pointer;
-            pointer-events: auto;
+            pointer-events: auto !important;
+            /* Rimossi completamente i backdrop-filter per polverizzare il riquadro sfumato */
         }
 
-        .today-png-btn { height: 44px; }
-        .capsula-basso-img { height: 44px; }
+        /* Tasto Oggi (Basso a sinistra) - Configurato sulle tue misure reali */
+        .today-png-btn { 
+            position: absolute !important;
+            bottom: 14px !important;  /* I tuoi 14px dal fondo */
+            left: 23px !important;    /* I tuoi 23px dal bordo sinistro */
+            width: 75px !important;   /* I tuoi 75px di larghezza */
+            height: auto !important;
+        }
+
+        /* Capsula viste (Basso a destra) - Configurata sulle tue misure reali */
+        .capsula-basso-img { 
+            position: absolute !important;
+            bottom: 14px !important;  /* I tuoi 14px dal fondo */
+            right: 23px !important;   /* I tuoi 23px dal bordo destro */
+            width: 130px !important;  /* La tua larghezza di 130px */
+            height: auto !important;
+        }
 
         /* SCHERMATA CREAZIONE PROMEMORIA CON RIGHE REALI */
         .ios-modal {
