@@ -330,19 +330,30 @@
         }
 
         /* TITOLI GRIGI SOPRA LE DUE COLONNE (Es: gio - 21 mag) */
-            .column-header-title {
+                  .column-header-title {
             text-align: center; font-size: 13px; color: var(--ios-gray);
-            padding: 6px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
+            padding: 10px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
             background-color: #000;
         }
 
-        /* COLONNA DELLE ORE A SINISTRA - ALLINEAMENTO AUTOMATICO */
-        .time-labels-col { display: contents !important; }
-        
+        /* COLONNA DELLE ORE RIPRISTINATA E ALLINEATA */
+        .time-labels-col { 
+            width: 55px !important; 
+            flex-shrink: 0 !important;
+            display: flex !important; 
+            flex-direction: column !important; 
+            color: var(--ios-gray); 
+            font-size: 11px; 
+            padding-left: 12px; 
+            padding-top: 45px; 
+        }
+        /* Questa riga blocca ogni ora sulla propria riga da 60px */
         .time-labels-col div {
             height: 60px !important;
+            line-height: 60px !important;
             display: flex !important;
             align-items: center !important;
+            box-sizing: border-box !important;
         }
         
         /* LE DUE COLONNE CON LE LINEE VERTICALI DA 1.5PX */
@@ -368,6 +379,7 @@
             background-color: rgba(255, 255, 255, 0.12); border-left: 4px solid #FFFFFF;
             border-radius: 4px; padding: 6px 10px; font-size: 14px; font-weight: 500; z-index: 10;
         }
+
 
 
         .secret-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 300; padding: 60px 20px; display: none; }
