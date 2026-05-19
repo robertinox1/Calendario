@@ -368,6 +368,33 @@
             color: var(--ios-tint) !important;
         }
 
+        /* IMMAGINE 1: Tasto Oggi (Basso a sinistra) sovrapposto alla barra */
+        .today-png-btn {
+            position: absolute !important;
+            bottom: 20px !important;  /* Alza o abbassa l'immagine dal fondo */
+            left: 16px !important;    /* Distanza dal bordo sinistro dello schermo */
+            width: 60px !important;  /* Larghezza dell'immagine (puoi aumentarla come per l'header) */
+            height: auto !important;
+            object-fit: contain;
+            cursor: pointer;
+            content: url("pulsante-oggi.PNG") !important; /* Forza il caricamento da GitHub */
+            z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
+            opacity: 1 !important;
+        }
+
+        /* IMMAGINE 2: Capsula viste (Basso a destra) sovrapposta alla barra */
+        .capsula-basso-img {
+            position: absolute !important;
+            bottom: 20px !important;  /* Alza o abbassa l'immagine dal fondo */
+            right: 16px !important;   /* Distanza dal bordo destro dello schermo */
+            width: 120px !important;  /* Larghezza della capsula inferiore */
+            height: auto !important;
+            object-fit: contain;
+            cursor: pointer;
+            content: url("capsula-basso.PNG") !important; /* Forza il caricamento da GitHub */
+            z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
+            opacity: 1 !important;
+        }
 
         
     </style>
