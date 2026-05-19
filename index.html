@@ -336,6 +336,12 @@
         .day-cell.sat, .day-cell.sun {
             color: var(--ios-gray) !important;
         }
+                /* Colora di grigio chiaro tutti i numeri che cadono nella sesta colonna (Sabato) e nella settima colonna (Domenica) */
+        .days-grid .day-cell:nth-child(7n-1), 
+        .days-grid .day-cell:nth-child(7n) {
+            color: var(--ios-gray) !important;
+        }
+
         
     </style>
 </head>
