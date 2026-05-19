@@ -368,34 +368,38 @@
             color: var(--ios-tint) !important;
         }
 
-        /* IMMAGINE 1: Tasto Oggi (Basso a sinistra) sovrapposto alla barra */
-        .today-png-btn {
-            position: absolute !important;
-            bottom: 14px !important;  /* Alza o abbassa l'immagine dal fondo */
-            left: 23px !important;    /* Distanza dal bordo sinistro dello schermo */
-            width: 75px !important;  /* Larghezza dell'immagine (puoi aumentarla come per l'header) */
-            height: auto !important;
-            object-fit: contain;
-            cursor: pointer;
-            content: url("pulsante-oggi.png") !important; /* Forza il caricamento da GitHub */
-            z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
-            opacity: 1 !important;
-
+         .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 84px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 23px 24px 23px;
+            z-index: 120;
+            background-color: rgba(28, 28, 30, 0.9);
+            border-top: 0.5px solid var(--ios-border);
+            pointer-events: auto !important;
         }
 
-        /* IMMAGINE 2: Capsula viste (Basso a destra) sovrapposta alla barra */
-        .capsula-basso-img {
-            position: absolute !important;
-            bottom: 14px !important;  /* Alza o abbassa l'immagine dal fondo */
-            right: 23px !important;   /* Distanza dal bordo destro dello schermo */
-            width: 130px !important;  /* Larghezza della capsula inferiore */
+        .today-png-btn {
+            width: 75px !important;
             height: auto !important;
             object-fit: contain;
             cursor: pointer;
-            content: url("capsula-basso.PNG") !important; /* Forza il caricamento da GitHub */
-            z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
-            opacity: 1 !important; 
-             
+            position: relative;
+            bottom: -5px;
+        }
+
+        .capsula-basso-img {
+            width: 130px !important;
+            height: auto !important;
+            object-fit: contain;
+            cursor: pointer;
+            position: relative;
+            bottom: -5px;
         }
  /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
         html, body {
@@ -431,11 +435,11 @@
     <!-- CALENDARIO -->
     <div class="calendar-scroll-view" id="scroll-container" onscroll="gestisciScorrimentoMesi()"></div>
 
-    <!-- FOOTER CON IMMAGINI PNG -->
-    <div class="bottom-bar">
+      <div class="bottom-bar">
         <img src="pulsante-oggi.png" class="today-png-btn" alt="Oggi" onclick="scattaSuOggi()">
-        <img src="capsula-basso.png" class="capsula-basso-img" alt="Viste">
+        <img src="capsula-basso.PNG" class="capsula-basso-img" alt="Viste">
     </div>
+
 
     <!-- SCHERMATA CREAZIONE EVENTO REPLICATA -->
     <div class="ios-modal" id="event-modal">
