@@ -359,6 +359,11 @@
             padding-left: 16px !important;
             padding-right: 16px !important;
         }
+   
+        /* Se il mese è quello in corso, la scritta diventa rossa nativa Apple */
+        .day-cell[data-corrente="true"]::before {
+            color: var(--ios-tint) !important;
+        }
 
 
         
@@ -517,10 +522,15 @@
                         }
                     }
 
-                    // Aggancia il mese abbreviato sopra il giorno 1
+                                      // Aggancia il mese abbreviato sopra il giorno 1
                     if (g === 1 && m > 0) {
                         dCell.setAttribute("data-primo", "true");
                         dCell.setAttribute("data-mese-abbreviato", nomiMesiBrevi[mese]);
+                        
+                        // Controlla se questo mese e anno corrispondono a quelli di OGGI
+                        if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
+                            dCell.setAttribute("data-corrente", "true");
+                        }
                     }
 
                     let dNum = document.createElement("div");
