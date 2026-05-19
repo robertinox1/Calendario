@@ -367,36 +367,57 @@
         .day-cell[data-corrente="true"]::before {
             color: var(--ios-tint) !important;
         }
-
-        /* IMMAGINE 1: Tasto Oggi (Basso a sinistra) sovrapposto alla barra */
+  /* 1. PULSANTE "OGGI" NATIVO IN CODICE (Basso a sinistra) - MISURE REALI */
         .today-png-btn {
             position: absolute !important;
-            bottom: 14px !important;  /* Alza o abbassa l'immagine dal fondo */
-            left: 23px !important;    /* Distanza dal bordo sinistro dello schermo */
-            width: 75px !important;  /* Larghezza dell'immagine (puoi aumentarla come per l'header) */
-            height: auto !important;
-            object-fit: contain;
+            bottom: 14px !important;  /* I tuoi 14px dal fondo */
+            left: 23px !important;    /* I tuoi 23px dal bordo sinistro */
+            width: 75px !important;   /* La tua larghezza esatta di 75px */
+            height: 36px !important;  
+            background-color: #1C1C1E !important; /* Grigio scuro originale Apple */
+            border-radius: 18px !important; 
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 150 !important;  
+            content: none !important; /* Ignora il file PNG con lo sfondo difettoso */
             cursor: pointer;
-            content: url("pulsante-oggi.png") !important; /* Forza il caricamento da GitHub */
-            z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
-            opacity: 1 !important;
-
+        }
+        /* Inserisce la scritta "Oggi" dentro la bolla da 75px */
+        .today-png-btn::after {
+            content: "Oggi" !important;
+            color: var(--ios-tint) !important; 
+            font-size: 15px !important;
+            font-weight: 400 !important;
+            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
         }
 
-        /* IMMAGINE 2: Capsula viste (Basso a destra) sovrapposta alla barra */
+        /* 2. CAPSULA DELLE VISTE NATIVA IN CODICE (Basso a destra) - MISURE REALI */
         .capsula-basso-img {
             position: absolute !important;
-            bottom: 14px !important;  /* Alza o abbassa l'immagine dal fondo */
-            right: 23px !important;   /* Distanza dal bordo destro dello schermo */
-            width: 130px !important;  /* Larghezza della capsula inferiore */
-            height: auto !important;
-            object-fit: contain;
+            bottom: 14px !important;  /* I tuoi 14px dal fondo */
+            right: 23px !important;   /* I tuoi 23px dal bordo destro */
+            width: 130px !important;  /* La tua larghezza esatta di 130px */
+            height: 36px !important;  
+            background-color: #1C1C1E !important; /* Grigio scuro originale Apple */
+            border-radius: 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 150 !important;  
+            content: none !important; /* Ignora il file PNG con lo sfondo difettoso */
             cursor: pointer;
-            content: url("capsula-basso.PNG") !important; /* Forza il caricamento da GitHub */
-            z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
-            opacity: 1 !important; 
-             
         }
+        /* Inserisce i simboli dentro la capsula da 130px ben distanziati */
+        .capsula-basso-img::after {
+            content: "☰   ☷" !important; /* Distanziati per riempire armoniosamente i 130px */
+            color: var(--ios-tint) !important; 
+            font-size: 16px !important;
+            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
+            padding-left: 4px !important;
+        }
+    
+        
  /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
         html, body {
             max-width: 100% !important;
