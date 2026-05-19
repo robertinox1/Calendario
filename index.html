@@ -421,29 +421,12 @@
                 let grid = document.createElement("div");
                 grid.className = "days-grid";
 
-                                if (m > 0) {
+                if (m > 0) {
                     let breakLine = document.createElement("div");
                     breakLine.className = "inline-month-break";
                     if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
                         breakLine.classList.add("current-break");
                     }
-                    
-                    // Ingrandiamo il testo direttamente da qui
-                    breakLine.style.fontSize = "22px";
-                    breakLine.style.fontWeight = "700";
-                    
-                    // Calcoliamo lo spostamento per metterlo sopra il numero 1
-                    let primoGiornoReal = new Date(anno, mese, 1).getDay();
-                    let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
-                    let percentualeSpostamento = offsetReal * 14.28;
-                    
-                    // Applichiamo lo spostamento e centriamo il testo sulla colonna
-                    breakLine.style.paddingLeft = percentualeSpostamento + "%";
-                    breakLine.innerText = nomiMesiBrevi[mese];
-                    
-                    grid.appendChild(breakLine);
-                }
-
                     breakLine.innerText = nomiMesiBrevi[mese];
                     grid.appendChild(breakLine);
                     let primoGiorno = new Date(anno, mese, 1).getDay();
