@@ -50,19 +50,22 @@
         }
 
         /* Anno con la bolla tonda grigia intorno */
-        .back-year-btn {
+              .back-year-btn {
             background-color: var(--ios-card);
             border: none;
             color: #FFFFFF; 
-            font-size: 20px;
+            font-size: 17px; /* Scritta dell'anno leggermente più piccola */
             cursor: pointer;
             font-weight: 500;
-            padding: 6px 14px;
+            padding: 8px 18px; /* Aumentato: prima cifra alza la bolla, seconda la allunga */
             border-radius: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 4px; /* Spazio controllato tra freccia e testo */
+            height: 36px; /* Forza l'altezza per renderla poco più grande dell'icona a destra */
         }
+
 
                    .capsula-alto-img {
             width: 160px !important; /* Forza la lunghezza quasi al doppio per distenderla bene */
@@ -399,7 +402,8 @@
     <!-- HEADER PRINCIPALE -->
     <div class="ios-header">
         <div class="navbar-top">
-            <button class="back-year-btn" onclick="openSecretPanel()">‹ <span id="current-year-header">2026</span></button>
+                      <button class="back-year-btn" onclick="openSecretPanel()"><span style="font-size: 24px; line-height: 0; margin-top: -2px;">‹</span> <span id="current-year-header">2026</span></button>
+
             <img src="capsula-alto.png" class="capsula-alto-img" alt="Menu" onclick="openNewEventModal()">
         </div>
         <div class="main-month-title" id="main-title-display">Maggio</div>
