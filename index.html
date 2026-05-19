@@ -105,18 +105,20 @@
             -webkit-overflow-scrolling: touch;
         }
 
-               /* Più spazio verticale netto tra i blocchi dei mesi */
+                 /* Rimosso padding laterale per far toccare le linee al bordo dello schermo */
         .month-section { 
-            padding: 0 16px 15px 16px; 
-            margin-bottom: 40px; /* Aggiunto margine inferiore per staccare visivamente i mesi */
+            padding: 0 0 15px 0; 
+            margin-bottom: 40px; 
         }
 
-
+        /* Spostato il padding dentro la griglia così i numeri non toccano i bordi */
         .days-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 16px;
+            row-gap: 10px;
+            padding: 0 16px;
         }
+
 
         /* CELLA GIORNO E CARATTERISTICHE DEI NUMERI */
         .day-cell {
