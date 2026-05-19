@@ -312,6 +312,31 @@
 
         .secret-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 300; padding: 60px 20px; display: none; }
         .secret-panel.open { display: block; }
+                /* Forza lo sblocco finale per far toccare le linee ai bordi */
+        .month-section {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            width: 100% !important;
+        }
+
+        /* Cambia le lettere dei feriali in bianco acceso */
+        .weekdays-grid div {
+            color: #FFFFFF !important;
+        }
+        /* Cambia le lettere di Sabato e Domenica in grigio chiaro */
+        .weekdays-grid div:nth-child(6), .weekdays-grid div:nth-child(7) {
+            color: var(--ios-gray) !important;
+        }
+
+        /* Cambia i numeri dei feriali in bianco acceso */
+        .day-cell {
+            color: #FFFFFF !important;
+        }
+        /* Cambia i numeri di Sabato e Domenica in grigio chiaro */
+        .day-cell.sat, .day-cell.sun {
+            color: var(--ios-gray) !important;
+        }
+
     </style>
 </head>
 <body>
