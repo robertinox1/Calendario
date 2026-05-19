@@ -316,7 +316,7 @@
             background-color: #FFFFFF !important; 
             color: #000000 !important; 
             border-radius: 50%; 
-            font-weight: 700;
+            font-weight: 400;
             position: relative;
             z-index: 3; /* Sta sopra alla bolla grigia */
         }
@@ -328,13 +328,13 @@
             left: 0; 
             width: 92px; 
             height: 38px; /* Aumentata l'altezza della parte grigia */
-            background-color: rgba(255, 255, 255, 0.35) !important; /* Grigio nettamente più chiaro e visibile */
+            background-color: rgba(255, 255, 255, 0.50) !important; /* Grigio nettamente più chiaro e visibile */
             border-radius: 19px; /* Arrotondamento aggiornato per la nuova altezza */
             z-index: -1; 
         }
 
 
-        .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 600; background-color: transparent !important; }
+        .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 400; background-color: transparent !important; }
 
         /* CONTENITORE FLEX: AFFIANCA LE COLONNE E ABILITA LO SCORRIMENTO */
         .day-view-columns-container {
@@ -501,7 +501,7 @@
         .day-view-header .capsula-alto-img { margin-right: -16px !important; }
         /* Se il giorno successivo dentro la bolla è Sabato o Domenica, diventa un grigio ancora più chiaro e morbido */
         .day-view-week-bar .num.next-day-preview.muted { 
-            color: rgba(255, 255, 255, 0.6) !important; 
+            color: rgba(255, 255, 255, 0.15) !important; 
         }
 
     </style>
