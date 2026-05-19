@@ -380,6 +380,7 @@
             content: url("pulsante-oggi.png") !important; /* Forza il caricamento da GitHub */
             z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
             opacity: 1 !important;
+             clip-path: inset(0px round 20px) !important;
              
         }
 
@@ -395,8 +396,22 @@
             content: url("capsula-basso.png") !important; /* Forza il caricamento da GitHub */
             z-index: 150 !important;  /* La tiene sopra a tutto il resto della barra */
             opacity: 1 !important; 
+             clip-path: inset(0px round 20px) !important;
+        }
+ /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
+        html, body {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            position: relative !important;
         }
 
+        .calendar-scroll-view {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important; /* Blocca rigorosamente lo spostamento orizzontale */
+            overflow-y: scroll !important; /* Permette solo lo scorrimento in alto e in basso */
+            -webkit-overflow-scrolling: touch;
+        }
         
     </style>
 </head>
