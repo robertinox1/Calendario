@@ -370,39 +370,45 @@
 
          
 
-         .today-png-btn {
+ .today-png-btn {
             position: absolute !important;
-            bottom: 14px !important;  /* I tuoi 14px dal fondo */
-            left: 23px !important;    /* I tuoi 23px dal bordo sinistro */
-            width: 75px !important;   /* I tuoi 75px di larghezza */
-            height: auto !important;
-            object-fit: contain !important;
+            bottom: 14px !important;  
+            left: 23px !important;    
+            width: 75px !important;   
+            height: 38px !important; /* Forza l'altezza reale per evitare deformazioni */
             z-index: 150 !important;
             cursor: pointer;
             
-            /* FORZA LUMINOSITÀ E CANCELLA RIQUADRO */
-            opacity: 1 !important;    /* Toglie lo sbiadito, le icone diventano bianche accese */
-            border: none !important;  /* Elimina il riquadro esterno di Safari */
-            outline: none !important; /* Elimina il secondo bordo fantasma */
-            background: transparent !important;
+            /* TRUCCO ANTI-BORDO: Rende invisibile il tag img di Safari (eliminando il riquadro grigio) */
+            opacity: 0 !important; 
+            
+            /* PROIETTA L'IMMAGINE PULITA SENZA BORDI */
+            background-image: url("pulsante-oggi.PNG") !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            -webkit-appearance: none !important;
         }
 
         .capsula-basso-img {
             position: absolute !important;
-            bottom: 14px !important;  /* I tuoi 14px dal fondo */
-            right: 23px !important;   /* I tuoi 23px dal bordo destro */
-            width: 130px !important;  /* I tuoi 130px di larghezza */
-            height: auto !important;
-            object-fit: contain !important;
+            bottom: 14px !important;  
+            right: 23px !important;   
+            width: 130px !important;  
+            height: 38px !important; /* Forza l'altezza reale per evitare deformazioni */
             z-index: 150 !important;
             cursor: pointer;
             
-            /* FORZA LUMINOSITÀ E CANCELLA RIQUADRO */
-            opacity: 1 !important;    /* Toglie lo sbiadito, le icone diventano bianche accese */
-            border: none !important;  /* Elimina il riquadro esterno di Safari */
-            outline: none !important; /* Elimina il secondo bordo fantasma */
-            background: transparent !important;
-        }
+            /* TRUCCO ANTI-BORDO: Rende invisibile il tag img di Safari (eliminando il riquadro grigio) */
+            opacity: 0 !important; 
+            
+            /* PROIETTA L'IMMAGINE PULITA SENZA BORDI */
+            background-image: url("capsula-basso.PNG") !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            -webkit-appearance: none !important;
+             }
  /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
         html, body {
             max-width: 100% !important;
