@@ -118,7 +118,7 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             row-gap: 10px;
-            padding: 0 16px;
+            padding: 0 0px;
         }
 
 
@@ -342,6 +342,14 @@
         .days-grid .day-cell:nth-child(7n-1), 
         .days-grid .day-cell:nth-child(7n) {
             color: var(--ios-gray) !important;
+        }
+        
+        /* Protezione bordi dello schermo per i numeri del weekend e feriali esterni */
+        .days-grid .day-cell:nth-child(7n-6) {
+            padding-left: 16px !important;
+        }
+        .days-grid .day-cell:nth-child(7n) {
+            padding-right: 16px !important;
         }
 
         
