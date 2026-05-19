@@ -377,45 +377,45 @@
 
          
 
- .today-png-btn {
-            position: absolute !important;
-            bottom: 14px !important;  
-            left: 23px !important;    
-            width: 75px !important;   
-            height: 38px !important; /* Forza l'altezza reale per evitare deformazioni */
-            z-index: 150 !important;
-            cursor: pointer;
-            
-            /* TRUCCO ANTI-BORDO: Rende invisibile il tag img di Safari (eliminando il riquadro grigio) */
-            opacity: 0 !important; 
-            
-            /* PROIETTA L'IMMAGINE PULITA SENZA BORDI */
-            background-image: url("pulsante-oggi.png") !important;
-            background-size: contain !important;
-            background-repeat: no-repeat !important;
-            background-position: center !important;
-            -webkit-appearance: none !important;
+        /* Spegniamo lo sfondo grigio e i bordi della barra inferiore per lasciare solo le icone pure */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 84px;
+            background: transparent !important; /* Rende la barra totalmente invisibile */
+            border: none !important;            /* Rimuove la linea di bordo grigia */
+            pointer-events: none;               /* Permette di cliccare lo schermo dietro */
         }
 
-        .capsula-basso-img {
-            position: absolute !important;
-            bottom: 14px !important;  
-            right: 23px !important;   
-            width: 130px !important;  
-            height: 38px !important; /* Forza l'altezza reale per evitare deformazioni */
-            z-index: 150 !important;
+        /* CONFIGURAZIONE IMMAGINI: Rimosso lo sbiadito e cancellata la sfocatura del riquadro */
+        .today-png-btn, .capsula-basso-img {
+            object-fit: contain;
+            opacity: 1 !important; /* Massima luminosità accesa per il bianco e nero */
             cursor: pointer;
-            
-            /* TRUCCO ANTI-BORDO: Rende invisibile il tag img di Safari (eliminando il riquadro grigio) */
-            opacity: 0 !important; 
-            
-            /* PROIETTA L'IMMAGINE PULITA SENZA BORDI */
-            background-image: url("capsula-basso.PNG") !important;
-            background-size: contain !important;
-            background-repeat: no-repeat !important;
-            background-position: center !important;
-            -webkit-appearance: none !important;
-             }
+            pointer-events: auto !important; /* Mantiene i tasti cliccabili */
+            /* Rimossi completamente i backdrop-filter per eliminare definitivamente il riquadro */
+        }
+
+        /* Tasto Oggi (Basso a sinistra) - Sulle tue misure reali */
+        .today-png-btn { 
+            position: absolute !important;
+            bottom: 14px !important;  /* I tuoi 14px dal fondo */
+            left: 23px !important;    /* I tuoi 23px dal bordo sinistro */
+            width: 75px !important;   /* I tuoi 75px di larghezza */
+            height: auto !important;
+        }
+
+        /* Capsula viste (Basso a destra) - Sulle tue misure reali */
+        .capsula-basso-img { 
+            position: absolute !important;
+            bottom: 14px !important;  /* I tuoi 14px dal fondo */
+            right: 23px !important;   /* I tuoi 23px dal bordo destro */
+            width: 130px !important;  /* La tua larghezza di 130px */
+            height: auto !important;
+        }
+
  /* BLOCCO SCORRIMENTO LATERALE DEFINITIVO */
         html, body {
             max-width: 100% !important;
