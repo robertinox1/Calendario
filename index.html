@@ -144,17 +144,26 @@
         .day-cell.today .day-number { background-color: var(--ios-tint); color: #ffffff; font-weight: 700; }
 
         /* LINEE ORIZZONTALI DIVISORIE PIÙ EVIDENTI TRA LE RIGHE */
-        .inline-month-break {
-            grid-column: 1 / span 7;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--ios-text);
-            padding: 14px 0 6px 4px;
-            border-bottom: 0.8px solid var(--ios-border); /* Linea marcata */
-            margin-bottom: 8px;
-            text-align: left;
+               /* Rimuoviamo il vecchio blocco per non far sballare la griglia */
+        .inline-month-break { display: none !important; }
+
+        /* Linea continua orizzontale sopra i giorni reali */
+        .linea-mela-top {
+            border-top: 0.5px solid var(--ios-border) !important;
         }
-        .inline-month-break.current-break { color: var(--ios-tint); }
+
+        /* Scritta del mese abbreviato (es. Gen, Feb) sopra il numero 1 */
+        .day-cell[data-primo="true"]::before {
+            content: attr(data-mese-abbreviato);
+            position: absolute;
+            top: -26px; /* Spinge la scritta perfettamente sopra il numero 1 */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ios-text);
+            white-space: nowrap;
+        }
 
         .ios-capsule-dot {
             width: 6px;
@@ -404,7 +413,7 @@
 
         function idData(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
 
-        function renderizzaCalendarioInfinito() {
+              function renderizzaCalendarioInfinito() {
             const container = document.getElementById("scroll-container");
             container.innerHTML = "";
             let dataLavoro = new Date(oggi.getFullYear() - 1, oggi.getMonth() - 2, 1);
@@ -421,23 +430,12 @@
                 let grid = document.createElement("div");
                 grid.className = "days-grid";
 
-                if (m > 0) {
-                    let breakLine = document.createElement("div");
-                    breakLine.className = "inline-month-break";
-                    if (mese === oggi.getMonth() && anno === oggi.getFullYear()) {
-                        breakLine.classList.add("current-break");
-                    }
-                    breakLine.innerText = nomiMesiBrevi[mese];
-                    grid.appendChild(breakLine);
-                    let primoGiorno = new Date(anno, mese, 1).getDay();
-                    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
-                    for (let e = 0; e < offset; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
-                }
-
                 let primoGiornoReal = new Date(anno, mese, 1).getDay();
                 let offsetReal = primoGiornoReal === 0 ? 6 : primoGiornoReal - 1;
-                if (m === 0) {
-                    for (let e = 0; e < offsetReal; e++) { let empty = document.createElement("div"); grid.appendChild(empty); }
+
+                for (let e = 0; e < offsetReal; e++) { 
+                    let empty = document.createElement("div"); 
+                    grid.appendChild(empty); 
                 }
 
                 let giorniNelMese = new Date(anno, mese + 1, 0).getDate();
@@ -445,12 +443,28 @@
                     let dataGiorno = new Date(anno, mese, g);
                     let sData = idData(dataGiorno);
                     let dayOfWeek = dataGiorno.getDay();
+                    let colonnaAttuale = dayOfWeek === 0 ? 7 : dayOfWeek;
 
                     let dCell = document.createElement("div");
                     dCell.className = "day-cell";
-                    if (dayOfWeek === 0) dCell.classList.add("sun");
-                    if (dayOfWeek === 6) dCell.classList.add("sat");
                     dCell.id = `cell-${sData}`;
+
+                    // Attiva la linea grigia spessa Apple solo dal giorno 1 al 31
+                    if (g === 1 || colonnaAttuale === 1 || (g <= 7 && colonnaAttuale > offsetReal)) {
+                        dCell.classList.add("linea-mela-top");
+                    }
+                    if (g > 1 && colonnaAttuale > 1) {
+                        let inizioSettimanaGiorno = g - (colonnaAttuale - 1);
+                        if (inizioSettimanaGiorno >= 1) {
+                            dCell.classList.add("linea-mela-top");
+                        }
+                    }
+
+                    // Aggancia il mese abbreviato sopra il giorno 1
+                    if (g === 1 && m > 0) {
+                        dCell.setAttribute("data-primo", "true");
+                        dCell.setAttribute("data-mese-abbreviato", nomiMesiBrevi[mese]);
+                    }
 
                     let dNum = document.createElement("div");
                     dNum.className = "day-number";
