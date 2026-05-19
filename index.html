@@ -696,7 +696,8 @@
         }
 
               function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
-            document.getElementById("day-view-back-title").innerText = `${nomiMesiBrevi[meseIndex]}`;
+          document.getElementById("day-view-back-title").innerText = `${nomiMesi[meseIndex]}`;
+
             const weekBar = document.querySelector(".day-view-week-bar");
             weekBar.innerHTML = "";
             let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
