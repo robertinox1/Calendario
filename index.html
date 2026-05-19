@@ -330,15 +330,15 @@
         }
 
         /* TITOLI GRIGI SOPRA LE DUE COLONNE (Es: gio - 21 mag) */
-        .column-header-title {
+            .column-header-title {
             text-align: center; font-size: 13px; color: var(--ios-gray);
             padding: 6px 0; border-bottom: 1.5px solid var(--ios-border); font-weight: 500;
             background-color: #000;
         }
 
-        /* COLONNA DELLE ORE A SINISTRA */
+        /* COLONNA DELLE ORE A SINISTRA - ALLINEAMENTO AUTOMATICO */
         .time-labels-col { display: contents !important; }
-
+        
         .time-labels-col div {
             height: 60px !important;
             display: flex !important;
@@ -352,7 +352,7 @@
             box-sizing: border-box !important;
             position: relative; 
             border-left: 1.5px solid var(--ios-border) !important; 
-             padding-top: 38px;
+            padding-top: 0px;
         }
         
         /* LINEE ORARIE DA 1.5PX CHE TOCCANO IL BORDO DESTRO */
