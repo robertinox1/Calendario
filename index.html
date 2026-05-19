@@ -627,10 +627,10 @@
             
             for (let section of sections) {
                 let rect = section.getBoundingClientRect();
-                if (rect.top <= 220 && rect.bottom >= 220) {
+                if (rect.top <= 220) {
                     annoAttualeVisualizzato = section.getAttribute("data-anno-view");
                     meseAttualeVisualizzato = section.getAttribute("data-mese-nome");
-                    break;
+                
                 }
             }
             document.getElementById("current-year-header").innerText = annoAttualeVisualizzato;
