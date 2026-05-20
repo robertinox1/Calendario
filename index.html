@@ -900,18 +900,22 @@
 
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
-                                    // REPLICA UNIVERALE DELLA LOGICA VERTICALE UMANA DEL MAGO
+                    // REPLICA DELLA LOGICA VERTICALE CON CONSOLIDAMENTO DEL MESE
                     let dataFutura = new Date(dataSelezionata.getFullYear(), dataSelezionata.getMonth(), dataSelezionata.getDate(), 12, 0, 0);
                     
-                    // 1. Il mago ha cliccato una riga sopra sulla colonna (-7 giorni). 
-                    // Il codice rimette i 7 giorni per scendere sulla riga dello "specchio" (es. dal 26 Dic passa al 2 Gen)
+                    // 1. Sposta la data in avanti di 7 giorni per scendere sulla riga del giorno specchio
                     dataFutura.setDate(dataFutura.getDate() + 7);
                     
-                    // 2. Ora che è sul giorno specchio corretto, avanza di 2 mesi esatti nel futuro
+                    // 2. CONSOLIDAMENTO: Creiamo un nuovo oggetto pulito basato sulla nuova data ottenuta (es. 2 Gennaio)
+                    // Questo impedisce a JavaScript di ricordarsi del mese di Dicembre precedente
+                    dataFutura = new Date(dataFutura.getFullYear(), dataFutura.getMonth(), dataFutura.getDate(), 12, 0, 0);
+                    
+                    // 3. Ora avanza di 2 mesi esatti nel futuro partendo dal mese consolidato
                     dataFutura.setMonth(dataFutura.getMonth() + 2);
 
                     let stringaDataFutura = idData(dataFutura);
                     databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica };
+
 
                 }
             }
