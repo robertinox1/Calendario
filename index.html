@@ -855,7 +855,41 @@
 
         function closeDayViewModal() { document.getElementById("day-view-modal").classList.remove("open"); }
         function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
-        sistemaLettereBarra();
+                // FUNZIONE INDEPENDENTE DI CORREZIONE REALE PER LE LETTERE DELLA BARRA
+        function sistemaLettereBarra() {
+            const labels = document.querySelectorAll(".day-view-week-bar .day-label");
+            const numeri = document.querySelectorAll(".day-view-week-bar .num");
+            const lettereReali = ["D", "L", "M", "M", "G", "V", "S"];
+            
+            if (labels.length === 7 && numeri.length === 7) {
+                // Troviamo il punto di riferimento (il giorno centrale cliccato, dove i = 0, che è il terzo elemento della barra)
+                let giornoCliccatoRef = dataSelezionata.getDate();
+                let meseRef = dataSelezionata.getMonth();
+                let annoRef = dataSelezionata.getFullYear();
+
+                for (let i = 0; i < 7; i++) {
+                    let numeroGiorno = parseInt(numeri[i].innerText);
+                    
+                    // Creiamo la data di verifica partendo esattamente dalla data selezionata
+                    let dataVerifica = new Date(annoRef, meseRef, giornoCliccatoRef);
+                    // Usiamo lo stesso scostamento (da -2 a +4) che usa il tuo ciclo originale per trovare la data esatta
+                    dataVerifica.setDate(giornoCliccatoRef + (i - 2));
+                    
+                    let indiceGiorno = dataVerifica.getDay();
+                    
+                    // Scrive la lettera visibile sopra la bolla associandola al giorno reale corretto
+                    labels[i].innerText = lettereReali[indiceGiorno];
+                    
+                    // Imposta i colori Apple corretti per i feriali e i weekend
+                    if (indiceGiorno === 0 || indiceGiorno === 6) {
+                        labels[i].className = "day-label muted";
+                    } else {
+                        labels[i].className = "day-label";
+                    }
+                }
+            }
+        }
+
         function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
         function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
         function closeSecretPanel() { document.getElementById("secret-panel").classList.remove("open"); }
