@@ -900,38 +900,27 @@
 
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
-                                                                        // LA TUA LOGICA ORIGINALE PROTOCOLLATA: ARROTONDAMENTO AL NUMERO INFERIORE + 7 GIORNI
-                                     // Forziamo la data a mezzogiorno (12:00) per evitare che i fusi orari di Safari spostino i giorni
+                                                                                        // REPLICA ESATTA DEL RAGIONAMENTO UMANO DEL MAGO
                     let dataFutura = new Date(dataSelezionata.getFullYear(), dataSelezionata.getMonth(), dataSelezionata.getDate(), 12, 0, 0);
-                    let giornoPartenzaReale = dataFutura.getDate();
+                    let gPartenza = dataFutura.getDate();
+                    let mPartenza = dataFutura.getMonth();
 
+                    // Trova l'ultimo giorno reale del mese in cui hai cliccato
+                    let ultimoDelMeseCorrente = new Date(dataFutura.getFullYear(), mPartenza + 1, 0).getDate();
 
-                    // 1. Calcoliamo l'anno e il mese esatto di arrivo target (+2 mesi nel futuro)
-                    let annoArrivoTarget = dataFutura.getFullYear();
-                    let meseArrivoTarget = dataFutura.getMonth() + 2;
-                    if (meseArrivoTarget > 11) {
-                        meseArrivoTarget = meseArrivoTarget - 12;
-                        annoArrivoTarget += 1;
+                    // SE HAI CLICCATO SULL'ULTIMO GIORNO (Caso 31 Dicembre o 28 Febbraio)
+                    if (gPartenza === ultimoDelMeseCorrente) {
+                        // Il codice capisce che ti sei spostato in alto sulla colonna verticale.
+                        // Forza il mese di arrivo in avanti di 3 mesi e imposta il giorno fisso sul numero 7!
+                        dataFutura.setMonth(mPartenza + 3);
+                        dataFutura.setDate(7);
+                    } 
+                    // CASO STANDARD (Se clicchi su un giorno normale a metà mese)
+                    else {
+                        // Fa il percorso classico: due mesi in avanti e mantiene lo stesso numero di giorno
+                        dataFutura.setMonth(mPartenza + 2);
+                        dataFutura.setDate(gPartenza);
                     }
-
-                    // 2. Troviamo qual è l'ultimo giorno massimo disponibile per quel mese di arrivo
-                    let ultimoGiornoDisponibile = new Date(annoArrivoTarget, meseArrivoTarget + 1, 0).getDate();
-
-                    // 3. APPLICA IL TUO METODO: Se il giorno di partenza non esiste, usa il numero inferiore massimo
-                    let giornoAncoraggio = giornoPartenzaReale;
-                    if (giornoAncoraggio > ultimoGiornoDisponibile) {
-                        giornoAncoraggio = ultimoGiornoDisponibile; // Diventa a forza il 28 se è Febbraio, o il 30
-                    }
-
-                    // 4. Configura la data di base bloccata senza slittamenti automatici
-                    dataFutura.setFullYear(annoArrivoTarget);
-                    dataFutura.setMonth(meseArrivoTarget);
-                    dataFutura.setDate(giornoAncoraggio);
-
-                    // 5. INFINE CONTA I TUOI 7 GIORNI ESATTI: Dal 28 Febbraio + 7 giorni = Arriva al 7 Marzo!
-                    dataFutura.setDate(dataFutura.getDate() + 7);
-
-
 
 
                     let stringaDataFutura = idData(dataFutura);
