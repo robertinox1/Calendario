@@ -751,7 +751,10 @@
             let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
             let sDataOggi = idData(oggi);
 
-                      // Trova la posizione della settimana bloccando il Lunedì come primo giorno
+                      // Genera la stringa della data odierna reale
+            let sDataOggi = idData(oggi);
+
+            // Calcola la posizione della settimana bloccando il Lunedì come primo giorno
             let dayOfWeek = dataLavoro.getDay();
             let offsetALunedi = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
             let lunediSettimana = new Date(anno, meseIndex, giorno - offsetALunedi, 0, 0, 0, 0);
@@ -770,12 +773,12 @@
                     stileRossoInLine = "style='color: var(--ios-tint) !important;'";
                 }
 
-                // SPOSTA LA BOLLA: Evidenzia con il cerchio bianco solo il giorno cliccato
+                // SPOSTA LA BOLLA BIANCA: Evidenzia solo il giorno cliccato
                 if (dTarget.getDate() === dataLavoro.getDate() && dTarget.getMonth() === dataLavoro.getMonth()) {
                     numClass += " active-day";
                 }
                 
-                // Mantiene la previsione segreta per la colonna di destra
+                // SPOSTA LA BOLLA GRIGIA SEGRETA: Evidenzia il giorno successivo a quello cliccato
                 if (i === offsetALunedi + 1) {
                     numClass += " next-day-preview";
                 }
