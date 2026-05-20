@@ -272,15 +272,16 @@
         /* LISTA COLONNE DEL GIORNO */
            /* GRIGLIA ORARIA - APERTURA VERTICALE SENZA JAVASCRIPT */
               /* GRIGLIA ORARIA - APERTURA DAL CENTRO E CHIUSURA GUIDATA DALL'ALTO */
+              /* GRIGLIA ORARIA - CHIUSURA CON LINEE CHE CONVERGONO NEL PUNTO GIUSTO */
         .day-view-modal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
             z-index: 180; 
             
-            /* IN CHIUSURA: L'origine si sposta in alto. La linea dei numeri scende 
-               verso il basso mentre dal fondo risalgono le altre righe comprimendosi */
+            /* IN CHIUSURA: L'asse si sposta in basso. Questo costringe la linea dei numeri 
+               in alto a scendere verso il basso, mentre le linee dal fondo risalgono */
             transform: scaleY(0); 
-            transform-origin: center top; 
+            transform-origin: center bottom; 
             opacity: 0;
             pointer-events: none; 
             
@@ -288,13 +289,13 @@
         }
 
         .day-view-modal.open { 
-            /* IN APERTURA: L'origine si sposta al centro, facendo dividere le linee 
-               in verticale (alto/basso) come piace a te */
+            /* IN APERTURA: L'asse rimane al centro per spaccare la griglia in due (alto/basso) */
             transform: scaleY(1); 
             transform-origin: center center;
             opacity: 1;
             pointer-events: auto; 
         }
+
 
 
 
