@@ -270,32 +270,33 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
-                            /* GRIGLIA ORARIA - APERTURA A SERRANDA E CHIUSURA CLASSICA VERSO IL BASSO */
+        /* GRIGLIA ORARIA - APERTURA A SERRANDA DAL CENTRO VISIVO E CHIUSURA CLASSICA IN BASSO */
         .day-view-modal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
             z-index: 180; 
             
-            /* STATO CHIUSO: La pagina si nasconde scivolando in basso del 100% */
-            transform: translateY(100%) scaleY(0); 
+            /* IN CHIUSURA CLASSICA: La pagina scivola interamente in basso del 100% sotto lo schermo */
+            transform: translateY(100%); 
             opacity: 0;
             pointer-events: none; /* Sblocca subito i tasti mese/anno sotto quando è chiusa */
             
-            /* LA TRANSIZIONE DI CHIUSURA: Fa scivolare la pagina verso il basso dolcemente */
-            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease;
+            /* La transizione di chiusura si concentra sul movimento fluido verso il basso */
+            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
         }
 
         .day-view-modal.open { 
-            /* STATO APERTO: Torna a tutto schermo */
+            /* IN APERTURA A SERRANDA: Annulla lo scivolamento e si espande in verticale (alto/basso) */
             transform: translateY(0) scaleY(1); 
             opacity: 1;
             pointer-events: auto; 
             
-            /* LA TRANSIZIONE DI APERTURA: Forza l'espansione a serranda (alto/basso) dal centro visivo */
+            /* Fissa l'asse al centro dell'altezza visiva corrente per spaccare lo schermo in due */
             transform-origin: center center;
+            
+            /* Forza il browser ad applicare solo lo schiacciamento verticale per l'apertura */
             transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
