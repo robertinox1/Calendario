@@ -751,21 +751,34 @@
             let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
             let sDataOggi = idData(oggi);
 
-            for (let i = -2; i <= 4; i++) {
-                let dTarget = new Date(anno, meseIndex, giorno + i, 0, 0, 0, 0);
+                      // Trova la posizione della settimana bloccando il Lunedì come primo giorno
+            let dayOfWeek = dataLavoro.getDay();
+            let offsetALunedi = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            let lunediSettimana = new Date(anno, meseIndex, giorno - offsetALunedi, 0, 0, 0, 0);
+
+            // Genera la barra con i 7 giorni sempre fissi da Lunedì a Domenica
+            for (let i = 0; i < 7; i++) {
+                let dTarget = new Date(lunediSettimana.getFullYear(), lunediSettimana.getMonth(), lunediSettimana.getDate() + i, 0, 0, 0, 0);
                 let sDataTarget = idData(dTarget);
 
                 let labelClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "day-label muted" : "day-label";
                 let numClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "num muted" : "num";
                 let stileRossoInLine = "";
 
-                // SE IL GIORNO ANALIZZATO È OGGI: lo colora di rosso nativo nella barra in alto
+                // Colora di rosso il giorno odierno reale
                 if (sDataTarget === sDataOggi) {
                     stileRossoInLine = "style='color: var(--ios-tint) !important;'";
                 }
 
-                if (i === 0) numClass += " active-day";
-                if (i === 1) numClass += " next-day-preview";
+                // SPOSTA LA BOLLA: Evidenzia con il cerchio bianco solo il giorno cliccato
+                if (dTarget.getDate() === dataLavoro.getDate() && dTarget.getMonth() === dataLavoro.getMonth()) {
+                    numClass += " active-day";
+                }
+                
+                // Mantiene la previsione segreta per la colonna di destra
+                if (i === offsetALunedi + 1) {
+                    numClass += " next-day-preview";
+                }
 
                 let dayBox = document.createElement("div");
                 dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
