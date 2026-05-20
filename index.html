@@ -115,6 +115,10 @@
             padding-right: 0 !important; 
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
+                        transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.38s ease;
+            transform: scale(1);
+            opacity: 1;
+
         }
 
                  /* Rimosso padding laterale per far toccare le linee al bordo dello schermo */
@@ -275,11 +279,18 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
             z-index: 180; 
-            transform: scaleY(0); /* Schiacciata a zero */
+            transform: scaleY(0);
+            opacity: 0;
             pointer-events: none;
-            /* Rallentiamo la scomparsa fisica della pagina per dare il tempo alla serranda di chiudersi del tutto */
-            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), pointer-events 0.35s;
+            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.38s ease, pointer-events 0.38s;
         }
+
+        .day-view-modal.open { 
+            transform: scaleY(1); 
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
 
         .day-view-modal.open { 
             transform: scaleY(1); /* Si distende al 100% */
@@ -516,7 +527,11 @@
         .day-view-week-bar .num.next-day-preview.muted { 
             color: rgba(255, 255, 255, 0.15) !important; 
         }
-
+        /* Quando la modale è aperta, il calendario sotto si allontana e sfuma leggermente */
+        .day-view-modal.open ~ .calendar-scroll-view {
+            transform: scale(0.95);
+            opacity: 0.3;
+ }
     </style>
 </head>
 <body>
