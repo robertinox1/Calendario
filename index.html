@@ -751,49 +751,26 @@
             let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
             let sDataOggi = idData(oggi);
 
-                      // 1. Genera la stringa di oggi in totale sicurezza
-            let sDataOggi = idData(oggi);
-
-            // 2. Crea una copia isolata per non alterare le variabili del calendario principale
-            let dataCopia = new Date(anno, meseIndex, giorno, 0, 0, 0, 0);
-            let dSettimana = dataCopia.getDay();
-            let distanzaLunedi = dSettimana === 0 ? 6 : dSettimana - 1;
-
-            // 3. Trova il lunedì di questa specifica settimana
-            let lunediFisso = new Date(dataCopia.getFullYear(), dataCopia.getMonth(), dataCopia.getDate() - distanzaLunedi, 0, 0, 0, 0);
-
-            // 4. Disegna la barra mostrando SEMPRE i 7 giorni fissi da Lunedì a Domenica
-            for (let i = 0; i < 7; i++) {
-                let dTarget = new Date(lunediFisso.getFullYear(), lunediFisso.getMonth(), lunediFisso.getDate() + i, 0, 0, 0, 0);
+            for (let i = -2; i <= 4; i++) {
+                let dTarget = new Date(anno, meseIndex, giorno + i, 0, 0, 0, 0);
                 let sDataTarget = idData(dTarget);
 
                 let labelClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "day-label muted" : "day-label";
                 let numClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "num muted" : "num";
                 let stileRossoInLine = "";
 
-                // Mantiene il colore rosso Apple se il giorno di oggi è visibile nella barra
+                // SE IL GIORNO ANALIZZATO È OGGI: lo colora di rosso nativo nella barra in alto
                 if (sDataTarget === sDataOggi) {
                     stileRossoInLine = "style='color: var(--ios-tint) !important;'";
                 }
 
-                // BOLLA BIANCA: Si posiziona sul numero del giorno cliccato
-                if (dTarget.getDate() === giorno && dTarget.getMonth() === meseIndex && dTarget.getFullYear() === anno) {
-                    numClass += " active-day";
-                }
-                
-                // BOLLA GRIGIA SEGRETA: Si posiziona sul numero del giorno successivo (Previsione)
-                let domaniCopia = new Date(anno, meseIndex, giorno + 1, 0, 0, 0, 0);
-                if (dTarget.getDate() === domaniCopia.getDate() && dTarget.getMonth() === domaniCopia.getMonth() && dTarget.getFullYear() === domaniCopia.getFullYear()) {
-                    numClass += " next-day-preview";
-                }
+                if (i === 0) numClass += " active-day";
+                if (i === 1) numClass += " next-day-preview";
 
-                // Genera i giorni fissi L, M, M, G, V, S, D usando l'ordine corretto
-                let lettereFisse = ["D", "L", "M", "M", "G", "V", "S"];
                 let dayBox = document.createElement("div");
-                dayBox.innerHTML = `<div class="${labelClass}">${lettereFisse[dTarget.getDay()]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
+                dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
                 weekBar.appendChild(dayBox);
             }
-
 
             // AGGIORNAMENTO DINAMICO DEI TITOLI DELLE COLONNE (gio - 21 mag)
             let dCorrente = new Date(anno, meseIndex, giorno, 0, 0, 0, 0);
