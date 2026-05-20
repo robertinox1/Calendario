@@ -106,18 +106,16 @@
         }
 
         /* VISTA SCORRIMENTO MESI */
-             .calendar-scroll-view {
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: hidden !important;
-            overflow-y: scroll !important;
+        .calendar-scroll-view {
+            height: 100vh;
+            overflow-y: scroll;
+            padding-top: 135px;
+            padding-bottom: 120px;
+            padding-left: 0 !important;  
+            padding-right: 0 !important; 
+            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            /* Stessa identica reattività della modale oraria */
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            transform: scale(1);
-            opacity: 1;
         }
-
 
                  /* Rimosso padding laterale per far toccare le linee al bordo dello schermo */
         .month-section { 
@@ -272,27 +270,12 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
-                /* SCHERMATA GRIGLIA ORARIA - EFFETTO SERRANDA SIMMETRICO AVANTI/INDIETRO */
-
-
-              /* GRIGLIA ORARIA - SINCRONIZZATA AL MILLISECONDO */
         .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-            z-index: 180; 
-            transform: scaleY(0);
-            opacity: 0;
-            pointer-events: none;
-            /* Curva e durata identiche a quelle del calendario per una chiusura fusa insieme */
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 180; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
-        .day-view-modal.open { 
-            transform: scaleY(1); 
-            opacity: 1;
-            pointer-events: auto; 
-        }
-
+        .day-view-modal.open { transform: translateY(0); }
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
@@ -522,14 +505,7 @@
         .day-view-week-bar .num.next-day-preview.muted { 
             color: rgba(255, 255, 255, 0.15) !important; 
         }
-        /* Quando la modale è aperta, il calendario sotto si allontana e sfuma leggermente */
-                /* Quando la modale è aperta, il calendario si allontana nello sfondo in modo armonioso */
-        body:has(.day-view-modal.open) .calendar-scroll-view {
-            transform: scale(0.92); /* Leggermente più piccolo per accentuare la profondità Apple */
-            opacity: 0;            /* Sfuma completamente nello sfondo nero */
-        }
 
- }
     </style>
 </head>
 <body>
