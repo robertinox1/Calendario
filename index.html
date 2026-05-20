@@ -270,12 +270,28 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
+             /* GRIGLIA ORARIA - EFFETTO DIVISIONE E RICOMPOSIZIONE DELLE LINEE */
         .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-            z-index: 180; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 180; 
+            
+            /* STATO CHIUSO: La pagina è compressa come una singola linea orizzontale al centro */
+            transform: scaleY(0);
+            opacity: 0;
+            pointer-events: none;
+            
+            /* SINCRONIZZAZIONE PERFETTA: Usiamo la stessa curva per l'espansione e il riavvolgimento */
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
         }
-        .day-view-modal.open { transform: translateY(0); }
+
+        .day-view-modal.open { 
+            /* STATO APERTO: Le linee di sopra scattano in alto, quelle di sotto in basso formando la pagina */
+            transform: scaleY(1); 
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
