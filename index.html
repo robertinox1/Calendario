@@ -270,12 +270,28 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
+           /* GRIGLIA ORARIA - APERTURA VERTICALE SENZA JAVASCRIPT */
         .day-view-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-            z-index: 180; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: absolute; /* Si aggancia all'altezza visiva corrente del body */
+            top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
+            z-index: 180; 
+            
+            /* STATO CHIUSO: La pagina si contrae in verticale verso il suo centro visivo */
+            transform: scaleY(0); 
+            opacity: 0;
+            pointer-events: none; /* Sblocca subito i tasti sotto quando è chiusa */
+            
+            /* Animazione fluida di apertura e chiusura a libro */
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
         }
-        .day-view-modal.open { transform: translateY(0); }
+
+        .day-view-modal.open { 
+            /* STATO APERTO: Si ridistende in verticale coprendo lo schermo */
+            transform: scaleY(1); 
+            opacity: 1;
+            pointer-events: auto; 
+        }
+
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
