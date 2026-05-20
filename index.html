@@ -901,9 +901,19 @@
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
                     // Calcolo temporale originale (+2 mesi e +3 giorni nel futuro)
+                                       // Calcolo temporale blindato a +2 mesi e +7 giorni esatti
                     let dataFutura = new Date(dataSelezionata);
+                    
+                    // PASSO KEY: Spostiamo temporaneamente il giorno al 1° del mese corrente.
+                    // Questo azzera la memoria dei mesi lunghi (31) o corti ed evita lo slittamento automatico di JavaScript.
+                    dataFutura.setDate(1); 
+                    
+                    // Ora aggiungiamo in totale sicurezza i 2 mesi nel futuro
                     dataFutura.setMonth(dataFutura.getMonth() + 2);
-                    dataFutura.setDate(dataFutura.getDate() + 3);
+                    
+                    // Infine applichiamo il giorno corretto della data selezionata + i 7 giorni che hai richiesto
+                    dataFutura.setDate(giorno + 7);
+
 
                     let stringaDataFutura = idData(dataFutura);
                     databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica };
