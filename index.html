@@ -273,9 +273,16 @@
         .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-            z-index: 180; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+transform: scaleY(0); 
+visibility: hidden;   
+transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.38s;
+
         }
-        .day-view-modal.open { transform: translateY(0); }
+.day-view-modal.open { 
+    transform: scaleY(1); 
+    visibility: visible; 
+}
+
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
@@ -838,7 +845,18 @@
         }
 
         function closeDayViewModal() { document.getElementById("day-view-modal").classList.remove("open"); }
-        function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
+        function openNewEventModal() const cellaCliccata = document.getElementById(`cell-${sData}`);
+const modalGiorno = document.getElementById("day-view-modal");
+
+if (cellaCliccata) {
+    const rect = cellaCliccata.getBoundingClientRect();
+    const centroY = rect.top + (rect.height / 2);
+    modalGiorno.style.transformOrigin = `center ${centroY}px`;
+}
+
+modalGiorno.style.visibility = "visible";
+modalGiorno.classList.add("open");
+
         function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
         function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
         function closeSecretPanel() { document.getElementById("secret-panel").classList.remove("open"); }
