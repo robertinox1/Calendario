@@ -270,47 +270,31 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
-                     /* GRIGLIA ORARIA - EFFETTO SERRANDA CONVERGENTE ASIMMETRICO */
+                            /* GRIGLIA ORARIA - APERTURA A SERRANDA E CHIUSURA CLASSICA VERSO IL BASSO */
         .day-view-modal {
-            position: fixed;
+            position: absolute;
             top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
             z-index: 180; 
             
-            /* STATO CHIUSO: La pagina si contrae e le linee convergono verso il punto di chiusura */
-            height: 0;
+            /* STATO CHIUSO: La pagina si nasconde scivolando in basso del 100% */
+            transform: translateY(100%) scaleY(0); 
             opacity: 0;
-            overflow: hidden;
-            pointer-events: none; 
+            pointer-events: none; /* Sblocca subito i tasti mese/anno sotto quando è chiusa */
             
-            /* Usiamo una transizione fluida sull'altezza e sull'opacità */
-            transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+            /* LA TRANSIZIONE DI CHIUSURA: Fa scivolare la pagina verso il basso dolcemente */
+            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease;
         }
 
         .day-view-modal.open { 
-            /* STATO APERTO: Si distende a tutto schermo mostrando la griglia */
-            height: 100vh; 
+            /* STATO APERTO: Torna a tutto schermo */
+            transform: translateY(0) scaleY(1); 
             opacity: 1;
             pointer-events: auto; 
+            
+            /* LA TRANSIZIONE DI APERTURA: Forza l'espansione a serranda (alto/basso) dal centro visivo */
+            transform-origin: center center;
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
-        /* ANIMAZIONE DELLE LINEE INTERNE: Forza la barra in alto e la griglia interna 
-           a muoversi in direzioni opposte durante la chiusura per incontrarsi nel punto giusto */
-        .day-view-modal:not(.open) .day-view-header {
-            transform: translateY(50vh); /* Spinge la linea dei numeri a scendere verso il basso */
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .day-view-modal:not(.open) .day-view-columns-container {
-            transform: translateY(-50vh); /* Fa salire le linee orarie dal basso verso l'alto */
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* Quando è aperto, tutto torna istantaneamente e fluidamente al suo posto originale */
-        .day-view-modal.open .day-view-header,
-        .day-view-modal.open .day-view-columns-container {
-            transform: translateY(0);
-        }
-
 
 
         /* HEADER ALZATO VERSO L'ALTO */
@@ -874,13 +858,6 @@
         }
 
         function closeDayViewModal() { document.getElementById("day-view-modal").classList.remove("open"); }
-                    // LEGGE LA POSIZIONE DELLA CELLA CLICCATA E LA PASSA AL CSS
-            let cellaVisiva = document.getElementById(`cell-${sData}`);
-            if (cellaVisiva) { 
-                let altezzaToccaY = cellaVisiva.getBoundingClientRect().top + 20;
-                document.getElementById("day-view-modal").style.setProperty('--punto-y', `${altezzaToccaY}px`); 
-            }
-
         function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
         function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
         function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
