@@ -900,21 +900,35 @@
 
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
-                                                        // Calcolo temporale matematicamente blindato (+2 mesi e +7 giorni reali)
+                                                                        // LA TUA LOGICA ORIGINALE PROTOCOLLATA: ARROTONDAMENTO AL NUMERO INFERIORE + 7 GIORNI
                     let dataFutura = new Date(dataSelezionata);
-                    
-                    // 1. Memorizza temporaneamente il numero del giorno da cui parti (es. 31)
-                    let baseGiornoPartenza = dataFutura.getDate();
-                    
-                    // 2. Schiaccia momentaneamente il giorno al 1° del mese per azzerare la memoria dei mesi lunghi
-                    dataFutura.setDate(1); 
-                    
-                    // 3. Sposta il mese in avanti di 2 mesi in totale sicurezza (es. da Dicembre va a Febbraio)
-                    dataFutura.setMonth(dataFutura.getMonth() + 2);
-                    
-                    // 4. Applica la vera matematica lineare: 1 + il giorno iniziale + i 7 giorni richiesti.
-                    // JavaScript calcolerà il 1° Febbraio + 31 giorni + 7 giorni, arrivando AL MILLIMETRO al 7 Marzo!
-                    dataFutura.setDate(1 + (baseGiornoPartenza - 1) + 7);
+                    let giornoPartenzaReale = dataFutura.getDate();
+
+                    // 1. Calcoliamo l'anno e il mese esatto di arrivo target (+2 mesi nel futuro)
+                    let annoArrivoTarget = dataFutura.getFullYear();
+                    let meseArrivoTarget = dataFutura.getMonth() + 2;
+                    if (meseArrivoTarget > 11) {
+                        meseArrivoTarget = meseArrivoTarget - 12;
+                        annoArrivoTarget += 1;
+                    }
+
+                    // 2. Troviamo qual è l'ultimo giorno massimo disponibile per quel mese di arrivo
+                    let ultimoGiornoDisponibile = new Date(annoArrivoTarget, meseArrivoTarget + 1, 0).getDate();
+
+                    // 3. APPLICA IL TUO METODO: Se il giorno di partenza non esiste, usa il numero inferiore massimo
+                    let giornoAncoraggio = giornoPartenzaReale;
+                    if (giornoAncoraggio > ultimoGiornoDisponibile) {
+                        giornoAncoraggio = ultimoGiornoDisponibile; // Diventa a forza il 28 se è Febbraio, o il 30
+                    }
+
+                    // 4. Configura la data di base bloccata senza slittamenti automatici
+                    dataFutura.setFullYear(annoArrivoTarget);
+                    dataFutura.setMonth(meseArrivoTarget);
+                    dataFutura.setDate(giornoAncoraggio);
+
+                    // 5. INFINE CONTA I TUOI 7 GIORNI ESATTI: Dal 28 Febbraio + 7 giorni = Arriva al 7 Marzo!
+                    dataFutura.setDate(dataFutura.getDate() + 7);
+
 
 
 
