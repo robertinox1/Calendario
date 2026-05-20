@@ -900,31 +900,19 @@
 
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
-                                                                                        // REPLICA ESATTA DEL RAGIONAMENTO UMANO DEL MAGO
+                                    // REPLICA UNIVERALE DELLA LOGICA VERTICALE UMANA DEL MAGO
                     let dataFutura = new Date(dataSelezionata.getFullYear(), dataSelezionata.getMonth(), dataSelezionata.getDate(), 12, 0, 0);
-                    let gPartenza = dataFutura.getDate();
-                    let mPartenza = dataFutura.getMonth();
-
-                    // Trova l'ultimo giorno reale del mese in cui hai cliccato
-                    let ultimoDelMeseCorrente = new Date(dataFutura.getFullYear(), mPartenza + 1, 0).getDate();
-
-                    // SE HAI CLICCATO SULL'ULTIMO GIORNO (Caso 31 Dicembre o 28 Febbraio)
-                    if (gPartenza === ultimoDelMeseCorrente) {
-                        // Il codice capisce che ti sei spostato in alto sulla colonna verticale.
-                        // Forza il mese di arrivo in avanti di 3 mesi e imposta il giorno fisso sul numero 7!
-                        dataFutura.setMonth(mPartenza + 3);
-                        dataFutura.setDate(7);
-                    } 
-                    // CASO STANDARD (Se clicchi su un giorno normale a metà mese)
-                    else {
-                        // Fa il percorso classico: due mesi in avanti e mantiene lo stesso numero di giorno
-                        dataFutura.setMonth(mPartenza + 2);
-                        dataFutura.setDate(gPartenza);
-                    }
-
+                    
+                    // 1. Il mago ha cliccato una riga sopra sulla colonna (-7 giorni). 
+                    // Il codice rimette i 7 giorni per scendere sulla riga dello "specchio" (es. dal 26 Dic passa al 2 Gen)
+                    dataFutura.setDate(dataFutura.getDate() + 7);
+                    
+                    // 2. Ora che è sul giorno specchio corretto, avanza di 2 mesi esatti nel futuro
+                    dataFutura.setMonth(dataFutura.getMonth() + 2);
 
                     let stringaDataFutura = idData(dataFutura);
                     databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica };
+
                 }
             }
 
