@@ -751,26 +751,46 @@
             let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
             let sDataOggi = idData(oggi);
 
-            for (let i = -2; i <= 4; i++) {
-                let dTarget = new Date(anno, meseIndex, giorno + i, 0, 0, 0, 0);
+                       // Genera la stringa della data odierna reale (Evita blocchi JavaScript)
+            let sDataOggi = idData(oggi);
+
+            // Calcola la distanza tra il giorno cliccato e il Lunedì di quella settimana
+            let giornoDellaSettimana = dataLavoro.getDay();
+            let distanzaDaLunedi = giornoDellaSettimana === 0 ? 6 : giornoDellaSettimana - 1;
+
+            // Fissa la data di partenza sul Lunedì esatto della settimana corrente
+            let dataLunediFissa = new Date(anno, meseIndex, giorno - distanzaDaLunedi, 0, 0, 0, 0);
+
+            // Disegna sempre la settimana standard da Lunedì a Domenica
+            for (let i = 0; i < 7; i++) {
+                let dTarget = new Date(dataLunediFissa.getFullYear(), dataLunediFissa.getMonth(), dataLunediFissa.getDate() + i, 0, 0, 0, 0);
                 let sDataTarget = idData(dTarget);
 
                 let labelClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "day-label muted" : "day-label";
                 let numClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "num muted" : "num";
                 let stileRossoInLine = "";
 
-                // SE IL GIORNO ANALIZZATO È OGGI: lo colora di rosso nativo nella barra in alto
+                // Mantiene il colore rosso Apple sul giorno corrente reale se presente nella barra
                 if (sDataTarget === sDataOggi) {
                     stileRossoInLine = "style='color: var(--ios-tint) !important;'";
                 }
 
-                if (i === 0) numClass += " active-day";
-                if (i === 1) numClass += " next-day-preview";
+                // SPOSTA LA BOLLA BIANCA: Si attiva solo sul numero del giorno cliccato
+                if (dTarget.getDate() === dataLavoro.getDate() && dTarget.getMonth() === dataLavoro.getMonth() && dTarget.getFullYear() === dataLavoro.getFullYear()) {
+                    numClass += " active-day";
+                }
+                
+                // SPOSTA LA BOLLA GRIGIA SEGRETA: Si attiva sul numero del giorno successivo (Previsione)
+                let giornoSuccessivo = new Date(anno, meseIndex, giorno + 1, 0, 0, 0, 0);
+                if (dTarget.getDate() === giornoSuccessivo.getDate() && dTarget.getMonth() === giornoSuccessivo.getMonth() && dTarget.getFullYear() === giornoSuccessivo.getFullYear()) {
+                    numClass += " next-day-preview";
+                }
 
                 let dayBox = document.createElement("div");
                 dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
                 weekBar.appendChild(dayBox);
             }
+
 
             // AGGIORNAMENTO DINAMICO DEI TITOLI DELLE COLONNE (gio - 21 mag)
             let dCorrente = new Date(anno, meseIndex, giorno, 0, 0, 0, 0);
