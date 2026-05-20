@@ -273,11 +273,9 @@
         .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-           z-index: 180; transform: translateY(100%); visibility: hidden; transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1);
-
+            z-index: 180; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-       .day-view-modal.open { transform: translateY(0); visibility: visible; }
-
+        .day-view-modal.open { transform: translateY(0); }
 
         /* HEADER ALZATO VERSO L'ALTO */
         .day-view-header { 
@@ -839,30 +837,8 @@
             }
         }
 
-              function closeDayViewModal() { 
-            const modalGiorno = document.getElementById("day-view-modal");
-            modalGiorno.classList.remove("open");
-            // Aspetta che la pagina sia scesa del tutto (380ms) prima di smaterializzarla
-            setTimeout(() => { modalGiorno.style.visibility = "hidden"; }, 380);
-        }
-
-                 const cellaCliccata = document.getElementById(`cell-${sData}`);
-            const modalGiorno = document.getElementById("day-view-modal");
-
-            if (cellaCliccata) {
-                // Calcola quanti pixel dista la cella dal bordo superiore dello schermo
-                const rect = cellaCliccata.getBoundingClientRect();
-                // Sposta l'inizio dell'animazione esattamente all'altezza del tuo dito
-                modalGiorno.style.top = `${rect.top}px`;
-            }
-
-            // Rende visibile la modale e le dice di salire
-            modalGiorno.style.visibility = "visible";
-            modalGiorno.classList.add("open");
-            
-            // Un istante dopo l'inizio del movimento, rimette il top a 0px per far combaciare tutto lo schermo
-            setTimeout(() => { modalGiorno.style.top = "0px"; }, 30);
-
+        function closeDayViewModal() { document.getElementById("day-view-modal").classList.remove("open"); }
+        function openNewEventModal() { document.getElementById("event-modal").classList.add("open"); }
         function closeNewEventModal() { document.getElementById("event-modal").classList.remove("open"); }
         function openSecretPanel() { document.getElementById("secret-panel").classList.add("open"); }
         function closeSecretPanel() { document.getElementById("secret-panel").classList.remove("open"); }
