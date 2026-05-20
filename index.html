@@ -270,22 +270,22 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
-           /* GRIGLIA ORARIA - APERTURA E CHIUSURA SUL PUNTO DI TOCCO ESATTO */
+               /* GRIGLIA ORARIA - BLOCCO DELL'ASSE VERTICALE SUL PUNTO DI TOCCO CORRETTO */
         .day-view-modal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
             z-index: 180; 
             
-            /* STATO CHIUSO: La pagina si contrae a spessore zero */
+            /* STATO CHIUSO: La pagina si contrae a spessore zero sulla riga esatta */
             transform: scaleY(0); 
             opacity: 0;
-            pointer-events: none; /* Sblocca subito i tasti mese/anno sotto quando è chiusa */
+            pointer-events: none; 
             
-            /* IL SEGRETO: Dice al browser di non usare il centro dello schermo, ma l'altezza Y memorizzata nella variabile */
-            transform-origin: center var(--punto-y, center); 
+            /* FORZATURA ASSOLUTA: Specifichiamo che il punto Y deve essere mantenuto 
+               stabile durante tutta la transizione di chiusura */
+            transform-origin: center var(--punto-y, 50%) !important; 
             
-            /* Movimento fluido e simmetrico sia in andata che in ritorno */
-            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
+            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease;
         }
 
         .day-view-modal.open { 
@@ -293,6 +293,7 @@
             transform: scaleY(1); 
             opacity: 1;
             pointer-events: auto; 
+            transform-origin: center var(--punto-y, 50%) !important;
         }
 
 
