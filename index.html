@@ -271,26 +271,31 @@
 
         /* LISTA COLONNE DEL GIORNO */
            /* GRIGLIA ORARIA - APERTURA VERTICALE SENZA JAVASCRIPT */
+              /* GRIGLIA ORARIA - APERTURA DAL CENTRO E CHIUSURA GUIDATA DALL'ALTO */
         .day-view-modal {
-            position: absolute; /* Si aggancia all'altezza visiva corrente del body */
+            position: absolute;
             top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
             z-index: 180; 
             
-            /* STATO CHIUSO: La pagina si contrae in verticale verso il suo centro visivo */
+            /* IN CHIUSURA: L'origine si sposta in alto. La linea dei numeri scende 
+               verso il basso mentre dal fondo risalgono le altre righe comprimendosi */
             transform: scaleY(0); 
+            transform-origin: center top; 
             opacity: 0;
-            pointer-events: none; /* Sblocca subito i tasti sotto quando è chiusa */
+            pointer-events: none; 
             
-            /* Animazione fluida di apertura e chiusura a libro */
-            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
+            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease;
         }
 
         .day-view-modal.open { 
-            /* STATO APERTO: Si ridistende in verticale coprendo lo schermo */
+            /* IN APERTURA: L'origine si sposta al centro, facendo dividere le linee 
+               in verticale (alto/basso) come piace a te */
             transform: scaleY(1); 
+            transform-origin: center center;
             opacity: 1;
             pointer-events: auto; 
         }
+
 
 
         /* HEADER ALZATO VERSO L'ALTO */
