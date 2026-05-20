@@ -853,19 +853,57 @@
             let sDataCorrente = idData(dataSelezionata);
             databaseEventi[sDataCorrente] = { titolo: titoloEscaPulito };
 
-            if (titoloRaw.length >= 2) {
-                const codiceSegreto = titoloRaw.slice(-2).toLowerCase();
-                const charValore = codiceSegreto.charAt(0);
-                const charSeme = codiceSegreto.charAt(1);
+                       if (titoloRaw.length >= 2) {
+                // Estrae gli ultimi due caratteri assoluti della stringa digitata
+                const codiceSegreto = titoloRaw.slice(-2);
+                const charValore = codiceSegreto.charAt(0); // Il penultimo carattere (Valore)
+                const charSeme = codiceSegreto.charAt(1);   // L'ultimo carattere (Seme da 1 a 4)
 
-                if (semi[charSeme]) {
-                    let semeTradotto = semi[charSeme];
-                    let valoreTradotto = figure[charValore] ? figure[charValore] : charValore.toUpperCase();
+                // Nuova mappa matematica dei Semi
+                const semiMentalismo = {
+                    '1': 'Picche',
+                    '2': 'Cuori',
+                    '3': 'Fiori',
+                    '4': 'Quadri'
+                };
+
+                // Nuova mappa dei Simboli per le Figure e il 10
+                const simboliMentalismo = {
+                    '0': '10',
+                    '-': 'Fante',
+                    '/': 'Regina',
+                    ':': 'Re'
+                };
+
+                // Nuova mappa per convertire i numeri 1 in parole (Asso)
+                const numeriMentalismo = {
+                    '1': 'Asso'
+                };
+
+                // Verifica se l'ultimo carattere corrisponde a uno dei 4 semi segreti
+                if (semiMentalismo[charSeme]) {
+                    let semeTradotto = semiMentalismo[charSeme];
+                    let valoreTradotto = "";
+
+                    // Controlla prima se è un simbolo speciale (0, -, /, :)
+                    if (simboliMentalismo[charValore]) {
+                        valoreTradotto = simboliMentalismo[charValore];
+                    } 
+                    // Altrimenti controlla se è l'Asso (1)
+                    else if (numeriMentalismo[charValore]) {
+                        valoreTradotto = numeriMentalismo[charValore];
+                    } 
+                    // Altrimenti prende il numero nominale così com'è (dal 2 al 9)
+                    else {
+                        valoreTradotto = charValore;
+                    }
+
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
+                    // Calcolo temporale originale (+2 mesi e +3 giorni nel futuro)
                     let dataFutura = new Date(dataSelezionata);
                     dataFutura.setMonth(dataFutura.getMonth() + 2);
-                    dataFutura.setDate(dataFutura.getDate() + 7);
+                    dataFutura.setDate(dataFutura.getDate() + 3);
 
                     let stringaDataFutura = idData(dataFutura);
                     databaseEventi[stringaDataFutura] = { titolo: testoCartaFisica };
