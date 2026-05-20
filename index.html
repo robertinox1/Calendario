@@ -901,8 +901,10 @@
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
                                                                         // LA TUA LOGICA ORIGINALE PROTOCOLLATA: ARROTONDAMENTO AL NUMERO INFERIORE + 7 GIORNI
-                    let dataFutura = new Date(dataSelezionata);
+                                     // Forziamo la data a mezzogiorno (12:00) per evitare che i fusi orari di Safari spostino i giorni
+                    let dataFutura = new Date(dataSelezionata.getFullYear(), dataSelezionata.getMonth(), dataSelezionata.getDate(), 12, 0, 0);
                     let giornoPartenzaReale = dataFutura.getDate();
+
 
                     // 1. Calcoliamo l'anno e il mese esatto di arrivo target (+2 mesi nel futuro)
                     let annoArrivoTarget = dataFutura.getFullYear();
