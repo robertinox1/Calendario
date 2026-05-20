@@ -270,33 +270,46 @@
         }
 
         /* LISTA COLONNE DEL GIORNO */
-               /* GRIGLIA ORARIA - BLOCCO DELL'ASSE VERTICALE SUL PUNTO DI TOCCO CORRETTO */
+                     /* GRIGLIA ORARIA - EFFETTO SERRANDA CONVERGENTE ASIMMETRICO */
         .day-view-modal {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000;
             z-index: 180; 
             
-            /* STATO CHIUSO: La pagina si contrae a spessore zero sulla riga esatta */
-            transform: scaleY(0); 
+            /* STATO CHIUSO: La pagina si contrae e le linee convergono verso il punto di chiusura */
+            height: 0;
             opacity: 0;
+            overflow: hidden;
             pointer-events: none; 
             
-            /* FORZATURA ASSOLUTA: Specifichiamo che il punto Y deve essere mantenuto 
-               stabile durante tutta la transizione di chiusura */
-            transform-origin: center var(--punto-y, 50%) !important; 
-            
-            transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease;
+            /* Usiamo una transizione fluida sull'altezza e sull'opacità */
+            transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
         }
 
         .day-view-modal.open { 
-            /* STATO APERTO: Si ridistende in verticale coprendo lo schermo */
-            transform: scaleY(1); 
+            /* STATO APERTO: Si distende a tutto schermo mostrando la griglia */
+            height: 100vh; 
             opacity: 1;
             pointer-events: auto; 
-            transform-origin: center var(--punto-y, 50%) !important;
         }
 
+        /* ANIMAZIONE DELLE LINEE INTERNE: Forza la barra in alto e la griglia interna 
+           a muoversi in direzioni opposte durante la chiusura per incontrarsi nel punto giusto */
+        .day-view-modal:not(.open) .day-view-header {
+            transform: translateY(50vh); /* Spinge la linea dei numeri a scendere verso il basso */
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
+        .day-view-modal:not(.open) .day-view-columns-container {
+            transform: translateY(-50vh); /* Fa salire le linee orarie dal basso verso l'alto */
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Quando è aperto, tutto torna istantaneamente e fluidamente al suo posto originale */
+        .day-view-modal.open .day-view-header,
+        .day-view-modal.open .day-view-columns-container {
+            transform: translateY(0);
+        }
 
 
 
