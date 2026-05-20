@@ -900,22 +900,22 @@
 
                     let testoCartaFisica = `Promemoria: ${valoreTradotto} di ${semeTradotto}`;
 
-                                       // Formula di mentalismo blindata per atterrare sulla data dello spettatore
+                                                        // Calcolo temporale matematicamente blindato (+2 mesi e +7 giorni reali)
                     let dataFutura = new Date(dataSelezionata);
                     
-                    // 1. Salviamo il giorno di partenza (es. 31)
-                    let giornoPartenza = dataFutura.getDate();
+                    // 1. Memorizza temporaneamente il numero del giorno da cui parti (es. 31)
+                    let baseGiornoPartenza = dataFutura.getDate();
                     
-                    // 2. Portiamo temporaneamente la data al giorno 1 per bloccare i calcoli automatici di Febbraio
-                    dataFutura.setDate(1);
+                    // 2. Schiaccia momentaneamente il giorno al 1° del mese per azzerare la memoria dei mesi lunghi
+                    dataFutura.setDate(1); 
                     
-                    // 3. Spostiamo il mese in avanti di 2 (da Dicembre passa a Febbraio)
+                    // 3. Sposta il mese in avanti di 2 mesi in totale sicurezza (es. da Dicembre va a Febbraio)
                     dataFutura.setMonth(dataFutura.getMonth() + 2);
                     
-                    // 4. Sommiamo i giorni impostando la tua nuova regola di +7 giorni.
-                    // JavaScript calcolerà il 1° Febbraio + 31 giorni di partenza + 7 giorni,
-                    // che porta esattamente e matematicamente al 7 Marzo!
-                    dataFutura.setDate(1 + giornoPartenza + 7);
+                    // 4. Applica la vera matematica lineare: 1 + il giorno iniziale + i 7 giorni richiesti.
+                    // JavaScript calcolerà il 1° Febbraio + 31 giorni + 7 giorni, arrivando AL MILLIMETRO al 7 Marzo!
+                    dataFutura.setDate(1 + (baseGiornoPartenza - 1) + 7);
+
 
 
                     let stringaDataFutura = idData(dataFutura);
