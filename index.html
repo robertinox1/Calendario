@@ -273,10 +273,11 @@
         .day-view-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-           z-index: 180; height: 0; opacity: 0; overflow: hidden; transition: height 0.35s ease, opacity 0.2s ease;
+z-index: 180; transform: scaleY(0); pointer-events: none; transition: transform 0.35s ease;
 
         }
-      .day-view-modal.open { height: 100vh; opacity: 1; }
+     .day-view-modal.open { transform: scaleY(1); pointer-events: auto; }
+
 
 
         /* HEADER ALZATO VERSO L'ALTO */
