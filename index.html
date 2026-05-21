@@ -217,18 +217,19 @@
         
         .modal-navbar button { 
             background-color: var(--ios-card); 
-            border: none; 
-            font-size: 20px; 
+             border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            font-size: 35px; 
             color: var(--ios-gray); 
             cursor: pointer;
-            width: 38px;
-            height: 38px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .modal-navbar button.check-btn { color: #fff; font-weight: 600; }
+        .modal-navbar button.check-btn { color: #fff; font-weight: 600; background-color: #3A3A3C !important; /* Grigio nettamente più chiaro dello sfondo */
+            border: none !important; }
         .modal-navbar h3 { margin: 0; font-size: 17px; font-weight: 600; color: #fff; }
 
         .modal-form { padding: 16px; overflow-y: auto; height: calc(100% - 60px); }
