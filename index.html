@@ -413,7 +413,11 @@
             padding: 6px 10px; 
             font-size: 14px; 
             font-weight: 500; 
-            z-index: 10;
+            /* RIPORTA IL TESTO IN PRIMO PIANO */
+            color: #FFFFFF !important;
+            display: flex !important;
+            align-items: center !important; /* Centra il testo verticalmente per allinearlo al bordino */
+            z-index: 10 !important; /* Forza il contenitore a stare sopra */ 
         }
 /* CREAZIONE DEL NUOVO BORDINO PERSONALIZZATO, PIÙ CORTO E SPOSTATO */
         .ios-timeline-event::before {
@@ -434,6 +438,7 @@
             width: 2.5px; 
             background-color: #FFFFFF; 
             border-radius: 2px; /* Arrotonda leggermente le punte del bordino per stile Apple */
+              z-index: -1 !important; 
         }
 
 
