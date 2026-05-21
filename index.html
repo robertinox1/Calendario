@@ -964,6 +964,11 @@
             closeNewEventModal();
             closeDayViewModal();
             renderizzaCalendarioInfinito();
+             const imgOggi = document.querySelector(".today-png-btn");
+            const imgViste = document.querySelector(".capsula-basso-img");
+            if (imgOggi) imgOggi.style.bottom = "48px";
+            if (imgViste) imgViste.style.bottom = "50px";
+        }
         }
     </script>
 </body>
