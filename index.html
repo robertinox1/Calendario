@@ -395,11 +395,23 @@
             box-sizing: border-box !important;
         }
         
+             /* PROMEMORIA GIORNALIERI - LARGHEZZA TOTALE DELLA CELLA */
         .ios-timeline-event {
-            position: absolute; left: 10px; right: 20px; top: 120px; height: 50px;
-            background-color: rgba(255, 255, 255, 0.12); border-left: 4px solid #FFFFFF;
-            border-radius: 4px; padding: 6px 10px; font-size: 14px; font-weight: 500; z-index: 10;
+            position: absolute; 
+            left: 0px !important;    /* Attacca il bordo sinistro del promemoria all'inizio della cella */
+            right: 0px !important;   /* Allunga il bordo destro fino alla fine della cella */
+            width: 100% !important;  /* Forza il riempimento totale della larghezza al 100% */
+            box-sizing: border-box !important; /* Impedisce al padding interno di far sbordare l'evento */
+            
+            background-color: rgba(255, 255, 255, 0.12); 
+            border-left: 4px solid #FFFFFF;
+            border-radius: 4px; 
+            padding: 6px 10px; 
+            font-size: 14px; 
+            font-weight: 500; 
+            z-index: 10;
         }
+
 
 
 
