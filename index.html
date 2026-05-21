@@ -395,13 +395,17 @@
             box-sizing: border-box !important;
         }
         
-             /* PROMEMORIA GIORNALIERI - LARGHEZZA TOTALE DELLA CELLA */
+        /* PROMEMORIA GIORNALIERI - POSIZIONAMENTO FISSO ORE 02:00 SOLO TRAMITE CSS */
         .ios-timeline-event {
-            position: absolute; 
-            left: 0px !important;    /* Attacca il bordo sinistro del promemoria all'inizio della cella */
-            right: 0px !important;   /* Allunga il bordo destro fino alla fine della cella */
-            width: 100% !important;  /* Forza il riempimento totale della larghezza al 100% */
-            box-sizing: border-box !important; /* Impedisce al padding interno di far sbordare l'evento */
+            position: absolute !important; 
+            left: 0px !important;    /* Attacca al bordo sinistro della colonna */
+            right: 0px !important;   /* Allunga fino al bordo destro della colonna */
+            width: 100% !important;  /* Riempie tutta la larghezza della cella */
+            
+            /* LA FORZATURA ORARIA */
+            top: 120px !important;   /* Spinge il blocco giù di 120px (Inizio ore 02:00) */
+            height: 50px !important; /* Lo allunga di 60px per toccare la linea delle 03:00 */
+            box-sizing: border-box !important; 
             
             background-color: rgba(255, 255, 255, 0.12); 
             border-left: 4px solid #FFFFFF;
@@ -411,6 +415,7 @@
             font-weight: 500; 
             z-index: 10;
         }
+
 
 
 
