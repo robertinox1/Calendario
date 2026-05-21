@@ -408,14 +408,33 @@
             box-sizing: border-box !important; 
             
             background-color: rgba(255, 255, 255, 0.12); 
-            border-left: 2.5px solid #FFFFFF;
+             border-left: none !important;
             border-radius: 4px; 
             padding: 6px 10px; 
             font-size: 14px; 
             font-weight: 500; 
             z-index: 10;
         }
-
+/* CREAZIONE DEL NUOVO BORDINO PERSONALIZZATO, PIÙ CORTO E SPOSTATO */
+        .ios-timeline-event::before {
+            content: "";
+            position: absolute;
+            
+            /* SPOSTAMENTO: Determina quanto spazio bianco c'è prima del bordino */
+            left: 5px; /* Spostato di 5px verso l'interno rispetto al rettangolo */
+            
+            /* ALTEZZA: Determina quanto deve essere lungo il bordino */
+            height: 40px; /* Più corto dell'altezza totale che è 60px */
+            
+            /* CENTRAGGIO VERTICALE: Lo centra dall'alto verso il basso nella cella */
+            top: 50%;
+            transform: translateY(-50%);
+            
+            /* SPESSORE E COLORE: Riproduce lo spessore originale del tuo bordo */
+            width: 2.5px; 
+            background-color: #FFFFFF; 
+            border-radius: 2px; /* Arrotonda leggermente le punte del bordino per stile Apple */
+        }
 
 
 
