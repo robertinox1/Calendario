@@ -591,19 +591,22 @@
         .day-view-week-bar .num.next-day-preview.muted { 
             color: rgba(255, 255, 255, 0.30) !important; 
         }
-   /* TRASFORMAZIONE GEOMETRICA PULITA SOLO TRAMITE CSS */
-.freccetta-ios {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 6px;
-    width: 8px;
-    height: 12px;
-    opacity: 0.7;
-    /* La proprietà content sostituisce direttamente il carattere '>' con il disegno geometrico speculare */
-    content: url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" width="8" height="12" viewBox="0 0 8 12" fill="none"><path d="M1 4L4 1L7 4M1 8L4 11L7 8" stroke="rgb(142,142,147)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') !important;
-}
-
-
+        /* LA FRECCETTA COMPRESO RUOTATA IN VERTICALE */
+        .freccetta-ios {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            margin-left: 6px; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13px !important;    /* Dimensioni proporzionate */
+            font-weight: 300 !important;    /* Tratto ultra-sottile in stile iOS */
+            letter-spacing: -2px;          /* Stringe i due simboli per unirli */
+            opacity: 0.7;                  /* Sfumatura grigia nativa Apple */
+            
+            /* Ruota il simbolo di 90 gradi esatti (Su / Giù) */
+            transform: rotate(90deg) !important; 
+        }
 
     </style>
 </head>
@@ -675,21 +678,21 @@
                 </div>
 
                 <!-- L'ultima riga del blocco chiude il gruppo e distanzia di 26px quello sotto -->
-                <div class="finta-riga-opzioni distanza-orari-fine"><span>Tempo di percorrenza</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">></span></span>
+                <div class="finta-riga-opzioni distanza-orari-fine"><span>Tempo di percorrenza</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">&lt;&gt;</span></span>
                 </div>
 
                 <!-- Blocco Ripetizione (Distanziato di 26px dal blocco sopra) -->
-                <div class="finta-riga-opzioni distanza-ripetizione"><span>Ripetizione</span><span style="color:var(--ios-gray); font-size:15px;">Mai <span class="freccetta-ios">></span></span>
+                <div class="finta-riga-opzioni distanza-ripetizione"><span>Ripetizione</span><span style="color:var(--ios-gray); font-size:15px;">Mai <span class="freccetta-ios">&lt;&gt;</span></span>
                 </div>
 
                 <!-- GRUPPO CALENDARIO/INVITATI UNITO da 2 righe -->
-                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">⚪ Lavoro <span class="freccetta-ios">></span></span>
+                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">⚪ Lavoro <span class="freccetta-ios">&lt;&gt;</span></span>
                 </div>
                 <!-- L'ultima riga del blocco chiude il gruppo e distanzia di 26px quello sotto -->
                 <div class="finta-riga-opzioni distanza-invitati-fine"><span>Invitati</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ›</span></div>
                 
                 <!-- Blocco Avviso (Distanziato di 26px dal blocco sopra) -->
-                <div class="finta-riga-opzioni distanza-avviso"><span>Avviso</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">></span></span>
+                <div class="finta-riga-opzioni distanza-avviso"><span>Avviso</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">&lt;&gt;</span></span>
                 </div>
             </div>
 
