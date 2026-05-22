@@ -212,7 +212,7 @@
 
         /* Header della modale con tasti tondi grigi */
         .modal-navbar {
-            display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 0.5px solid var(--ios-border);
+            display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: none !important;
         }
         
         .modal-navbar button { 
@@ -249,7 +249,7 @@
         .modal-form { padding: 16px; overflow-y: auto; height: calc(100% - 60px); }
         
         .ios-segment-control {
-            display: flex; background-color: rgba(255, 255, 255, 0.20); padding: 2px; border-radius: 25px; margin-bottom: 26px;  position: relative;
+            display: flex; background-color: rgba(255, 255, 255, 0.20); padding: 2px; border-radius: 25px; margin-top: -8px !important; margin-bottom: 35px !important;  position: relative;
         }
         .ios-segment-control div {
             flex: 1; text-align: center; padding: 6px 0; font-size: 13px; font-weight: 500; border-radius: 25px; 
@@ -257,7 +257,7 @@
         .ios-segment-control div.active { background-color: #CACACA; color: #fff; }
 
         .ios-input-block {
-            background-color: #2C2C2E; border-radius: 25px; padding: 4px 16px; margin-bottom: 28px;
+            background-color: #2C2C2E; border-radius: 25px; padding: 4px 16px; margin-bottom: 37px;
         }
         .ios-input-block input {
             width: 100%; background: none; border: none; color: #fff; font-size: 17px; padding: 12px 0; outline: none;
@@ -281,15 +281,15 @@
         }
        .distanza-orari-fine {
             border-radius: 0 0 25px 25px; /* Chiude le curve in fondo al blocco orari */
-            margin-bottom: 26px !important; /* Spazio di 26px verso la Ripetizione */
+            margin-bottom: 35px !important; /* Spazio di 26px verso la Ripetizione */
         }
         .distanza-ripetizione {
             border-radius: 25px; /* Arrotonda tutto il tasto singolo */
-            margin-bottom: 26px !important; /* Spazio di 26px verso il blocco Calendario */
+            margin-bottom: 35px !important; /* Spazio di 26px verso il blocco Calendario */
         }
         .distanza-invitati-fine {
             border-radius: 0 0 25px 25px; /* Chiude le curve in fondo al blocco Calendario/Invitati */
-            margin-bottom: 26px !important; /* Spazio di 26px verso l'Avviso */
+            margin-bottom: 35px !important; /* Spazio di 26px verso l'Avviso */
         }
         .distanza-avviso {
             border-radius: 25px; /* Arrotonda tutto il tasto singolo */
