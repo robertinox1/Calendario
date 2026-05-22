@@ -271,7 +271,7 @@
             align-items: center;
         }
         .bolla-data-ora {
-            background-color:  rgba(255, 255, 255, 0.45) !important;
+            background-color:  rgba(255, 255, 255, 0.10) !important;
             color: #FFFFFF !important;            
             font-size: 17px !important;           
             font-weight: 500;
@@ -591,6 +591,17 @@
         .day-view-week-bar .num.next-day-preview.muted { 
             color: rgba(255, 255, 255, 0.30) !important; 
         }
+                /* LA FRECCETTA NATIVA IN STILE APPLE */
+        .freccetta-ios {
+            display: inline-block;
+            font-family: inherit;
+            font-size: inherit;        /* Eredita esattamente i tuoi 15px */
+            color: inherit;           /* Eredita esattamente il tuo var(--ios-gray) */
+            font-weight: 300 !important; /* Tratto ultra-sottile stile iOS */
+            margin-left: 6px;          /* Distanza controllata dalla parola */
+            opacity: 0.6;              /* Sfuma leggermente come su iPhone */
+        }
+
 
     </style>
 </head>
@@ -662,18 +673,22 @@
                 </div>
 
                 <!-- L'ultima riga del blocco chiude il gruppo e distanzia di 26px quello sotto -->
-                <div class="finta-riga-opzioni distanza-orari-fine"><span>Tempo di percorrenza</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ↕</span></div>
+                <div class="finta-riga-opzioni distanza-orari-fine"><span>Tempo di percorrenza</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">></span></span>
+                </div>
 
                 <!-- Blocco Ripetizione (Distanziato di 26px dal blocco sopra) -->
-                <div class="finta-riga-opzioni distanza-ripetizione"><span>Ripetizione</span><span style="color:var(--ios-gray); font-size:15px;">Mai ↕</span></div>
+                <div class="finta-riga-opzioni distanza-ripetizione"><span>Ripetizione</span><span style="color:var(--ios-gray); font-size:15px;">Mai <span class="freccetta-ios">></span></span>
+                </div>
 
                 <!-- GRUPPO CALENDARIO/INVITATI UNITO da 2 righe -->
-                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">⚪ Lavoro ↕</span></div>
+                <div class="finta-riga-opzioni border-row"><span>Calendario</span><span style="color:var(--ios-gray); font-size:15px;">⚪ Lavoro <span class="freccetta-ios">></span></span>
+                </div>
                 <!-- L'ultima riga del blocco chiude il gruppo e distanzia di 26px quello sotto -->
                 <div class="finta-riga-opzioni distanza-invitati-fine"><span>Invitati</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ›</span></div>
                 
                 <!-- Blocco Avviso (Distanziato di 26px dal blocco sopra) -->
-                <div class="finta-riga-opzioni distanza-avviso"><span>Avviso</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ↕</span></div>
+                <div class="finta-riga-opzioni distanza-avviso"><span>Avviso</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">></span></span>
+                </div>
             </div>
 
         </div>
