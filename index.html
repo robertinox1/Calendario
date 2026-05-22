@@ -573,6 +573,26 @@
         .day-view-week-bar .num.next-day-preview.muted { 
             color: rgba(255, 255, 255, 0.30) !important; 
         }
+                /* IL CONTENITORE CHE AFFIANCA LE DUE BOLLE */
+        .contenitore-bolle-ios {
+            display: flex;
+            gap: 8px; 
+            align-items: center;
+        }
+
+        /* LA STRUTTURA GRAFICA DELLE BOLLE GRIGIE */
+        .bolla-data-ora {
+            background-color: #3A3A3C !important; /* Il grigio della bolla */
+            color: #FFFFFF !important;            /* Il testo dentro diventa bianco */
+            font-size: 17px !important;           
+            font-weight: 500;
+            padding: 6px 12px;                    /* Lo spessore della bolla */
+            border-radius: 25px;                   /* Arrotonda gli angoli della bolla */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
 
     </style>
 </head>
@@ -627,8 +647,21 @@
                     <span>Tutto il giorno</span>
                     <div style="width:40px; height:24px; background:#3a3a3c; border-radius:12px;"></div>
                 </div>
-                <div class="finta-riga-opzioni mid-row"><span>Inizio</span><span class="testo-data-orario" id="modal-data-inizio"><span style="color:#FFFFFF; font-size:17px;">8 gen 2026 &nbsp; 02:00</span></div>
-                <div class="finta-riga-opzioni mid-row"><span>Fine</span><span class="testo-data-orario" id="modal-data-fine"><span style="color:#FFFFFF; font-size:17px;">8 gen 2026 &nbsp; 03:00</span></div>
+                               <div class="finta-riga-opzioni mid-row">
+                    <span>Inizio</span>
+                    <div class="contenitore-bolle-ios">
+                        <span class="bolla-data-ora" id="modal-data-inizio">-- --- ----</span>
+                        <span class="bolla-data-ora">02:00</span>
+                    </div>
+                </div>
+                <div class="finta-riga-opzioni mid-row">
+                    <span>Fine</span>
+                    <div class="contenitore-bolle-ios">
+                        <span class="bolla-data-ora" id="modal-data-fine">-- --- ----</span>
+                        <span class="bolla-data-ora">03:00</span>
+                    </div>
+                </div>
+
                 <!-- L'ultima riga del blocco chiude il gruppo e distanzia di 26px quello sotto -->
                 <div class="finta-riga-opzioni distanza-orari-fine"><span>Tempo di percorrenza</span><span style="color:var(--ios-gray); font-size:15px;">Nessuno ↕</span></div>
 
@@ -886,6 +919,11 @@
             let stringaDataDinamica = `${giorno} ${nomiMesiBrevi[meseIndex].toLowerCase()} ${anno}`;
             document.getElementById("modal-data-inizio").innerHTML = `${stringaDataDinamica} &nbsp; 02:00`;
             document.getElementById("modal-data-fine").innerHTML = `${stringaDataDinamica} &nbsp; 03:00`;
+                              // INSERISCE LA DATA DINAMICA DENTRO LA PRIMA BOLLA
+            let stringaDataDinamica = `${giorno} ${nomiMesiBrevi[meseIndex].toLowerCase()} ${anno}`;
+            document.getElementById("modal-data-inizio").innerText = stringaDataDinamica;
+            document.getElementById("modal-data-fine").innerText = stringaDataDinamica;
+
 
             document.getElementById("day-view-modal").classList.add("open");
         }
