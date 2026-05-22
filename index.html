@@ -591,16 +591,18 @@
         .day-view-week-bar .num.next-day-preview.muted { 
             color: rgba(255, 255, 255, 0.30) !important; 
         }
-                /* LA FRECCETTA NATIVA IN STILE APPLE */
-        .freccetta-ios {
-            display: inline-block;
-            font-family: inherit;
-            font-size: inherit;        /* Eredita esattamente i tuoi 15px */
-            color: inherit;           /* Eredita esattamente il tuo var(--ios-gray) */
-            font-weight: 300 !important; /* Tratto ultra-sottile stile iOS */
-            margin-left: 6px;          /* Distanza controllata dalla parola */
-            opacity: 0.6;              /* Sfuma leggermente come su iPhone */
-        }
+   /* TRASFORMAZIONE GEOMETRICA PULITA SOLO TRAMITE CSS */
+.freccetta-ios {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+    width: 8px;
+    height: 12px;
+    opacity: 0.7;
+    /* La proprietà content sostituisce direttamente il carattere '>' con il disegno geometrico speculare */
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" width="8" height="12" viewBox="0 0 8 12" fill="none"><path d="M1 4L4 1L7 4M1 8L4 11L7 8" stroke="rgb(142,142,147)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') !important;
+}
+
 
 
     </style>
