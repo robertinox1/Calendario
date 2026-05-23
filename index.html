@@ -680,7 +680,7 @@
 
         .detail-body { padding: 24px 16px; }
         .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
-        .detail-subtitle { font-size: 15px; color: var(--ios-gray); margin-bottom: 24px; }
+        .detail-subtitle { font-size: 15px; color: #FFFFFF; margin-bottom: 24px; }
 
 
     </style>
@@ -1094,6 +1094,7 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
         function apriSchermataDettagli(titolo, oggettoData) {
             let giorniEstesi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
             let mesiEstesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+            let titoloPulito = titolo.replace("Promemoria: ", "").trim();
             
             // 1. Compila la data estesa per il sottotitolo (es: venerdì 23 maggio 2026)
             let stringaDataDettaglio = `${giorniEstesi[oggettoData.getDay()]} ${oggettoData.getDate()} ${mesiEstesi[oggettoData.getMonth()]} ${oggettoData.getFullYear()}`;
@@ -1103,7 +1104,7 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
             
             // 3. Inietta i dati nei rispettivi elementi dell'interfaccia
             document.getElementById("display-detail-title").innerText = titolo;
-            document.getElementById("display-detail-time").innerHTML = `${stringaDataDettaglio}<br>dalle ore 02:00 alle 03:00`;
+            document.getElementById("display-detail-time").innerHTML = `${stringaDataDettaglio}<br>02:00 - 03:00`;
             
             // 👈 Questa riga cancella i trattini e scrive la data reale (es: 19 mag)
             document.getElementById("display-detail-button-date").innerText = stringaBollaSinistra;
