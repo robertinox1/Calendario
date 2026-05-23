@@ -1101,8 +1101,11 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
             
             // 2. Compila il giorno e il mese breve per la nuova bolla di sinistra (es: 23 mag)
             let stringaBollaSinistra = `${oggettoData.getDate()} ${nomiMesiBrevi[oggettoData.getMonth()].toLowerCase()}`;
-            let parole = titolo.trim().split(" ");
-            let ultimeTreParole = parole.slice(-3).join(" ");
+             let titoloPulito = titolo;
+            if (titolo.includes(":")) {
+                // [1] prende la seconda parte (dopo i due punti) e .trim() toglie lo spazio vuoto iniziale
+                titoloPulito = titolo.split(":")[1].trim(); 
+            }
             
             // 3. Inietta i dati nei rispettivi elementi dell'interfaccia
             document.getElementById("display-detail-title").innerText = titolo;
