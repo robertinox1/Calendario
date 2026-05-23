@@ -1090,17 +1090,28 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
             document.getElementById("day-view-modal").classList.add("open");
         }
                 //  INCOLLA QUESTE SUBITO SOTTO LA FUNZIONE AGGIORNAEDAPRISCHERMATAGIORNO
+               // 🚨 SOSTITUISCI INTERAMENTE LA VECCHIA FUNZIONE CON QUESTA 🚨
         function apriSchermataDettagli(titolo, oggettoData) {
             let giorniEstesi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
             let mesiEstesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
             
+            // 1. Compila la data estesa per il sottotitolo (es: venerdì 23 maggio 2026)
             let stringaDataDettaglio = `${giorniEstesi[oggettoData.getDay()]} ${oggettoData.getDate()} ${mesiEstesi[oggettoData.getMonth()]} ${oggettoData.getFullYear()}`;
             
+            // 2. Compila il giorno e il mese breve per la nuova bolla di sinistra (es: 23 mag)
+            let stringaBollaSinistra = `${oggettoData.getDate()} ${nomiMesiBrevi[oggettoData.getMonth()].toLowerCase()}`;
+            
+            // 3. Inietta i dati nei rispettivi elementi dell'interfaccia
             document.getElementById("display-detail-title").innerText = titolo;
             document.getElementById("display-detail-time").innerHTML = `${stringaDataDettaglio}<br>dalle ore 02:00 alle 03:00`;
             
+            // 👈 Questa riga cancella i trattini e scrive la data reale (es: 19 mag)
+            document.getElementById("display-detail-button-date").innerText = stringaBollaSinistra;
+            
+            // 4. Apre la modale a schermo intero
             document.getElementById("detail-modal").classList.add("open");
         }
+
 
         function closeDetailModal() {
             document.getElementById("detail-modal").classList.remove("open");
