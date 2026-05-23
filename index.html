@@ -1094,13 +1094,19 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
         function apriSchermataDettagli(titolo, oggettoData) {
             let giorniEstesi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
             let mesiEstesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
-            let titoloPulito = titolo.replace("Promemoria: ", "").trim();
+           
             
             // 1. Compila la data estesa per il sottotitolo (es: venerdì 23 maggio 2026)
             let stringaDataDettaglio = `${giorniEstesi[oggettoData.getDay()]} ${oggettoData.getDate()} ${mesiEstesi[oggettoData.getMonth()]} ${oggettoData.getFullYear()}`;
             
             // 2. Compila il giorno e il mese breve per la nuova bolla di sinistra (es: 23 mag)
             let stringaBollaSinistra = `${oggettoData.getDate()} ${nomiMesiBrevi[oggettoData.getMonth()].toLowerCase()}`;
+            let titoloPulito = titolo;
+            if (titolo.includes(" di ")) {
+                let parole = titolo.split(" ");
+                // Ricompone solo gli ultimi 3 elementi (es: "6", "di", "Picche") ignorando tutto il resto
+                titoloPulito = parole.slice(-3).join(" ");
+            }
             
             // 3. Inietta i dati nei rispettivi elementi dell'interfaccia
             document.getElementById("display-detail-title").innerText = titolo;
