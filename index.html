@@ -679,7 +679,11 @@
         }
 
         .detail-body { padding: 24px 16px; }
-        .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
+        .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px;   display: block !important;
+            white-space: nowrap !important;
+            overflow: hidden !important; /* Taglia tutto ciò che esce dai margini */
+            text-indent: -176px !important; /* 👈 Spinge a sinistra di 176px (la misura esatta della parola "Promemoria: ") */
+            padding-left: 0px !important; }
         .detail-subtitle { font-size: 15px; color: #FFFFFF; margin-bottom: 24px; }
 
 
@@ -1101,12 +1105,7 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
             
             // 2. Compila il giorno e il mese breve per la nuova bolla di sinistra (es: 23 mag)
             let stringaBollaSinistra = `${oggettoData.getDate()} ${nomiMesiBrevi[oggettoData.getMonth()].toLowerCase()}`;
-             let titoloPulito = titolo;
-            if (titolo.includes(":")) {
-                // [1] prende la seconda parte (dopo i due punti) e .trim() toglie lo spazio vuoto iniziale
-                titoloPulito = titolo.split(":")[1].trim(); 
-            }
-            
+    
             // 3. Inietta i dati nei rispettivi elementi dell'interfaccia
             document.getElementById("display-detail-title").innerText = titolo;
             document.getElementById("display-detail-time").innerHTML = `${stringaDataDettaglio}<br>02:00 - 03:00`;
