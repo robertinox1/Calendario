@@ -622,6 +622,8 @@
         }
 
     </style>
+    <link rel="manifest" href="manifest.json">
+
 </head>
 <body>
 
@@ -1103,6 +1105,23 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
             renderizzaCalendarioInfinito();
           
         }
+        // Aggiorna i dati del widget dinamico sulla Home
+if ('widgets' in navigator) {
+    navigator.widgets.getByTag('data-oggi').then(widget => {
+        if (widget) {
+            let oggi = new Date();
+            let giorniBrevi = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
+
+            let datiAggiornati = {
+                giornoSettimana: giorniBrevi[oggi.getDay()],
+                numeroGiorno: oggi.getDate().toString()
+            };
+
+            navigator.widgets.updateByTag('data-oggi', datiAggiornati);
+        }
+    });
+}
+
     </script>
 </body>
 </html>
