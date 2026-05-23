@@ -347,42 +347,55 @@
             margin-left: -16px !important;
 
         }
-
-        .day-view-week-bar { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-top: 15px; position: relative; }
+        /* 1. LA BARRA SETTIMANALE FISSA */
+        .day-view-week-bar { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            text-align: center; 
+            margin-top: 15px; 
+            position: relative; 
+        }
         .day-view-week-bar .day-label { font-size: 11px; color: #FFFFFF; font-weight: 500; margin-bottom: 5px; }
         .day-view-week-bar .day-label.muted, .day-view-week-bar .num.muted { color: var(--ios-dark-gray); }
         
         .day-view-week-bar .num { 
-            font-size: 18px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto; position: relative; z-index: 2; 
+            font-size: 18px; height: 35px; width: 35px; display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto; position: relative; border-radius: 50%; z-index: 2;
         }
 
-        /* STRUTTURA CAPSULA UNIFICATA */
-              .day-view-week-bar .num.active-day { 
+        /* BOLLA BIANCA DEL GIORNO SELEZIONATO */
+        .day-view-week-bar .num.active-day { 
             background-color: #FFFFFF !important; 
             color: #000000 !important; 
             border-radius: 50%; 
             font-weight: 600;
-                   width: 35px !important;  /* Ingrandito da 32px a 38px */
-            height: 35px !important; /* Ingrandito da 32px a 38px */
-        
+            width: 35px !important;  
+            height: 35px !important; 
             position: relative;
-            z-index: 3; /* Sta sopra alla bolla grigia */
+            z-index: 3; 
         }
 
-                     .day-view-week-bar .num.active-day::after {
+        /* CAPSULA GRIGIA UNIFICATA CHE ABBRACCIA I DUE GIORNI */
+        .day-view-week-bar .num.active-day::after {
             content: ""; 
             position: absolute;  
             left: 0; 
+            top: 0;
             width: 92px; 
-            height: 35px; /* Aumentata l'altezza della parte grigia */
-            background-color: rgba(255, 255, 255, 0.20) !important; /* Grigio nettamente più chiaro e visibile */
-            border-radius: 19px; /* Arrotondamento aggiornato per la nuova altezza */
+            height: 35px; 
+            background-color: rgba(255, 255, 255, 0.20) !important; 
+            border-radius: 19px; 
             z-index: -1; 
         }
 
-
+        /* GIORNO SUCCESSIVO NORMALE (Entra nella capsula, testo bianco) */
         .day-view-week-bar .num.next-day-preview { color: #FFFFFF !important; font-weight: 400; background-color: transparent !important; }
+
+        /* MANTIENE LA TUA IMPOSTAZIONE ORIGINALE: Se il giorno dopo è Sabato o Domenica, diventa grigio morbido e spento */
+        .day-view-week-bar .num.next-day-preview.muted { 
+            color: rgba(255, 255, 255, 0.30) !important; 
+        }
+
 
         /* CONTENITORE FLEX: AFFIANCA LE COLONNE E ABILITA LO SCORRIMENTO */
         .day-view-columns-container {
@@ -866,32 +879,53 @@
             }
         }
 
-              function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
-          document.getElementById("day-view-back-title").innerText = `${nomiMesi[meseIndex]}`;
+             //  INCOLLA QUESTO BLOCCO NUOVO AL LORO POSTO:
+function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
+            document.getElementById("day-view-back-title").innerText = `${nomiMesi[meseIndex]}`;
 
             const weekBar = document.querySelector(".day-view-week-bar");
             weekBar.innerHTML = "";
-            let giorniLettere = ["D", "L", "M", "M", "G", "V", "S"];
+            
+            let giorniLettere = ["D", "L", "M", "M", "G", "V", "S", "D"];
             let sDataOggi = idData(oggi);
 
-            for (let i = -2; i <= 4; i++) {
-                let dTarget = new Date(anno, meseIndex, giorno + i, 0, 0, 0, 0);
+            // 1. Trova il Lunedì della settimana corrente del giorno cliccato
+            let dataCliccata = new Date(anno, meseIndex, giorno);
+            let dayOfWeekCliccato = dataCliccata.getDay(); 
+            let offsetALunedì = dayOfWeekCliccato === 0 ? -6 : 1 - dayOfWeekCliccato;
+            let lunedìCorrente = new Date(anno, meseIndex, giorno + offsetALunedì);
+
+            // 2. Ciclo fisso di 7 giorni da Lunedì a Domenica
+            for (let i = 0; i < 7; i++) {
+                let dTarget = new Date(lunedìCorrente.getFullYear(), lunedìCorrente.getMonth(), lunedìCorrente.getDate() + i);
                 let sDataTarget = idData(dTarget);
 
-                let labelClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "day-label muted" : "day-label";
-                let numClass = (dTarget.getDay() === 0 || dTarget.getDay() === 6) ? "num muted" : "num";
+                let isFestivo = (dTarget.getDay() === 0 || dTarget.getDay() === 6);
+                let labelClass = isFestivo ? "day-label muted" : "day-label";
+                let numClass = isFestivo ? "num muted" : "num";
                 let stileRossoInLine = "";
 
-                // SE IL GIORNO ANALIZZATO È OGGI: lo colora di rosso nativo nella barra in alto
                 if (sDataTarget === sDataOggi) {
                     stileRossoInLine = "style='color: var(--ios-tint) !important;'";
                 }
 
-                if (i === 0) numClass += " active-day";
-                if (i === 1) numClass += " next-day-preview";
+                // 3. Calcolo dinamico della distanza dal giorno selezionato
+                let diffTempo = dTarget.getTime() - dataCliccata.getTime();
+                let diffGiorni = Math.round(diffTempo / (1000 * 60 * 60 * 24));
+
+                if (diffGiorni === 0) {
+                    numClass += " active-day"; // Accende la bolla bianca e la capsula grigia
+                } else if (diffGiorni === 1) {
+                    numClass += " next-day-preview"; // Entra nella capsula grigia come giorno dopo
+                    if (isFestivo) {
+                        numClass += " muted"; // La tua regola originale: se è sabato/domenica si spegne in grigio morbido
+                    }
+                }
 
                 let dayBox = document.createElement("div");
-                dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[dTarget.getDay()]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
+                let indiceLettera = dTarget.getDay() === 0 ? 7 : dTarget.getDay();
+                
+                dayBox.innerHTML = `<div class="${labelClass}">${giorniLettere[indiceLettera]}</div><div class="${numClass}" ${stileRossoInLine}>${dTarget.getDate()}</div>`;
                 weekBar.appendChild(dayBox);
             }
 
