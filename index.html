@@ -636,16 +636,7 @@
         .ios-detail-modal.open { transform: translateY(0); }
 
         /* 2. L'HEADER NAVBAR (Allineato all'altezza dell'header del giorno) */
-        .detail-navbar {
-            display: flex !important; 
-            justify-content: space-between !important; 
-            align-items: center !important; 
-            padding: 20px 16px 10px 16px !important; 
-            background-color: #000 !important; 
-            border-bottom: none !important;
-        }
-        
-        /* 3. LE DUE BOLLE COMPLEMENTARI (Forma e dimensioni identiche a back-month-btn) */
+               /* 3. LE DUE BOLLE SIMMETRICHE (Forma, altezza e finiture identiche) */
         .detail-navbar button {
             background-color: var(--ios-card) !important;
             border: none !important;
@@ -659,27 +650,28 @@
             align-items: center !important;
             justify-content: center !important;
             height: 44px !important; 
+            min-width: 105px !important; /* Forza le due bolle ad avere la stessa identica larghezza minima */
             box-sizing: border-box !important;
             transform: none !important; 
         }
 
-        /* 4. IL DISEGNO DELLA FRECCIA (Inietta la freccia bianca geometrica prima della data) */
+        /* 4. IL DISEGNO DELLA FRECCIA BIANCA SULLA DATA */
         .detail-navbar button:first-child::before {
             content: "" !important;
             display: inline-block !important;
-            width: 9px;
-            height: 9px;
-            margin-right: 9px; 
+            width: 8px;
+            height: 8px;
+            margin-right: 8px; /* Distanza controllata dal testo della data (es: 19 mag) */
             border-left: 2.5px solid #FFFFFF;
             border-bottom: 2.5px solid #FFFFFF;
-            transform: rotate(45deg) translateY(-1px); 
+            transform: rotate(45deg); /* Crea la punta rivolta a sinistra < */
+            flex-shrink: 0;
         }
 
         /* 5. IL CORPO DEL TESTO DEI DETTAGLI */
         .detail-body { padding: 24px 16px; }
         .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
         .detail-subtitle { font-size: 15px; color: var(--ios-gray); margin-bottom: 24px; }
-
 
 
     </style>
