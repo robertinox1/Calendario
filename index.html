@@ -620,6 +620,23 @@
             /* Ruota il simbolo di 90 gradi esatti (Su / Giù) */
             transform: rotate(90deg) !important; scaleY(3.5) !important; 
         }
+                /* 🚨 INCOLLA QUESTO BLOCCO IN FONDO AL TUO TAG STYLE 🚨 */
+        .ios-detail-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
+            z-index: 260; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .ios-detail-modal.open { transform: translateY(0); }
+        .detail-navbar {
+            display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 0.5px solid var(--ios-border);
+        }
+        .detail-navbar button {
+            background: none; border: none; color: var(--ios-tint); font-size: 17px; cursor: pointer; font-weight: 500;
+        }
+        .detail-body { padding: 24px 16px; }
+        .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
+        .detail-subtitle { font-size: 15px; color: var(--ios-gray); margin-bottom: 24px; }
+
 
     </style>
 </head>
@@ -767,6 +784,29 @@
     <img src="capsula-basso.PNG" style="position: fixed !important; bottom: 20px !important; right: 21px !important; width: 130px !important; height: auto !important; z-index: 250 !important; cursor: pointer;" alt="Viste">
 
     </div>
+
+        <!-- 🚨 INCOLLA QUESTO BLOCCO HTML SUBITO SOPRA AL PANNELLO SETUP 🚨 -->
+    <div class="ios-detail-modal" id="detail-modal">
+        <div class="detail-navbar">
+            <!-- Il tasto indietro in alto a sinistra stile Apple -->
+            <button onclick="closeDetailModal()"><svg width="12" height="20" viewBox="0 0 12 20" style="margin-right: 5px; display: inline-block; vertical-align: middle;"><path d="M10 2 L2 10 L10 18" fill="none" stroke="#FF453A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Calendario</button>
+            <button style="font-weight: 600;">Modifica</button>
+        </div>
+        <div class="detail-body">
+            <!-- I campi che JavaScript compilerà da solo con la carta da gioco segreta -->
+            <div class="detail-title" id="display-detail-title">Nome Evento</div>
+            <div class="detail-subtitle" id="display-detail-time">venerdì 23 maggio 2026<br>dalle ore 02:00 alle 03:00</div>
+            
+            <div class="finta-riga-opzioni" style="border-radius: 25px; margin-bottom: 20px;">
+                <span style="color: var(--ios-tint);">Mostra come libero</span>
+            </div>
+            <div class="finta-riga-opzioni" style="border-radius: 25px;">
+                <span>Note</span>
+                <span style="color: var(--ios-gray); font-size: 15px;">Nessuna</span>
+            </div>
+        </div>
+    </div>
+
 
     <!-- PANNELLO SETUP -->
     <div class="secret-panel" id="secret-panel">
@@ -956,6 +996,7 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
             canvasDestro.insertBefore(tDestro, canvasDestro.firstChild);
 
             // GESTIONE EVENTI SULLE DUE COLONNE
+                      //  INCOLLA QUESTO BLOCCO NUOVO AL POSTO DI QUELLO CANCELLATO:
             const vecchioEventS = canvasSinistro.querySelector(".ios-timeline-event");
             if (vecchioEventS) vecchioEventS.remove();
             const vecchioEventD = canvasDestro.querySelector(".ios-timeline-event");
@@ -966,6 +1007,12 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
                 let boxEv = document.createElement("div");
                 boxEv.className = "ios-timeline-event";
                 boxEv.innerText = databaseEventi[sData].titolo;
+                
+                // Attiva l'apertura della modale dettagli al clic
+                boxEv.onclick = (e) => {
+                    e.stopPropagation(); 
+                    apriSchermataDettagli(databaseEventi[sData].titolo, dCorrente);
+                };
                 canvasSinistro.appendChild(boxEv);
             }
 
@@ -975,8 +1022,15 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
                 let boxEvPost = document.createElement("div");
                 boxEvPost.className = "ios-timeline-event";
                 boxEvPost.innerText = databaseEventi[sDataSuccessiva].titolo;
+                
+                // Attiva l'apertura della modale dettagli al clic
+                boxEvPost.onclick = (e) => {
+                    e.stopPropagation(); 
+                    apriSchermataDettagli(databaseEventi[sDataSuccessiva].titolo, dSuccessivo);
+                };
                 canvasDestro.appendChild(boxEvPost);
             }
+
                     //  INCOLLA QUESTE AL LORO POSTO:
             let stringaDataDinamica = `${giorno} ${nomiMesiBrevi[meseIndex].toLowerCase()} ${anno}`;
             document.getElementById("modal-data-inizio").innerText = stringaDataDinamica;
@@ -984,6 +1038,23 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
 
             document.getElementById("day-view-modal").classList.add("open");
         }
+                //  INCOLLA QUESTE SUBITO SOTTO LA FUNZIONE AGGIORNAEDAPRISCHERMATAGIORNO
+        function apriSchermataDettagli(titolo, oggettoData) {
+            let giorniEstesi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+            let mesiEstesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+            
+            let stringaDataDettaglio = `${giorniEstesi[oggettoData.getDay()]} ${oggettoData.getDate()} ${mesiEstesi[oggettoData.getMonth()]} ${oggettoData.getFullYear()}`;
+            
+            document.getElementById("display-detail-title").innerText = titolo;
+            document.getElementById("display-detail-time").innerHTML = `${stringaDataDettaglio}<br>dalle ore 02:00 alle 03:00`;
+            
+            document.getElementById("detail-modal").classList.add("open");
+        }
+
+        function closeDetailModal() {
+            document.getElementById("detail-modal").classList.remove("open");
+        }
+
 
         function gestisciScorrimentoMesi() {
             const container = document.getElementById("scroll-container");
