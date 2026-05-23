@@ -621,21 +621,65 @@
             transform: rotate(90deg) !important; scaleY(3.5) !important; 
         }
                 /* 🚨 INCOLLA QUESTO BLOCCO IN FONDO AL TUO TAG STYLE 🚨 */
+             /* ========================================================
+           NUOVA SCHERMATA DETTAGLI - VERSIONE AZZERATA E PULITA
+           ======================================================== */
+        
+        /* 1. LA FINESTRA MODALE CHE SALE DAL BASSO */
         .ios-detail-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
-            z-index: 260; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 260; 
+            transform: translateY(100%); 
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .ios-detail-modal.open { transform: translateY(0); }
+
+        /* 2. L'HEADER NAVBAR (Allineato all'altezza dell'header del giorno) */
         .detail-navbar {
-            display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 0.5px solid var(--ios-border);
+            display: flex !important; 
+            justify-content: space-between !important; 
+            align-items: center !important; 
+            padding: 20px 16px 10px 16px !important; 
+            background-color: #000 !important; 
+            border-bottom: none !important;
         }
+        
+        /* 3. LE DUE BOLLE COMPLEMENTARI (Forma e dimensioni identiche a back-month-btn) */
         .detail-navbar button {
-            background: none; border: none; color: var(--ios-tint); font-size: 17px; cursor: pointer; font-weight: 500;
+            background-color: var(--ios-card) !important;
+            border: none !important;
+            color: #FFFFFF !important; 
+            font-size: 17px !important;
+            cursor: pointer !important;
+            font-weight: 500 !important;
+            padding: 8px 18px !important;
+            border-radius: 25px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 44px !important; 
+            box-sizing: border-box !important;
+            transform: none !important; 
         }
+
+        /* 4. IL DISEGNO DELLA FRECCIA (Inietta la freccia bianca geometrica prima della data) */
+        .detail-navbar button:first-child::before {
+            content: "" !important;
+            display: inline-block !important;
+            width: 9px;
+            height: 9px;
+            margin-right: 9px; 
+            border-left: 2.5px solid #FFFFFF;
+            border-bottom: 2.5px solid #FFFFFF;
+            transform: rotate(45deg) translateY(-1px); 
+        }
+
+        /* 5. IL CORPO DEL TESTO DEI DETTAGLI */
         .detail-body { padding: 24px 16px; }
         .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
         .detail-subtitle { font-size: 15px; color: var(--ios-gray); margin-bottom: 24px; }
+
 
 
     </style>
