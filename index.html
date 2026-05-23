@@ -625,7 +625,7 @@
            NUOVA SCHERMATA DETTAGLI - VERSIONE AZZERATA E PULITA
            ======================================================== */
         
-        /* 1. LA FINESTRA MODALE CHE SALE DAL BASSO */
+              /*  INCOLLA QUESTO BLOCCO NUOVO DENTRO <style>: */
         .ios-detail-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; background-color: #000000;
@@ -635,9 +635,33 @@
         }
         .ios-detail-modal.open { transform: translateY(0); }
 
-        /* 2. L'HEADER NAVBAR (Allineato all'altezza dell'header del giorno) */
-               /* 3. LE DUE BOLLE SIMMETRICHE (Forma, altezza e finiture identiche) */
-        .detail-navbar button {
+        .detail-navbar {
+            display: flex !important; 
+            justify-content: space-between !important; 
+            align-items: center !important; 
+            padding: 20px 16px 10px 16px !important; 
+            background-color: #000 !important; 
+            border-bottom: none !important;
+        }
+        
+        .bolla-dettagli-sx {
+            background-color: var(--ios-card) !important;
+            border: none !important;
+            color: #FFFFFF !important; 
+            font-size: 17px !important;
+            cursor: pointer !important;
+            font-weight: 500 !important;
+            padding: 8px 16px !important;
+            border-radius: 25px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 44px !important; 
+            min-width: 105px !important; 
+            box-sizing: border-box !important;
+        }
+
+        .bolla-dettagli-dx {
             background-color: var(--ios-card) !important;
             border: none !important;
             color: #FFFFFF !important; 
@@ -650,25 +674,10 @@
             align-items: center !important;
             justify-content: center !important;
             height: 44px !important; 
-            min-width: 105px !important; /* Forza le due bolle ad avere la stessa identica larghezza minima */
+            min-width: 105px !important; 
             box-sizing: border-box !important;
-            transform: none !important; 
         }
 
-        /* 4. IL DISEGNO DELLA FRECCIA BIANCA SULLA DATA */
-        .detail-navbar button:first-child::before {
-            content: "" !important;
-            display: inline-block !important;
-            width: 8px;
-            height: 8px;
-            margin-right: 8px; /* Distanza controllata dal testo della data (es: 19 mag) */
-            border-left: 2.5px solid #FFFFFF;
-            border-bottom: 2.5px solid #FFFFFF;
-            transform: rotate(45deg); /* Crea la punta rivolta a sinistra < */
-            flex-shrink: 0;
-        }
-
-        /* 5. IL CORPO DEL TESTO DEI DETTAGLI */
         .detail-body { padding: 24px 16px; }
         .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
         .detail-subtitle { font-size: 15px; color: var(--ios-gray); margin-bottom: 24px; }
@@ -823,11 +832,17 @@
 
         <!-- 🚨 INCOLLA QUESTO BLOCCO HTML SUBITO SOPRA AL PANNELLO SETUP 🚨 -->
     <div class="ios-detail-modal" id="detail-modal">
+               <!--  INCOLLA QUESTO BLOCCO NUOVO AL POSTO DI QUELLO CANCELLATO: -->
         <div class="detail-navbar">
-            <!-- Il tasto indietro in alto a sinistra stile Apple -->
-            <button onclick="closeDetailModal()"><svg width="12" height="20" viewBox="0 0 12 20" style="margin-right: 5px; display: inline-block; vertical-align: middle;"><path d="M10 2 L2 10 L10 18" fill="none" stroke="#FF453A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Calendario</button>
-            <button style="font-weight: 600;">Modifica</button>
+            <button class="bolla-dettagli-sx" onclick="closeDetailModal()">
+                <svg width="12" height="20" viewBox="0 0 12 20" style="margin-right: 8px; display: inline-block; vertical-align: middle;">
+                    <path d="M10 2 L2 10 L10 18" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span id="display-detail-button-date" style="display: inline-block; vertical-align: middle; line-height: 20px;">-- ---</span>
+            </button>
+            <button class="bolla-dettagli-dx">Modifica</button>
         </div>
+
         <div class="detail-body">
             <!-- I campi che JavaScript compilerà da solo con la carta da gioco segreta -->
             <div class="detail-title" id="display-detail-title">Nome Evento</div>
