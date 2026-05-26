@@ -807,6 +807,22 @@
     transform: translate(-0.4px, -2.8px); 
 }
 
+        /* FORZATURA CHIRURGICA COLORE E ALTEZZA COMPLETA */
+.detail-body .finta-riga-opzioni {
+    background-color: #2C2C2E !important; /* Colore grigio esatto delle opzioni */
+    height: 48px !important;              /* Altezza fissa millimetrica di iOS */
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+}
+
+/* ELIMINAZIONE TOTALE DELLA BOLLA VUOTA FANTASMA */
+.detail-body .detail-mini-calendar + .detail-mini-calendar {
+    display: none !important; /* Distrugge la seconda bolla vuota se è rimasta nel codice */
+}
+
+
 
 
     </style>
