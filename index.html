@@ -690,10 +690,12 @@
    AGGIUNTA: STRUTTURA MINI GRAFICO DETTAGLI
    ======================================================== */
 /* STRUTTURA MINI GRAFICO COSTRUITA AL MILLIMETRO */
-/* STRUTTURA MINI GRAFICO COSTRUITA AL MILLIMETRO */
+/* ========================================================
+   STRUTTURA MINI GRAFICO E OPZIONI DETTAGLI (PULITO)
+   ======================================================== */
 .detail-mini-calendar {
     background-color: #1C1C1E;
-    border-radius: 25px;
+    border-radius: 14px;
     height: 144px; 
     margin-top: 18px;
     margin-bottom: 20px;
@@ -702,17 +704,14 @@
     box-sizing: border-box;
 }
 
-/* Ogni riga occupa esattamente 36px */
 .detail-hour-row {
     height: 36px; 
     display: flex;
-    align-items: center; /* 👈 Sincronizza e centra verticalmente sia il numero che la linea sulla stessa riga */
+    align-items: flex-start;
     position: relative;
     box-sizing: border-box;
-    padding-top: 4px; /* 👈 Sposta in blocco sia il numero che la linea verso il basso, tenendoli uniti */
 }
 
-/* Linea divisoria orizzontale chiara - Ora segue sempre il numero */
 .detail-hour-line {
     flex: 1;
     border-bottom: 0.5px solid rgba(255, 255, 255, 0.25); 
@@ -723,23 +722,21 @@
     border-bottom: none;
 }
 
-/* Ripristinato a zero per non creare conflitti: ora comanda il padding-top del contenitore */
 .detail-hour-label {
     width: 55px;
     color: #8E8E93; 
     padding-left: 16px;
     font-size: 11px;
     font-weight: 500;
-    margin-top: 0; 
+    margin-top: 1px;
 }
 
-/* IL PROMEMORIA: Perfettamente immobile e centrato tra le linee 02:00 e 03:00 */
 .detail-event-pill {
     position: absolute;
     left: 55px; 
     right: 16px;
-    top: 58px;  /* 👈 Calibrato al millimetro per stare esattamente in mezzo alle linee delle 02:00 e 03:00 spostate */
-    height: 32px; /* Leggermente ridotto per lasciare il micro-spazio sopra e sotto la linea, stile iOS */
+    top: 38px;  
+    height: 36px; 
     background-color: rgba(255, 255, 255, 0.45) !important;
     border-radius: 4px; 
     padding: 0 12px;
@@ -750,12 +747,11 @@
     justify-content: center;
 }
 
-/* Il bordino verticale bianco corto e arrotondato dentro il promemoria */
 .detail-event-pill::before {
     content: "";
     position: absolute;
     left: 5px; 
-    height: 24px; 
+    height: 26px; 
     top: 50%;
     transform: translateY(-50%);
     width: 2.5px; 
@@ -783,7 +779,6 @@
     margin-top: 1px;
 }
 
-/* L'ICONA DELL'OROLOGIO CON LANCETTE ALLUNGATE */
 .detail-pill-clock-icon {
     width: 10px; 
     height: 10px;
@@ -793,7 +788,6 @@
     box-sizing: border-box;
 }
 
-/* Le lancette partono dal centro e sono lunghe e nitide */
 .detail-pill-clock-icon::after {
     content: "";
     position: absolute;
@@ -807,19 +801,25 @@
     transform: translate(-0.4px, -2.8px); 
 }
 
-        /* FORZATURA CHIRURGICA COLORE E ALTEZZA COMPLETA */
-.detail-body .finta-riga-opzioni {
-    background-color: #2C2C2E !important; /* Colore grigio esatto delle opzioni */
-    height: 48px !important;              /* Altezza fissa millimetrica di iOS */
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    box-sizing: border-box !important;
+/* NUOVO STILE PULITO PER IL BOTTONE COMPATTO ELIMINA */
+.detail-btn-elimina-container {
+    margin-top: 130px !important; /* Spinge di molto verso il basso */
+    text-align: center;
+    padding-bottom: 30px;
 }
 
-/* ELIMINAZIONE TOTALE DELLA BOLLA VUOTA FANTASMA */
-.detail-body .detail-mini-calendar + .detail-mini-calendar {
-    display: none !important; /* Distrugge la seconda bolla vuota se è rimasta nel codice */
+.detail-btn-elimina {
+    background-color: #1C1C1E !important; /* Grigio scuro identico alle righe */
+    color: #FF453A !important;
+    font-size: 15px !important;            /* Scritta leggermente rimpicciolita */
+    font-weight: 500 !important;
+    padding: 10px 0 !important;            /* Riduce l'altezza della bolla */
+    width: 140px !important;               /* Stringe di molto orizzontalmente */
+    margin: 0 auto !important;             /* Centra nello schermo */
+    border-radius: 20px !important;        /* Smussatura a bottone/capsula */
+    display: block !important;
+    border: none !important;
+    cursor: pointer;
 }
 
 
@@ -989,6 +989,8 @@
             <!-- I campi che JavaScript compilerà da solo con la carta da gioco segreta -->
             <div class="detail-title" id="display-detail-title">Nome Evento</div>
             <div class="detail-subtitle" id="display-detail-time">venerdì 23 maggio 2026<br>dalle ore 02:00 alle 03:00</div>
+            
+            <!-- MINI CALENDARIO GRAFICO -->
             <div class="detail-mini-calendar">
                 <div class="detail-hour-row"><div class="detail-hour-label">01:00</div><div class="detail-hour-line"></div></div>
                 <div class="detail-hour-row"><div class="detail-hour-label">02:00</div><div class="detail-hour-line"></div></div>
@@ -1006,36 +1008,27 @@
                 <div class="detail-hour-row"><div class="detail-hour-label">04:00</div><div class="detail-hour-line"></div></div>
             </div>
             
-                      <!-- MINI CALENDARIO GRAFICO (Già presente nel tuo codice) -->
-            <div class="detail-mini-calendar">
-                <!-- ... (lascia intatto il codice del mini-calendario che abbiamo appena sistemato) ... -->
-            </div>
-
-            <!-- 🚨 SOSTITUISCI DA QUI IN POI FINO ALLA FINE DI DETAIL-BODY -->
-            
-            <!-- Blocco Calendario Singolo (Distanziato come la Ripetizione) -->
-            <div class="finta-riga-opzioni distanza-ripetizione" style="padding: 11.5px 16px;">
+            <!-- RIGA CALENDARIO: Grigio scuro originale di var(--ios-card) tramite la tua classe -->
+            <div class="finta-riga-opzioni distanza-ripetizione">
                 <span>Calendario</span>
                 <span style="color:var(--ios-gray); font-size:15px;">⚪ Lavoro <span class="freccetta-ios">&lt;&gt;</span></span>
             </div>
 
-            <!-- GRUPPO AVVISI UNITO da 2 righe (Distanziato come Calendario/Invitati) -->
+            <!-- GRUPPO AVVISI UNITO: Grigio scuro originale di var(--ios-card) tramite le tue classi -->
             <div class="finta-riga-opzioni border-row">
                 <span>Avviso</span>
                 <span style="color:var(--ios-gray); font-size:15px;">30 minuti prima <span class="freccetta-ios">&lt;&gt;</span></span>
             </div>
-            <!-- L'ultima riga del blocco chiude il gruppo con le curve in fondo -->
-            <div class="finta-riga-opzioni distanza-orari-fine">
+            <div class="finta-riga-opzioni distanza-invitati-fine">
                 <span>Secondo avviso</span>
                 <span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">&lt;&gt;</span></span>
             </div>
 
-            <!-- Pulsante Elimina in fondo (opzionale, stile iOS pulito) -->
-            <div style="text-align: center; margin-top: 35px; padding-bottom: 40px;">
-                <button style="background-color: #1C1C1E; border: none; color: #FF453A; font-size: 17px; padding: 14px 0; width: 100%; border-radius: 25px; font-weight: 400; cursor: pointer;">Elimina evento</button>
+            <!-- CONTENITORE PULITO PER IL BOTTONE COMPATTO SPOSTATO IN BASSO -->
+            <div class="detail-btn-elimina-container">
+                <button class="detail-btn-elimina">Elimina evento</button>
             </div>
-        </div> <!-- Chiusura di detail-body -->
-
+        </div>
 
 
     <!-- PANNELLO SETUP -->
