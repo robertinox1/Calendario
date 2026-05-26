@@ -692,7 +692,7 @@
 /* STRUTTURA MINI GRAFICO DETTAGLI (MATEMATICA DI LUN) */
 .detail-mini-calendar {
     background-color: #1C1C1E; 
-    border-radius: 14px;
+    border-radius: 25px;
     height: 164px;              /* Altezza totale bloccata */
     margin-top: 18px;
     margin-bottom: 20px;
@@ -1034,10 +1034,19 @@
             </div>
 
             <!-- GRUPPO AVVISI UNITO: Grigio scuro originale di var(--ios-card) tramite le tue classi -->
-            <div class="finta-riga-opzioni border-row">
-                <span>Avviso</span>
-                <span style="color:var(--ios-gray); font-size:15px;">30 minuti prima <span class="freccetta-ios">&lt;&gt;</span></span>
-            </div>
+<!-- GRUPPO AVVISI UNITO (MODIFICA CHIRURGICA) -->
+<div class="finta-riga-opzioni" style="position: relative; border-radius: 25px 25px 0 0; margin-bottom: 0;">
+    <!-- 🟢 Ecco la nuova linea inserita che si stacca a sinistra e a destra -->
+    <div style="position: absolute; bottom: 0; left: 55px; right: 14px; border-bottom: 0.5px solid rgba(255, 255, 255, 0.25);"></div>
+    
+    <span>Avviso</span>
+    <span style="color:var(--ios-gray); font-size:15px;">30 minuti prima <span class="freccetta-ios">&lt;&gt;</span></span>
+</div>
+<div class="finta-riga-opzioni distanza-invitati-fine">
+    <span>Secondo avviso</span>
+    <span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">&lt;&gt;</span></span>
+</div>
+
             <div class="finta-riga-opzioni distanza-invitati-fine">
                 <span>Secondo avviso</span>
                 <span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">&lt;&gt;</span></span>
