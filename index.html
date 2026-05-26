@@ -689,50 +689,58 @@
         /* ========================================================
    AGGIUNTA: STRUTTURA MINI GRAFICO DETTAGLI
    ======================================================== */
-/* STRUTTURA MINI GRAFICO COMPATTA E DISTRIBUITA */
+/* STRUTTURA MINI GRAFICO COSTRUITA AL MILLIMETRO */
 .detail-mini-calendar {
     background-color: #1C1C1E;
-    border-radius: 25px;
-    padding: 6px 0; /* Ridotto al minimo per distribuire tutto dall'alto al basso */
+    border-radius: 14px;
+    /* Forza l'altezza totale esatta per 4 righe da 36px per non lasciare spazi vuoti sotto */
+    height: 144px; 
     margin-top: 18px;
     margin-bottom: 20px;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* Righe più corte e uniformi per stringere la bolla verticalmente */
+/* Ogni riga occupa esattamente un quarto dell'altezza totale */
 .detail-hour-row {
-    height: 32px; 
+    height: 36px; 
     display: flex;
     align-items: flex-start;
     position: relative;
+    box-sizing: border-box;
 }
 
-/* Rende la linea grigia molto più chiara e visibile */
+/* Linea divisoria orizzontale chiara */
 .detail-hour-line {
     flex: 1;
-    border-bottom: 0.5px solid rgba(255, 255, 255, 0.25); /* Molto più chiaro del precedente */
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.25); 
     height: 0;
+}
+
+/* Rimuove l'ultima linea in fondo per non toccare il bordo della bolla */
+.detail-hour-row:last-child {
+    border-bottom: none;
 }
 
 .detail-hour-label {
     width: 55px;
-    color: #8E8E93; /* Grigio più chiaro nativo Apple per i numeri delle ore */
+    color: #8E8E93; 
     padding-left: 16px;
     font-size: 11px;
     font-weight: 500;
-    margin-top: -6px;
+    margin-top: -6px; /* Centra il testo sopra la linea orizzontale */
 }
 
-/* IL PROMEMORIA: Riempie al 100% lo spazio verticale tra le 2 e le 3 */
+/* IL PROMEMORIA: Centrato, riempie lo spazio tra 02:00 e 03:00 con angoli arrotondati */
 .detail-event-pill {
     position: absolute;
-    left: 55px; /* Attaccato all'inizio della linea di destra */
+    left: 55px; /* Inizia esattamente dove partono le linee a destra */
     right: 16px;
-    top: 32px;  /* Parte esattamente sulla linea delle 02:00 (dopo la prima riga da 32px) */
-    height: 32px; /* Ha la stessa identica altezza della riga, riempiendo lo spazio al 100% */
+    top: 36px;  /* Parte al pixel dopo la riga delle 01:00 (36px dall'alto) */
+    height: 36px; /* Copre al millimetro l'altezza tra la linea delle 02:00 e delle 03:00 */
     background-color: rgba(255, 255, 255, 0.45) !important;
-    border-radius: 0px; /* Rimosso l'arrotondamento per farlo fondere perfettamente con le linee */
+    border-radius: 4px; /* Angoli arrotondati ripristinati */
     padding: 0 12px;
     box-sizing: border-box;
     z-index: 5;
@@ -741,16 +749,17 @@
     justify-content: center;
 }
 
-/* Il bordino verticale bianco si allunga per coprire l'intera altezza del blocco */
+/* Il bordino verticale bianco corto e arrotondato dentro il promemoria */
 .detail-event-pill::before {
     content: "";
     position: absolute;
-    left: 0px; /* Attaccato al bordo sinistro del blocco */
-    height: 100%; /* Copre l'altezza da cima a fondo */
-    top: 0;
-    transform: none;
-    width: 3px; 
+    left: 5px; /* Spostato leggermente dentro per via degli angoli curvi */
+    height: 26px; /* Più corto dei 36px totali per non sbordare dalle curve */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5px; 
     background-color: #FFFFFF; 
+    border-radius: 2px;
 }
 
 .detail-pill-title {
