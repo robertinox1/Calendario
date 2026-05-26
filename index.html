@@ -678,13 +678,108 @@
             box-sizing: border-box !important;
         }
 
-        .detail-body { padding: 24px 16px; }
-        .detail-title { font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px;   display: block !important;
-            white-space: nowrap !important;
-            overflow: hidden !important; /* Taglia tutto ciò che esce dai margini */
-            text-indent: -170px !important; /* 👈 Spinge a sinistra di 176px (la misura esatta della parola "Promemoria: ") */
-            padding-left: 0px !important; }
-        .detail-subtitle { font-size: 15px; color: #FFFFFF; margin-bottom: 24px; }
+    /* MINI GRIGLIA ORARIA DETTAGLI CON RELLANGOLO BIANCO SEMITRASPARENTE */
+.detail-mini-calendar {
+    background-color: #1C1C1E;
+    border-radius: 25px;
+    padding: 12px 0 16px 0;
+    margin-top: 18px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.detail-hour-row {
+    height: 38px;
+    position: relative;
+    border-bottom: 0.5px solid rgba(84, 84, 88, 0.35);
+}
+
+.detail-hour-row:last-child {
+    border-bottom: none;
+}
+
+.detail-hour-label {
+    width: 60px;
+    color: #48484A;
+    padding-left: 16px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: -6px;
+}
+
+/* Il rettangolo bianco semitrasparente identico al resto dell'app */
+.detail-event-pill {
+    position: absolute;
+    left: 62px;
+    right: 14px;
+    top: 41px; /* Centrato verticalmente tra le linee */
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.45) !important; /* Bianco semitrasparente originale */
+    border-radius: 4px;
+    padding: 3px 12px; /* Leggermente più imbottito a sinistra per il bordino */
+    box-sizing: border-box;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Il bordino personalizzato corto, spostato e arrotondato */
+.detail-event-pill::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    height: 24px; /* Più corto dell'altezza totale del rettangolo */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5px; 
+    background-color: #FFFFFF; 
+    border-radius: 2px;
+    z-index: 6;
+}
+
+/* Titolo dell'evento bianco */
+.detail-pill-title {
+    color: #FFFFFF !important;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Riga orario bianca sotto al titolo */
+.detail-pill-time-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #FFFFFF !important;
+    font-size: 9px;
+    font-weight: 500;
+    margin-top: 1px;
+}
+
+.detail-pill-clock-icon {
+    width: 8px;
+    height: 8px;
+    border: 1px solid #FFFFFF;
+    border-radius: 50%;
+    position: relative;
+}
+
+.detail-pill-clock-icon::after {
+    content: "";
+    position: absolute;
+    top: 1.5px;
+    left: 3px;
+    width: 2px;
+    height: 2.5px;
+    border-left: 0.8px solid #FFFFFF;
+    border-bottom: 0.8px solid #FFFFFF;
+}
+
+
 
 
     </style>
@@ -835,8 +930,8 @@
     </div>
 
         <!-- 🚨 INCOLLA QUESTO BLOCCO HTML SUBITO SOPRA AL PANNELLO SETUP 🚨 -->
+      <!-- SCHERMATA DETTAGLI -->
     <div class="ios-detail-modal" id="detail-modal">
-               <!--  INCOLLA QUESTO BLOCCO NUOVO AL POSTO DI QUELLO CANCELLATO: -->
         <div class="detail-navbar">
             <button class="bolla-dettagli-sx" onclick="closeDetailModal()">
                 <svg width="12" height="20" viewBox="0 0 12 20" style="margin-right: 8px; display: inline-block; vertical-align: middle;">
@@ -847,21 +942,55 @@
             <button class="bolla-dettagli-dx">Modifica</button>
         </div>
 
+        <!-- REVISIONA E MODIFICA QUESTO BLOCCO DA QUI DA TE -->
         <div class="detail-body">
-            <!-- I campi che JavaScript compilerà da solo con la carta da gioco segreta -->
+            <!-- Titolo e Sottotitolo -->
             <div class="detail-title" id="display-detail-title">Nome Evento</div>
-            <div class="detail-subtitle" id="display-detail-time">venerdì 23 maggio 2026<br>dalle ore 02:00 alle 03:00</div>
+            <div class="detail-subtitle" id="display-detail-time">martedì 19 mag 2026<br>02:00 - 03:00</div>
             
-            <div class="finta-riga-opzioni" style="border-radius: 25px; margin-bottom: 20px;">
-                <span style="color: var(--ios-tint);">Mostra come libero</span>
+            <!-- MINI CALENDARIO GRAFICO CON BLOCCO BIANCO SEMITRASPARENTE -->
+            <div class="detail-mini-calendar">
+                <div class="detail-hour-row"><div class="detail-hour-label">01:00</div></div>
+                <div class="detail-hour-row"><div class="detail-hour-label">02:00</div></div>
+                
+                <!-- Rettangolo Bianco Spazio 02:00 - 03:00 -->
+                <div class="detail-event-pill">
+                    <div class="detail-pill-title" id="detail-pill-text">Nome Evento</div>
+                    <div class="detail-pill-time-row">
+                        <div class="detail-pill-clock-icon"></div>
+                        <span>02:00 - 03:00</span>
+                    </div>
+                </div>
+                
+                <div class="detail-hour-row"><div class="detail-hour-label">03:00</div></div>
+                <div class="detail-hour-row"><div class="detail-hour-label">04:00</div></div>
             </div>
-            <div class="finta-riga-opzioni" style="border-radius: 25px;">
-                <span>Note</span>
-                <span style="color: var(--ios-gray); font-size: 15px;">Nessuna</span>
+
+            <!-- Sezione inferiore fedele allo screenshot -->
+            <div class="finta-riga-opzioni" style="border-radius: 25px; margin-bottom: 20px; padding: 14px 16px;">
+                <span>Calendario</span>
+                <span style="color: var(--ios-gray); font-size: 15px; display: flex; align-items: center; gap: 6px;">
+                    <span style="color: #FFFFFF; font-size: 12px;">⚪</span> Lavoro ↕
+                </span>
+            </div>
+
+            <div style="background-color: #1C1C1E; border-radius: 12px; overflow: hidden;">
+                <div class="finta-riga-opzioni" style="background: transparent; border-bottom: 0.5px solid var(--ios-border); border-radius: 0; padding: 14px 16px;">
+                    <span>Avviso</span>
+                    <span style="color: var(--ios-gray); font-size: 15px;">30 minuti prima ↕</span>
+                </div>
+                <div class="finta-riga-opzioni" style="background: transparent; border-radius: 0; padding: 14px 16px;">
+                    <span>Secondo avviso</span>
+                    <span style="color: var(--ios-gray); font-size: 15px;">Nessuno ↕</span>
+                </div>
+            </div>
+
+            <!-- Pulsante Elimina in fondo -->
+            <div style="text-align: center; margin-top: 35px;">
+                <button style="background-color: #1C1C1E; border: none; color: #FF453A; font-size: 17px; padding: 14px 0; width: 100%; border-radius: 12px; font-weight: 400; cursor: pointer;">Elimina evento</button>
             </div>
         </div>
     </div>
-
 
     <!-- PANNELLO SETUP -->
     <div class="secret-panel" id="secret-panel">
@@ -1108,6 +1237,7 @@ function aggiornaEdApriSchermataGiorno(giorno, meseIndex, anno, sData) {
     
             // 3. Inietta i dati nei rispettivi elementi dell'interfaccia
             document.getElementById("display-detail-title").innerText = titolo;
+            document.getElementById("detail-pill-text").innerText = titolo;
             document.getElementById("display-detail-time").innerHTML = `${stringaDataDettaglio}<br>02:00 - 03:00`;
             
             // 👈 Questa riga cancella i trattini e scrive la data reale (es: 19 mag)
