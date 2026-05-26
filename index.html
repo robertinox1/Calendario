@@ -990,15 +990,36 @@
                 <div class="detail-hour-row"><div class="detail-hour-label">04:00</div><div class="detail-hour-line"></div></div>
             </div>
             
-            <div class="finta-riga-opzioni" style="border-radius: 25px; margin-bottom: 20px;">
-                <span style="color: var(--ios-tint);">Mostra come libero</span>
+                      <!-- MINI CALENDARIO GRAFICO (Già presente nel tuo codice) -->
+            <div class="detail-mini-calendar">
+                <!-- ... (lascia intatto il codice del mini-calendario che abbiamo appena sistemato) ... -->
             </div>
-            <div class="finta-riga-opzioni" style="border-radius: 25px;">
-                <span>Note</span>
-                <span style="color: var(--ios-gray); font-size: 15px;">Nessuna</span>
+
+            <!-- 🚨 SOSTITUISCI DA QUI IN POI FINO ALLA FINE DI DETAIL-BODY -->
+            
+            <!-- Blocco Calendario Singolo (Distanziato come la Ripetizione) -->
+            <div class="finta-riga-opzioni distanza-ripetizione" style="padding: 11.5px 16px;">
+                <span>Calendario</span>
+                <span style="color:var(--ios-gray); font-size:15px;">⚪ Lavoro <span class="freccetta-ios">&lt;&gt;</span></span>
             </div>
-        </div>
-    </div>
+
+            <!-- GRUPPO AVVISI UNITO da 2 righe (Distanziato come Calendario/Invitati) -->
+            <div class="finta-riga-opzioni border-row">
+                <span>Avviso</span>
+                <span style="color:var(--ios-gray); font-size:15px;">30 minuti prima <span class="freccetta-ios">&lt;&gt;</span></span>
+            </div>
+            <!-- L'ultima riga del blocco chiude il gruppo con le curve in fondo -->
+            <div class="finta-riga-opzioni distanza-orari-fine">
+                <span>Secondo avviso</span>
+                <span style="color:var(--ios-gray); font-size:15px;">Nessuno <span class="freccetta-ios">&lt;&gt;</span></span>
+            </div>
+
+            <!-- Pulsante Elimina in fondo (opzionale, stile iOS pulito) -->
+            <div style="text-align: center; margin-top: 35px; padding-bottom: 40px;">
+                <button style="background-color: #1C1C1E; border: none; color: #FF453A; font-size: 17px; padding: 14px 0; width: 100%; border-radius: 25px; font-weight: 400; cursor: pointer;">Elimina evento</button>
+            </div>
+        </div> <!-- Chiusura di detail-body -->
+
 
 
     <!-- PANNELLO SETUP -->
