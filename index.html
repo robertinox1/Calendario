@@ -1005,29 +1005,28 @@
             <button class="bolla-dettagli-dx">Modifica</button>
         </div>
 
-        <div class="detail-body">
-            <!-- I campi che JavaScript compilerà da solo con la carta da gioco segreta -->
-            <div class="detail-title" id="display-detail-title">Nome Evento</div>
-            <div class="detail-subtitle" id="display-detail-time">venerdì 23 maggio 2026<br>dalle ore 02:00 alle 03:00</div>
-            
-            <!-- MINI CALENDARIO GRAFICO -->
-            <div class="detail-mini-calendar">
-                <div class="detail-hour-row"><div class="detail-hour-label">01:00</div><div class="detail-hour-line"></div></div>
-                <div class="detail-hour-row"><div class="detail-hour-label">02:00</div><div class="detail-hour-line"></div></div>
-                
-                <!-- Rettangolo Promemoria Bianco Semitrasparente -->
-                <div class="detail-event-pill">
-                    <div class="detail-pill-title" id="detail-pill-text">Nome Evento</div>
-                    <div class="detail-pill-time-row">
-                        <div class="detail-pill-clock-icon"></div>
-                        <span>02:00 - 03:00</span>
-                    </div>
-                </div>
-                
-                <div class="detail-hour-row"><div class="detail-hour-label">03:00</div><div class="detail-hour-line"></div></div>
-                <div class="detail-hour-row"><div class="detail-hour-label">04:00</div><div class="detail-hour-line"></div></div>
+      <div class="detail-body">
+    <!-- I campi che JavaScript compilerà da solo con la carta da gioco segreta -->
+    <div class="detail-title" id="display-detail-title">Nome Evento</div>
+    <div class="detail-subtitle" id="display-detail-time">venerdì 23 maggio 2026<br>dalle ore 02:00 alle 03:00</div>
+    
+    <!-- MINI CALENDARIO GRAFICO ORALMENTE ORDINATO -->
+    <div class="detail-mini-calendar">
+        <div class="detail-hour-row"><div class="detail-hour-label">01:00</div><div class="detail-hour-line"></div></div> <!-- 1° elemento: 01:00 -->
+        <div class="detail-hour-row"><div class="detail-hour-label">02:00</div><div class="detail-hour-line"></div></div> <!-- 2° elemento: 02:00 -->
+        <div class="detail-hour-row"><div class="detail-hour-label">03:00</div><div class="detail-hour-line"></div></div> <!-- 3° elemento: 03:00 -->
+        <div class="detail-hour-row"><div class="detail-hour-label">04:00</div><div class="detail-hour-line"></div></div> <!-- 4° elemento: 04:00 -->
+        
+        <!-- 🟢 IL PROMEMORIA SPOSTATO IN FONDO: Non rompe più il conteggio del CSS -->
+        <div class="detail-event-pill">
+            <div class="detail-pill-title" id="detail-pill-text">Nome Evento</div>
+            <div class="detail-pill-time-row">
+                <div class="detail-pill-clock-icon"></div>
+                <span>02:00 - 03:00</span>
             </div>
-            
+        </div>
+    </div>
+
             <!-- RIGA CALENDARIO: Grigio scuro originale di var(--ios-card) tramite la tua classe -->
             <div class="finta-riga-opzioni distanza-ripetizione">
                 <span>Calendario</span>
