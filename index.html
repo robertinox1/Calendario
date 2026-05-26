@@ -691,10 +691,12 @@
 /* ========================================================
    STRUTTURA MINI GRAFICO E OPZIONI DETTAGLI (PERFETTO)
    ======================================================== */
+/* STRUTTURA MINI GRAFICO INGRANDITA E BILANCIATA */
 .detail-mini-calendar {
-    background-color: #1C1C1E; /* Lo stesso grigio scuro di elimina evento */
+    background-color: #1C1C1E; 
     border-radius: 14px;
-    height: 144px; 
+    height: 164px;          /* 🟢 Ingrandito verticalmente da 144px a 164px */
+    padding: 10px 0;        /* 🟢 Crea lo spazio a metà riga sopra l'1 e sotto il 4 */
     margin-top: 18px;
     margin-bottom: 20px;
     position: relative;
@@ -702,7 +704,7 @@
     box-sizing: border-box;
 }
 
-/* Ogni riga occupa esattamente 36px */
+/* Ogni riga occupa esattamente 36px in modo uniforme */
 .detail-hour-row {
     height: 36px; 
     display: flex;
@@ -722,23 +724,23 @@
     border-bottom: none;
 }
 
-/* 🟢 NUMERI E LINEE RIPRISTINATI: Esattamente come quando andavano bene */
+/* Numeri e linee allineati che seguono la griglia */
 .detail-hour-label {
     width: 55px;
     color: #8E8E93; 
     padding-left: 16px;
     font-size: 11px;
     font-weight: 500;
-    margin-top: -2px; /* Riportato a -2px: la posizione perfetta che seguiva le linee */
+    margin-top: -2px; 
 }
 
-/* IL PROMEMORIA BIANCO: Perfettamente centrato a top: 38px */
+/* 🟢 IL PROMEMORIA BIANCO: Ricalibrato al pixel per la nuova altezza */
 .detail-event-pill {
     position: absolute;
     left: 55px; 
     right: 16px;
-    top: 38px;  
-    height: 36px; 
+    top: 46px;      /* 🟢 Spostato a 46px per compensare i 10px di padding in alto */
+    height: 36px;   /* 🟢 Mantiene l'altezza esatta della riga oraria per riempire lo spazio tra 2 e 3 */
     background-color: rgba(255, 255, 255, 0.45) !important;
     border-radius: 4px; 
     padding: 0 12px;
@@ -761,47 +763,6 @@
     border-radius: 2px;
 }
 
-.detail-pill-title {
-    color: #FFFFFF !important;
-    font-weight: 600;
-    font-size: 11px;
-    line-height: 1.1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.detail-pill-time-row {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    color: #FFFFFF !important;
-    font-size: 9px;
-    font-weight: 500;
-    margin-top: 1px;
-}
-
-.detail-pill-clock-icon {
-    width: 9px;
-    height: 9px;
-    border: 0.8px solid #FFFFFF;
-    border-radius: 50%;
-    position: relative;
-    box-sizing: border-box;
-}
-
-.detail-pill-clock-icon::after {
-    content: "";
-    position: absolute;
-    top: 4.1px;  
-    left: 4.1px; 
-    width: 2.2px; 
-    height: 2.2px; 
-    border-left: 0.8px solid #FFFFFF;   
-    border-bottom: 0.8px solid #FFFFFF; 
-    box-sizing: border-box;
-    transform: translate(-0.4px, -1.8px); 
-}
 
 /* 🟢 COLORE BOLLE DETTAGLI FORZATO A #1C1C1E (Come Elimina Evento) */
 .detail-body .finta-riga-opzioni {
