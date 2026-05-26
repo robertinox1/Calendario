@@ -701,12 +701,12 @@
     box-sizing: border-box;
 }
 
-/* Base per tutte le righe orarie: bloccate in posizione assoluta senza margini spuri */
+/* Base per le righe: spessore azzerato per non accumulare pixel e non accatastare i numeri */
 .detail-hour-row {
     position: absolute !important;
     left: 0;
     right: 0;
-    height: 20px; /* Spazio controllato per contenere l'altezza del testo */
+    height: 0px !important;     /* 🟢 FONDAMENTALE: altezza azzerata per non far muovere la griglia */
     margin: 0 !important;
     padding: 0 !important;
     display: flex;
@@ -714,7 +714,7 @@
     box-sizing: border-box;
 }
 
-/* 🟢 LE TUE COORDINATE RIGIDE PIXEL PER PIXEL (ORDINE 1, 2, 3, 4) */
+/* 🟢 LE TUE COORDINATE RIGIDE AL PIXEL (ORDINE 1, 2, 3, 4) */
 .detail-hour-row:nth-child(1) { top: 16px; }
 .detail-hour-row:nth-child(2) { top: 60px; }
 .detail-hour-row:nth-child(3) { top: 104px; }
@@ -732,7 +732,7 @@
     border-bottom: none;
 }
 
-/* Numeri orari agganciati e stampati in linea sul filo della riga */
+/* I numeri si centrano perfettamente sulla linea senza spostarla */
 .detail-hour-label {
     width: 55px;
     color: #8E8E93; 
@@ -740,16 +740,16 @@
     font-size: 11px;
     font-weight: 500;
     margin: 0 !important;
-    line-height: 1 !important;
-    transform: translateY(-0.5px); /* Centratura ottica perfetta sulla linea */
+    line-height: 0 !important; /* 🟢 Azzera l'ingombro del testo per non spingere le righe vicine */
+    transform: translateY(-0.5px); 
 }
 
 /* 🟢 IL PROMEMORIA BIANCO: Perfetto tra la linea 2 (60px) e la linea 3 (104px) */
 .detail-event-pill {
     position: absolute;
     left: 55px; 
-    right: 14px;    /* Allineato alla fine delle linee accorciate */
-    top: 60px;      /* Attacca esattamente sulla linea 2 (60px) */
+    right: 14px;    
+    top: 60px;      /* Attacca sulla linea 2 (60px) */
     height: 44px;   /* Copre i 44px esatti fino alla linea 3 (104px) */
     background-color: rgba(255, 255, 255, 0.45) !important;
     border-radius: 4px; 
