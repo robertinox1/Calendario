@@ -690,14 +690,12 @@
    AGGIUNTA: STRUTTURA MINI GRAFICO DETTAGLI
 /* ========================================================
    STRUTTURA MINI GRAFICO E OPZIONI DETTAGLI (PERFETTO)
-   ======================================================== */
-/* STRUTTURA MINI GRAFICO COSTRUITA AL MILLIMETRO */
+/* GEOMETRIA DEL MINI CALENDARIO CON DISTANZE FISSE A 16PX E SPAZI DA 44PX */
 .detail-mini-calendar {
     background-color: #1C1C1E; 
-    border-radius: 25px;
-    height: 164px;          
-    /* 🟢 Aggiunto padding simmetrico sopra e sotto per staccare l'1 e il 4 dai bordi */
-    padding: 14px 0 !important; 
+    border-radius: 14px;
+    height: 164px;              /* Altezza originale bloccata */
+    padding: 0px !important; 
     margin-top: 18px;
     margin-bottom: 20px;
     position: relative;
@@ -705,44 +703,65 @@
     box-sizing: border-box;
 }
 
-/* Ogni riga ora è di 34px, così 34 * 4 = 136px + 28px di padding = 164px perfetti */
+/* 🟢 RIGA 1 (01:00): Alta 16px per creare la distanza esatta dal bordo superiore */
+.detail-hour-row:nth-child(1) {
+    height: 16px; 
+}
+
+/* 🟢 RIGA 2 (02:00): Spazio intermedio uniforme di 44px */
+.detail-hour-row:nth-child(2) {
+    height: 44px; 
+}
+
+/* 🟢 RIGA 3 (03:00): Spazio del promemoria uniforme di 44px */
+.detail-hour-row:nth-child(3) {
+    height: 44px; 
+}
+
+/* 🟢 RIGA 4 (04:00): Spazio intermedio uniforme di 44px */
+.detail-hour-row:nth-child(4) {
+    height: 44px; 
+}
+
+/* Nota: lo spazio finale sotto la linea 4 diventa automaticamente di 16px per chiudere i 164px totali */
+
+/* Struttura base comune a tutte le righe */
 .detail-hour-row {
-    height: 34px; 
     display: flex;
     align-items: flex-start;
     position: relative;
     box-sizing: border-box;
 }
 
-/* Linea divisoria orizzontale chiara */
+/* Le linee si fermano poco prima del bordo destro */
 .detail-hour-line {
     flex: 1;
     border-bottom: 0.5px solid rgba(255, 255, 255, 0.25); 
     height: 0;
+    margin-right: 14px !important; /* Interrompe la linea prima del bordo destro */
 }
 
-.detail-hour-row:last-child {
+.detail-hour-row:last-child .detail-hour-line {
     border-bottom: none;
 }
 
-/* Numeri e linee allineati che seguono la griglia */
 .detail-hour-label {
     width: 55px;
     color: #8E8E93; 
     padding-left: 16px;
     font-size: 11px;
     font-weight: 500;
-    margin-top: -2px; 
+    margin-top: -6px; /* Ancoraggio perfetto dei numeri sopra le linee divisorie */
 }
 
-/* 🟢 IL PROMEMORIA BIANCO: Posizionato e ridimensionato al millimetro */
+/* 🟢 IL PROMEMORIA BIANCO: Posizionato e dimensionato al millimetro sulla griglia da 44px */
 .detail-event-pill {
     position: absolute;
     left: 55px; 
-    right: 16px;
-    /* 🟢 Calcolo: 14px (padding iniziale) + 34px (prima riga dell'1) = 48px esatti per iniziare alle 02:00 */
-    top: 48px;      
-    height: 34px;   /* 🟢 Alta esattamente quanto la riga per riempire lo spazio tra le linee */
+    right: 14px;    /* Allineato alla fine delle linee accorciate */
+    /* 🟢 Calcolo: 16px (riga 1) + 44px (riga 2) = 60px esatti dall'alto per iniziare sulla linea delle 02:00 */
+    top: 60px;      
+    height: 44px;   /* 🟢 Alta esattamente 44px per riempire tutto lo spazio tra la linea 2 e 3 */
     background-color: rgba(255, 255, 255, 0.45) !important;
     border-radius: 4px; 
     padding: 0 12px;
@@ -757,7 +776,7 @@
     content: "";
     position: absolute;
     left: 5px; 
-    height: 24px; /* Accorciato a 24px per stare dentro i 34px totali del rettangolo */
+    height: 28px;   /* Proporzionato all'altezza di 44px per rimanere dentro le curve */
     top: 50%;
     transform: translateY(-50%);
     width: 2.5px; 
