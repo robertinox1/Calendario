@@ -693,7 +693,6 @@
 .detail-mini-calendar {
     background-color: #1C1C1E;
     border-radius: 14px;
-    /* Forza l'altezza totale esatta per 4 righe da 36px per non lasciare spazi vuoti sotto */
     height: 144px; 
     margin-top: 18px;
     margin-bottom: 20px;
@@ -702,7 +701,7 @@
     box-sizing: border-box;
 }
 
-/* Ogni riga occupa esattamente un quarto dell'altezza totale */
+/* Ogni riga occupa esattamente 36px */
 .detail-hour-row {
     height: 36px; 
     display: flex;
@@ -718,29 +717,29 @@
     height: 0;
 }
 
-/* Rimuove l'ultima linea in fondo per non toccare il bordo della bolla */
 .detail-hour-row:last-child {
     border-bottom: none;
 }
 
+/* 👈 AGGIUSTATO: Spostate le etichette in basso di 4px per centrarle visivamente rispetto al bordo e alle linee */
 .detail-hour-label {
     width: 55px;
     color: #8E8E93; 
     padding-left: 16px;
     font-size: 11px;
     font-weight: 500;
-    margin-top: -6px; /* Centra il testo sopra la linea orizzontale */
+    margin-top: -2px; /* Spostato da -6px a -2px per scendere e staccarsi dal bordo superiore */
 }
 
-/* IL PROMEMORIA: Centrato, riempie lo spazio tra 02:00 e 03:00 con angoli arrotondati */
+/* IL PROMEMORIA: Resta perfettamente ancorato tra le linee delle 02:00 e delle 03:00 */
 .detail-event-pill {
     position: absolute;
-    left: 55px; /* Inizia esattamente dove partono le linee a destra */
+    left: 55px; 
     right: 16px;
-    top: 36px;  /* Parte al pixel dopo la riga delle 01:00 (36px dall'alto) */
-    height: 36px; /* Copre al millimetro l'altezza tra la linea delle 02:00 e delle 03:00 */
+    top: 36px;  
+    height: 36px; 
     background-color: rgba(255, 255, 255, 0.45) !important;
-    border-radius: 4px; /* Angoli arrotondati ripristinati */
+    border-radius: 4px; 
     padding: 0 12px;
     box-sizing: border-box;
     z-index: 5;
@@ -753,8 +752,8 @@
 .detail-event-pill::before {
     content: "";
     position: absolute;
-    left: 5px; /* Spostato leggermente dentro per via degli angoli curvi */
-    height: 26px; /* Più corto dei 36px totali per non sbordare dalle curve */
+    left: 5px; 
+    height: 26px; 
     top: 50%;
     transform: translateY(-50%);
     width: 2.5px; 
@@ -782,23 +781,28 @@
     margin-top: 1px;
 }
 
+/* L'ICONA DELL'OROLOGIO CALIBRATA AL CENTRO */
 .detail-pill-clock-icon {
-    width: 8px;
-    height: 8px;
-    border: 1px solid #FFFFFF;
+    width: 9px;
+    height: 9px;
+    border: 0.8px solid #FFFFFF;
     border-radius: 50%;
     position: relative;
+    box-sizing: border-box;
 }
 
+/* 👈 AGGIUSTATO: Le lancette nascono esattamente dal centro geometrico dell'orologio (4.5px, 4.5px) */
 .detail-pill-clock-icon::after {
     content: "";
     position: absolute;
-    top: 1.5px;
-    left: 3px;
-    width: 2px;
-    height: 2.5px;
-    border-left: 0.8px solid #FFFFFF;
-    border-bottom: 0.8px solid #FFFFFF;
+    top: 4.1px;  /* Centro verticale esatto */
+    left: 4.1px; /* Centro orizzontale esatto */
+    width: 2.2px; /* Lunghezza lancetta minuti */
+    height: 2.2px; /* Lunghezza lancetta ore (leggermente più corta) */
+    border-left: 0.8px solid #FFFFFF;   /* Lancetta delle ore (verticale) */
+    border-bottom: 0.8px solid #FFFFFF; /* Lancetta dei minuti (orizzontale) */
+    box-sizing: border-box;
+    transform: translate(-0.4px, -1.8px); /* Bilanciamento dei vettori per centrarle al pixel */
 }
 
 
